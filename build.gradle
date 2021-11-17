@@ -1,0 +1,115 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.6'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	// querydsl
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+group = 'com.sikhye'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// mysql DB
+	runtimeOnly ('mysql:mysql-connector-java') //mysql8
+
+	// spring batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	testImplementation 'org.springframework.batch:spring-batch-test'
+
+	// spring jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// spring template
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Bean Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// spring boot starter
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Security, Authentication(JWT Token)
+	implementation('org.springframework.boot:spring-boot-starter-security:2.5.4')
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+	implementation('org.springframework.boot:spring-boot-starter')
+
+	// Spring Security for OAuth2)
+	implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
+	implementation('org.springframework.boot:spring-boot-starter-mustache')
+
+	// related to test
+	implementation('org.springframework.boot:spring-boot-devtools')
+
+	// for Crawling
+	implementation('org.jsoup:jsoup:1.14.1')
+
+	// p6spy
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+
+
+	// querydsl
+	implementation 'com.querydsl:querydsl-jpa'
+
+	// AWS S3
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.111'
+
+	// AWS cloud starter aws
+	implementation('org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE')
+
+	// index.html로 forwarding 하기 위함
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// @ConfigureProperties를 사용하기 위해 추가
+	// configure 파일을 읽어들이기 위함
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	// 이메일 인증
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// spring redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// ==========================================
+// QueryDSL 추가 시작
+// ==========================================
+// >> 01. gradle에서 querydsl 관련 :: querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝

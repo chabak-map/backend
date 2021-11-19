@@ -1,4 +1,4 @@
-package com.sikhye.chabak.src.email.model;
+package com.sikhye.chabak.utils.email.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;

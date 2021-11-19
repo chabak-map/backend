@@ -1,6 +1,6 @@
-package com.sikhye.chabak.src.email;
+package com.sikhye.chabak.utils.email;
 
-import com.sikhye.chabak.src.email.model.EmailToken;
+import com.sikhye.chabak.utils.email.model.EmailToken;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

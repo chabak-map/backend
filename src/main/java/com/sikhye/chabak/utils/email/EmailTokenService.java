@@ -1,7 +1,7 @@
-package com.sikhye.chabak.src.email;
+package com.sikhye.chabak.utils.email;
 
 import com.sikhye.chabak.base.BaseException;
-import com.sikhye.chabak.src.email.model.EmailToken;
+import com.sikhye.chabak.utils.email.model.EmailToken;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

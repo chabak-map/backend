@@ -6,30 +6,27 @@ on:
     branches: [ CHABAK-1.0.0 ]
   pull_request:
     branches: [ CHABAK-1.0.0 ]
-
-# 환경변수 설정
 env:
   S3_BUCKET_NAME: univ-city-bucket
   PROJECT_NAME: chabak
   RESOURCE_PATH: /home/runner/work/$PROJECT_NAME/$PROJECT_NAME/src/main/resources
-
 jobs:
   build:
-    runs-on: ubuntu-18.04	# 해당 job은 ubuntu 18.04에서 실행
+    runs-on: ubuntu-18.04
 
     steps:
-      - name: Checkout	# github에서 파일들을 가져옴
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Decrypt application yml	# (4번 참고) 암호화 했던 설정파일 복호화
+      - name: Decrypt application yml
         run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_YML_GPG }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
         shell: bash
 
-      - name: Unzip application yml	# 설정파일 압축 해제
+      - name: Unzip application yml
         run: tar xvf $RESOURCE_PATH/application.tar
         shell: bash
 
-      - name: Set up JDK 11	# java 11 설정
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
@@ -50,19 +47,19 @@ jobs:
         run: ./gradlew test
         shell: bash
 
-      - name: Make zip file #1	# build한 파일 모두 압축
+      - name: Make zip file
         run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
 
-      - name: Configure AWS credentials #2	# AWS IAM 사용자 정보 설정
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload to S3  #3	# S3에 업로드
+      - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
-      - name: Code Deploy #4 # Code Deploy
+      - name: Code Deploy
         run: aws deploy create-deployment --application-name chabak-map-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name chabak-map-deploy-group --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip

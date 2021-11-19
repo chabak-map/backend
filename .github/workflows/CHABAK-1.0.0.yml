@@ -8,7 +8,7 @@ on:
 env:
   S3_BUCKET_NAME: univ-city-bucket
   PROJECT_NAME: backend
-  RESOURCE_PATH: /home/runner/work/$PROJECT_NAME/$PROJECT_NAME/src/main/resources
+  RESOURCE_PATH: /home/runner/work/backend/backend/src/main/resources
 
 jobs:
   build:

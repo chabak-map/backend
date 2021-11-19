@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/ubuntu/chabak
+REPOSITORY=/home/ubuntu/backend
 cd $REPOSITORY
 
 APP_NAME=chabak

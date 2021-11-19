@@ -2,10 +2,10 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/chabak # 인스턴스에서 파일이 저장될 위치
+    destination: /home/ubuntu/backend # 인스턴스에서 파일이 저장될 위치
     overwrite: yes
 permissions:
-  - object: /home/ubuntu/chabak
+  - object: /home/ubuntu/backend
     #    pattern: "**"
     owner: ubuntu
     group: ubuntu

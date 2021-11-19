@@ -8,7 +8,7 @@ on:
 env:
   S3_BUCKET_NAME: univ-city-bucket
   PROJECT_NAME: chabak
-  RESOURCE_PATH: /home/runner/work/${PROJECT_NAME}/${PROJECT_NAME}/src/main/resources
+  RESOURCE_PATH: /home/runner/work/$PROJECT_NAME/$PROJECT_NAME/src/main/resources
 
 jobs:
   build:
@@ -18,8 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: test
+        run: ls /home/runner/work/
+        shell: bash
+
       - name: Decrypt application yml
-        run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_YML_GPG }} --output ${RESOURCE_PATH}/application.tar ${RESOURCE_PATH}/application.tar.gpg
+        run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_YML_GPG }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
         shell: bash
 
       - name: Unzip application yml

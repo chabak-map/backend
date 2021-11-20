@@ -12,3 +12,10 @@
 - CI/CD 방식 Jenkins -> GitAction + CodeDeploy로 변경
 - docker redis 설정
 - rest api 명세서 작성
+
+### 2021-11-20 진행상황
+- - -
+- SMS 인증 구현
+  - redis 추가 연동 필요
+- 회원 관련 기능 구현
+  - 로그인, 회원가입, 회원정보

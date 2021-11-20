@@ -30,6 +30,11 @@ public class JoinReq {
 
 	private String phoneNumber;
 
-	private String imageUrl;
-
+	@Builder
+	public JoinReq(String nickname, String email, String password, String phoneNumber) {
+		this.nickname = nickname;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+	}
 }

@@ -12,13 +12,13 @@ public interface MemberService {
 	LoginRes login(LoginReq loginReq) throws BaseException;
 
 	// 02. 회원가입
-	Long join(JoinReq joinReq) throws BaseException;
+	LoginRes join(JoinReq joinReq) throws BaseException;
 
 	// 03. 회원정보 조회
 	MemberDto lookup(Long memberId) throws BaseException;
 
 	// 04. 휴대폰 인증 요청
 
-
 	// 05. 휴대폰 인증 요청 확인
+
 }

@@ -1,4 +1,4 @@
-package com.sikhye.chabak.base;
+package com.sikhye.chabak.configure.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

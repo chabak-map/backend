@@ -1,7 +1,6 @@
 package com.sikhye.chabak.src.member.entity;
 
-import com.sikhye.chabak.base.BaseStatus;
-import com.sikhye.chabak.src.member.dto.MemberDto;
+import com.sikhye.chabak.configure.entity.BaseStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

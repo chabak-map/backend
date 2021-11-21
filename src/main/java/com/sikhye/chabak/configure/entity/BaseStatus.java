@@ -1,4 +1,4 @@
-package com.sikhye.chabak.base;
+package com.sikhye.chabak.configure.entity;
 
 public enum BaseStatus {
 	used,

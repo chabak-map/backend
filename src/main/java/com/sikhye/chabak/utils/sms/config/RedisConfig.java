@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.redis;
+package com.sikhye.chabak.utils.sms.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
@@ -33,17 +32,13 @@ public class RedisConfig {
 		return new LettuceConnectionFactory(redisHost, redisPort);
 	}
 
-	// 실제로 template 역할하여 키-값을 직렬화하여 데이터 변환
+	//	 실제로 template 역할하여 키-값을 직렬화하여 데이터 변환
 	@Bean
-	public RedisTemplate<?, ?> redisTemplate() {
-		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(redisConnectionFactory());
-
-		// key 값은 String 값으로 출력
+	public RedisTemplate<String, String> redisTemplate() {
+		RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-		// value 값은 객체를 Json 형식으로 출력
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+		redisTemplate.setValueSerializer(new StringRedisSerializer());
+		redisTemplate.setConnectionFactory(redisConnectionFactory());
 
 		return redisTemplate;
 	}
@@ -57,6 +52,29 @@ public class RedisConfig {
 		stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
 		return stringRedisTemplate;
 	}
+
+//	@Bean
+//	// Serializer가 빠지면 \xac\xed\x00\x05t\x00\x06 유니코드 값이 들어간다.
+//	public RedisCacheManager redisCacheManager() {
+//		RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
+//			.disableCachingNullValues()
+//			.entryTtl(Duration.ofSeconds(SmsCacheKey.DEFAULT_EXPIRE_SEC))
+//			.computePrefixWith(CacheKeyPrefix.simple())
+//			.serializeKeysWith(RedisSerializationContext
+//				.SerializationPair
+//				.fromSerializer(new StringRedisSerializer()));
+//
+//		Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+//
+//		cacheConfigurations.put(SmsCacheKey.SMS,
+//			RedisCacheConfiguration.defaultCacheConfig()
+//				.entryTtl(Duration.ofSeconds(SmsCacheKey.SMS_EXPIRE_SEC)));
+//
+//		return RedisCacheManager.RedisCacheManagerBuilder
+//			.fromConnectionFactory(redisConnectionFactory())
+//			.cacheDefaults(configuration)
+//			.withInitialCacheConfigurations(cacheConfigurations).build();
+//	}
 
 
 //	// Cache 관련 설정

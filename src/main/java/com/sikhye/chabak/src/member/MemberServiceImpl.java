@@ -8,13 +8,18 @@ import com.sikhye.chabak.src.member.dto.MemberDto;
 import com.sikhye.chabak.src.member.entity.Member;
 import com.sikhye.chabak.utils.AES128;
 import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.sms.SmsService;
+import com.sikhye.chabak.utils.sms.entity.SmsCacheKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.Random;
 
 import static com.sikhye.chabak.base.BaseResponseStatus.*;
 
@@ -24,8 +29,11 @@ import static com.sikhye.chabak.base.BaseResponseStatus.*;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
-	private final JwtService jwtService;
 	private final MemberRepository memberRepository;
+	private final RedisTemplate<String, String> redisTemplate;
+	private final SmsService smsService;
+	private final JwtService jwtService;
+
 
 	@Value("{secret.USER_INFO_PASSWORD_KEY")
 	private String USER_INFO_PASSWORD_KEY;
@@ -67,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
 			encryptedPassword = new AES128(USER_INFO_PASSWORD_KEY).encrypt(joinReq.getPassword());
 			encryptedPhoneNumber = new AES128(USER_INFO_PASSWORD_KEY).encrypt(joinReq.getPhoneNumber());
 		} catch (Exception ignored) {
-			throw new BaseException(PASSWORD_ENCRYPTION_ERROR);	// TODO: ENCRYPTION_ERROR 로 변경
+			throw new BaseException(PASSWORD_ENCRYPTION_ERROR);    // TODO: ENCRYPTION_ERROR 로 변경
 		}
 
 		try {
@@ -87,15 +95,16 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			throw new BaseException(DATABASE_ERROR);	// TODO: 회원정보 저장 실패
+			throw new BaseException(DATABASE_ERROR);    // TODO: 회원정보 저장 실패
 		}
 
 
 	}
 
 	@Override
-	public MemberDto lookup(Long memberId) throws BaseException {
+	public MemberDto lookup() throws BaseException {
 
+		Long memberId = jwtService.getUserIdx();
 		Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(DATABASE_ERROR));
 
 		return MemberDto.builder()
@@ -103,5 +112,68 @@ public class MemberServiceImpl implements MemberService {
 			.imageUrl(findMember.getImageUrl())
 			.nickname(findMember.getNickname())
 			.build();
+	}
+
+	@Override
+	@Transactional
+	@CachePut(value = SmsCacheKey.SMS, key = "#phoneNumber")
+	public String requestPhoneAuth(String phoneNumber) throws BaseException {
+
+		String verifyCode = genRandomNum();
+		String key = SmsCacheKey.SMS.concat("::").concat(phoneNumber);
+
+		redisTemplate.opsForValue().set(key, verifyCode);
+
+		String authMessage = "[ㅊㅂㅊㅂ] 인증 코드 [" + verifyCode + "]를 입력해주세요.";
+
+		try {
+			smsService.sendSms(phoneNumber, authMessage);
+		} catch (Exception exception) {
+			throw new BaseException(DATABASE_ERROR);    // TODO: 오류메시지 수정
+		}
+
+		String findCode = redisTemplate.opsForValue().get(key);
+		log.info("++findCode = {}, verifyCode = {}", findCode, verifyCode);
+
+		return verifyCode;
+	}
+
+
+	@Override
+	@CacheEvict(value = SmsCacheKey.SMS, key = "#phoneNumber")
+	public Boolean verifySms(String verifyCode, String phoneNumber) throws BaseException {
+
+		String key = SmsCacheKey.SMS.concat("::").concat(phoneNumber);
+
+		String findCode = redisTemplate.opsForValue().get(key);
+
+		if (!verifyCode.equals(findCode)) {
+			log.info("key = {}", key);
+			log.info("--findCode = {}, verifyCode = {}", findCode, verifyCode);
+			throw new BaseException(DATABASE_ERROR);  // TODO: 오류메시지 수정
+		}
+
+		return true;
+	}
+
+	// ================================================
+	// INTERNAL USE
+	// ================================================
+	private String genRandomNum() {
+		int maxNumLen = 6;
+
+		Random random = new Random(System.currentTimeMillis());    // 중복방지 랜덤
+
+		int range = (int) Math.pow(10, maxNumLen);
+		int trim = (int) Math.pow(10, maxNumLen - 1);
+		int result = random.nextInt(range) + trim;
+
+		if (result > range) {
+			result = result - trim;
+		}
+
+		log.info("generated Number = {}", result);
+		return String.valueOf(result);
+
 	}
 }

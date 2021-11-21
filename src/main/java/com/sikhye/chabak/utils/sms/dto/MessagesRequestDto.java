@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @Service
 @Getter

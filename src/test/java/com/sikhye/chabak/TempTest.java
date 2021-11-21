@@ -49,19 +49,7 @@
 //	@Rollback(false)
 //	public void memberJoinTest() throws Exception {
 //
-//		//given
-//		PostMemberReq postMemberReq = PostMemberReq.builder()
-//			.name("박현준")
-//			.email("phj0860@gmail.com")
-//			.password("guswjd35")
-//			.phoneNumber("01066146729")
-//			.gender("M")
-//			.major("컴퓨터과학과")
-//			.univName("상명대학교")
-//			.univYear(1996)
-//			.nickname("네이선")
-//			.birthDate(LocalDate.of(1996, 10, 22))
-//			.build();
+//
 //
 //		//when
 //		PostMemberRes result = memberService.join(postMemberReq);
@@ -95,30 +83,5 @@
 ////	}
 //
 //
-////	PostMemberReq postMemberReq = PostMemberReq.builder()
-////		.name("황두일")
-////		.email("hwang6636@wku.ac.kr")
-////		.password("test123")
-////		.phoneNumber("01011112222")
-////		.gender("M")
-////		.major("일어교육과")
-////		.univName("원광대학교")
-////		.univYear(1996)
-////		.nickname("h-twenty")
-////		.birthDate(LocalDate.of(1996, 7, 11))
-////		.build();
-//
-////	PostMemberReq postMemberReq = PostMemberReq.builder()
-////		.name("박현준")
-////		.email("phj0860@gmail.com")
-////		.password("guswjd35")
-////		.phoneNumber("01066146729")
-////		.gender("M")
-////		.major("컴퓨터과학과")
-////		.univName("상명대학교")
-////		.univYear(1996)
-////		.nickname("네이선")
-////		.birthDate(LocalDate.of(1996, 10, 22))
-////		.build();
 //
 //}

@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.email;//package com.sikhye.univcity.src.email;
+package com.sikhye.chabak.utils.unused.email;//package com.sikhye.univcity.src.email;
 //
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;

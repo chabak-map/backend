@@ -1,6 +1,7 @@
 package com.sikhye.chabak.src.member;
 
-import com.sikhye.chabak.base.BaseException;
+import com.sikhye.chabak.base.exception.BaseException;
+import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.member.dto.JoinReq;
 import com.sikhye.chabak.src.member.dto.LoginReq;
 import com.sikhye.chabak.src.member.dto.LoginRes;
@@ -8,6 +9,7 @@ import com.sikhye.chabak.src.member.dto.MemberDto;
 import com.sikhye.chabak.src.member.entity.Member;
 import com.sikhye.chabak.utils.AES128;
 import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.aws.BasicUploadService;
 import com.sikhye.chabak.utils.sms.SmsService;
 import com.sikhye.chabak.utils.sms.entity.SmsCacheKey;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.Random;
 
 import static com.sikhye.chabak.base.BaseResponseStatus.*;
@@ -32,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final SmsService smsService;
+	private final BasicUploadService s3UploadService;
 	private final JwtService jwtService;
 
 
@@ -39,35 +44,36 @@ public class MemberServiceImpl implements MemberService {
 	private String USER_INFO_PASSWORD_KEY;
 
 	@Override
-	public LoginRes login(LoginReq loginReq) throws BaseException {
+	public LoginRes login(LoginReq loginReq) {
 		String email = loginReq.getEmail();
 		String password = loginReq.getPassword();
 
 		// 입력된 이메일 기준 패스워드 찾기
-		Member findMember = memberRepository.findMemberByEmail(email);
+		Member findMember = memberRepository.findMemberByEmailAndStatus(email, BaseStatus.used).orElseThrow(() -> new BaseException(FAILED_TO_LOGIN));
+
 		String findPassword;
 		try {
 			findPassword = new AES128(USER_INFO_PASSWORD_KEY).decrypt(findMember.getPassword());
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+			throw new BaseException(DECRYPTION_ERROR);
 		}
 
 		// 현재 찾은 비밀번호와 유저 입력 패스워드 비교
 		if (password.equals(findPassword)) {
-			// 유저 ID와 JWT를 만들어서 반환
 			Long memberId = findMember.getId();
 			String jwt = jwtService.createJwt(memberId);
 			return new LoginRes(memberId, jwt);
 		} else {
+			log.info("password = {}", password);
+			log.info("findPassword = {}", findPassword);
 			throw new BaseException(FAILED_TO_LOGIN);
 		}
-
 	}
 
 	@Override
 	@Transactional
-	public LoginRes join(JoinReq joinReq) throws BaseException {
+	public LoginRes join(JoinReq joinReq) {
 
 		String encryptedPassword, encryptedPhoneNumber;
 
@@ -75,37 +81,42 @@ public class MemberServiceImpl implements MemberService {
 			encryptedPassword = new AES128(USER_INFO_PASSWORD_KEY).encrypt(joinReq.getPassword());
 			encryptedPhoneNumber = new AES128(USER_INFO_PASSWORD_KEY).encrypt(joinReq.getPhoneNumber());
 		} catch (Exception ignored) {
-			throw new BaseException(PASSWORD_ENCRYPTION_ERROR);    // TODO: ENCRYPTION_ERROR 로 변경
-		}
-
-		try {
-			// 새로운 멤버 저장
-			Member newMember = Member.builder()
-				.email(joinReq.getEmail())
-				.nickname(joinReq.getNickname())
-				.password(encryptedPassword)
-				.phoneNumber(encryptedPhoneNumber)
-				.build();
-
-			Member savedMember = memberRepository.save(newMember);
-
-			// JWT 토큰 생성
-			String jwt = jwtService.createJwt(savedMember.getId());
-			return new LoginRes(savedMember.getId(), jwt);
-
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			throw new BaseException(DATABASE_ERROR);    // TODO: 회원정보 저장 실패
+			throw new BaseException(ENCRYPTION_ERROR);
 		}
 
 
+		// 닉네임, 이메일 중복체크
+		Optional<Member> findMemberEmail = memberRepository.findMemberByEmailAndStatus(joinReq.getEmail(), BaseStatus.used);
+		if (findMemberEmail.isPresent()) {
+			throw new BaseException(POST_USERS_EXISTS_EMAIL);
+		}
+
+		Optional<Member> findMemberNickname = memberRepository.findMemberByNicknameAndStatus(joinReq.getNickname(), BaseStatus.used);
+		if (findMemberNickname.isPresent()) {
+			throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+		}
+
+
+		Member newMember = Member.builder()
+			.email(joinReq.getEmail())
+			.nickname(joinReq.getNickname())
+			.password(encryptedPassword)
+			.phoneNumber(encryptedPhoneNumber)
+			.build();
+
+		Member savedMember = memberRepository.save(newMember);
+
+		// JWT 토큰 생성
+		String jwt = jwtService.createJwt(savedMember.getId());
+		return new LoginRes(savedMember.getId(), jwt);
 	}
 
 	@Override
-	public MemberDto lookup() throws BaseException {
+	public MemberDto lookup() {
 
 		Long memberId = jwtService.getUserIdx();
-		Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(DATABASE_ERROR));
+		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, BaseStatus.used)
+			.orElseThrow(() -> new BaseException(CHECK_USER));
 
 		return MemberDto.builder()
 			.id(findMember.getId())
@@ -129,7 +140,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			smsService.sendSms(phoneNumber, authMessage);
 		} catch (Exception exception) {
-			throw new BaseException(DATABASE_ERROR);    // TODO: 오류메시지 수정
+			throw new BaseException(SMS_ERROR);
 		}
 
 		String findCode = redisTemplate.opsForValue().get(key);
@@ -148,12 +159,26 @@ public class MemberServiceImpl implements MemberService {
 		String findCode = redisTemplate.opsForValue().get(key);
 
 		if (!verifyCode.equals(findCode)) {
-			log.info("key = {}", key);
-			log.info("--findCode = {}, verifyCode = {}", findCode, verifyCode);
-			throw new BaseException(DATABASE_ERROR);  // TODO: 오류메시지 수정
+			throw new BaseException(INVALID_VERIFY_CODE);
 		}
 
 		return true;
+	}
+
+	@Override
+	@Transactional
+	public String uploadImage(MultipartFile memberImage) {
+
+		Long memberId = jwtService.getUserIdx();
+
+		// 이미지 저장
+		String imageUrl = s3UploadService.uploadImage(memberImage, "images/member/");
+
+		// 이미지 URL 저장
+		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, BaseStatus.used).orElseThrow(() -> new BaseException(CHECK_USER));
+		findMember.setImageUrl(imageUrl);
+
+		return findMember.getImageUrl();
 	}
 
 	// ================================================

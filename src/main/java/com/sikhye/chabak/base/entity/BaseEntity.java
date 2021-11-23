@@ -1,4 +1,4 @@
-package com.sikhye.chabak.base;
+package com.sikhye.chabak.base.entity;
 
 import lombok.Getter;
 import lombok.Setter;

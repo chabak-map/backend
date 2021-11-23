@@ -26,7 +26,7 @@ public enum BaseResponseStatus {
 	CHECK_USER(false, 2005, "유효하지 않은 계정입니다."),
 	INVALID_URI_PATH(false, 2006, "URI 경로가 잘못되었습니다."),
 	EMPTY_PARAMETER(false, 2007, "파라미터 값을 확인해주세요."),
-	CHECK_CV(false, 2008, "유효하지 않은 이력서입니다."),
+	INVALID_VERIFY_CODE(false, 2008, "잘못된 인증코드입니다."),
 	EMPTY_OR_INVALID_TOKEN(false, 2009, "발급된 토큰이 없거나 파싱 오류입니다."),
 
 	// Common 형식 관련: 2100~
@@ -48,7 +48,10 @@ public enum BaseResponseStatus {
 	POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
 	POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
 	POST_USERS_EXISTS_EMAIL(false, 2017, "중복된 이메일입니다."),
+	POST_USERS_EXISTS_NICKNAME(false, 2018, "중복된 닉네임입니다."),
 
+	POST_USERS_INVALID_NICKNAME(false, 2020, "잘못된 닉네임입니다."),
+	POST_USERS_INVALID_PASSWORD(false, 2021, "잘못된 비밀번호 형식입니다."),
 
 	/**
 	 * 3000 : Response 오류
@@ -58,7 +61,6 @@ public enum BaseResponseStatus {
 	RESPONSE_EMPTY(false, 3001, "조회할 정보가 없습니다."),
 
 	// [POST]
-	DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
 	FAILED_TO_LOGIN(false, 3014, "없는 아이디거나 비밀번호가 틀렸습니다."),
 
 
@@ -67,9 +69,13 @@ public enum BaseResponseStatus {
 	 */
 	DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
 	SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
+	SMS_ERROR(false, 4002, "SMS 인증 요청에 실패하였습니다."),
 
-	PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
-	PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");
+	ENCRYPTION_ERROR(false, 4011, "암호화에 실패하였습니다."),
+	DECRYPTION_ERROR(false, 4012, "복호화에 실패하였습니다."),
+
+	S3_UPLOAD_ERROR(false, 4021, "이미지 업로드에 실패하였습니다."),
+	S3_FORMAT_ERROR(false, 4022, "이미지 형식이 올바르지 않습니다.");
 
 
 	// 5000 : 필요시 만들어서 쓰세요

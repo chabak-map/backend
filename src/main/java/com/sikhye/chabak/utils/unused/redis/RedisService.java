@@ -1,6 +1,6 @@
 //package com.sikhye.chabak.utils.sms;
 //
-//import com.sikhye.chabak.base.BaseException;
+//import com.sikhye.chabak.base.exception.BaseException;
 //import com.sikhye.chabak.base.BaseResponseStatus;
 //import com.sikhye.chabak.utils.sms.entity.SmsToken;
 //import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@
 //
 //	public String findCode(String phoneNumber) throws BaseException {
 //
-//		// TODO: 인증에러 코드 변경
 //		SmsToken smsToken = redisRepository.findById(phoneNumber).orElseThrow(() -> new BaseException(DATABASE_ERROR));
 //
 //		return smsToken.getVerifyCode();
@@ -37,7 +36,6 @@
 //
 ////	@CachePut(cacheNames = "")
 //
-//	// TODO: 인증완료된 코드는 삭제?
 ////	public void deleteCode(String phoneNumber) throws BaseException {
 ////
 ////	}

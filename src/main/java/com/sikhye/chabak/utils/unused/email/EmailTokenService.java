@@ -1,6 +1,6 @@
 //package com.sikhye.chabak.utils.email;
 //
-//import com.sikhye.chabak.base.BaseException;
+//import com.sikhye.chabak.base.exception.BaseException;
 //import com.sikhye.chabak.utils.email.model.EmailToken;
 //import io.jsonwebtoken.lang.Assert;
 //import lombok.RequiredArgsConstructor;

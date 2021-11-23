@@ -1,6 +1,6 @@
 //package com.sikhye.chabak.utils.redis;
 //
-//import com.sikhye.chabak.base.BaseException;
+//import com.sikhye.chabak.base.exception.BaseException;
 //import com.sikhye.chabak.base.BaseResponse;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.web.bind.annotation.GetMapping;

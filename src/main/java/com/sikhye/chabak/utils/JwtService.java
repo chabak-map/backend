@@ -1,6 +1,6 @@
 package com.sikhye.chabak.utils;
 
-import com.sikhye.chabak.base.BaseException;
+import com.sikhye.chabak.base.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

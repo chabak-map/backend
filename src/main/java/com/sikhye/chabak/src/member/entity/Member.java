@@ -55,7 +55,4 @@ public class Member {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-
-	@OneToMany(mappedBy = "member")
-	private List<PlaceReview> placeReviews = new ArrayList<>();
 }

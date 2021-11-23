@@ -3,8 +3,6 @@ name: chabak-dev-1.0.0
 on:
   push:
     branches: [ CHABAK-1.0.0 ]
-  pull_request:
-    branches: [ CHABAK-1.0.0 ]
 env:
   S3_BUCKET_NAME: univ-city-bucket
   PROJECT_NAME: backend

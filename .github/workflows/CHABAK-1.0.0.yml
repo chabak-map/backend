@@ -41,12 +41,12 @@ jobs:
         run: ./gradlew clean
         shell: bash
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        shell: bash
-
       - name: Clean querydsl files
         run: ./gradlew cleanQuerydslSourcesDir
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build
         shell: bash
 
       - name: Make zip file

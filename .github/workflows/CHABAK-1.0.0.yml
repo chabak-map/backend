@@ -45,8 +45,8 @@ jobs:
         run: ./gradlew build
         shell: bash
 
-      - name: Test with Gradle
-        run: ./gradlew test
+      - name: Clean querydsl files
+        run: ./gradlew cleanQuerydslSourcesDir
         shell: bash
 
       - name: Make zip file

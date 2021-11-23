@@ -1,11 +1,12 @@
 package com.sikhye.chabak.src.member;
 
-import com.sikhye.chabak.base.BaseException;
 import com.sikhye.chabak.base.BaseResponse;
+import com.sikhye.chabak.base.exception.BaseException;
 import com.sikhye.chabak.src.member.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -19,17 +20,14 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("hello");
+		return new BaseResponse<>("helloV2");
 	}
 
 
 	@PostMapping("/login")
 	public BaseResponse<LoginRes> login(@Valid @RequestBody LoginReq loginReq) {
-		try {
-			return new BaseResponse<>(memberService.login(loginReq));
-		} catch (BaseException exception) {
-			return new BaseResponse<>(exception.getStatus());
-		}
+
+		return new BaseResponse<>(memberService.login(loginReq));
 	}
 
 	@PostMapping
@@ -43,11 +41,7 @@ public class MemberController {
 
 	@GetMapping
 	public BaseResponse<MemberDto> lookup() {
-		try {
-			return new BaseResponse<>(memberService.lookup());
-		} catch (BaseException exception) {
-			return new BaseResponse<>(exception.getStatus());
-		}
+		return new BaseResponse<>(memberService.lookup());
 	}
 
 
@@ -67,6 +61,14 @@ public class MemberController {
 		} catch (BaseException exception) {
 			return new BaseResponse<>(exception.getStatus());
 		}
+	}
+
+
+	@PostMapping("/image")
+	public BaseResponse<String> uploadImage(@RequestPart MultipartFile memberImage) {
+
+		return new BaseResponse<>(memberService.uploadImage(memberImage));
+
 	}
 
 

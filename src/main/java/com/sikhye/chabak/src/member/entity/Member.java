@@ -1,6 +1,6 @@
 package com.sikhye.chabak.src.member.entity;
 
-import com.sikhye.chabak.configure.entity.BaseStatus;
+import com.sikhye.chabak.base.entity.BaseStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,22 +42,11 @@ public class Member {
 		this.imageUrl = imageUrl;
 	}
 
-//	public MemberDto getMemberDto() {
-//
-//		return MemberDto.builder()
-//			.id(this.id)
-//			.nickname(this.nickname)
-//			.imageUrl(this.imageUrl)
-//			.build();
-//	}
-
-
-//	public void modifyMember() {
-//
-//	}
-
 	public void setStatusToDelete(BaseStatus status) {
 		this.status = status;
 	}
 
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

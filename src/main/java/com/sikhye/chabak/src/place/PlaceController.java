@@ -28,7 +28,7 @@ public class PlaceController {
 	public BaseResponse<List<PlaceSearchRes>> getAroundPlace(@RequestParam("lat") Double latitude,
 															 @RequestParam("lng") Double longitude,
 															 @RequestParam("r") Double radius) {
-		return new BaseResponse<>(placeService.aroundPlace(longitude, latitude, radius));
+		return new BaseResponse<>(placeService.aroundPlace(latitude, longitude, radius));
 	}
 
 	// 장소 삭제

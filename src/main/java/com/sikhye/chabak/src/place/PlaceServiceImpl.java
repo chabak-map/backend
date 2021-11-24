@@ -47,7 +47,6 @@ public class PlaceServiceImpl implements PlaceService {
 		return placeTagRepository.findTagListByPlaceIdAndStatus(placeId, used).orElse(null);
 	}
 
-	// TODO: 리뷰 닉네임 컬럼 제거
 	@Override
 	public PlaceDetailRes getPlace(Long placeId) {
 
@@ -96,6 +95,7 @@ public class PlaceServiceImpl implements PlaceService {
 	}
 
 	@Override
+	@Transactional
 	public Long statusToDelete(Long placeId) {
 		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
@@ -104,9 +104,9 @@ public class PlaceServiceImpl implements PlaceService {
 	}
 
 	@Override
+	@Transactional
 	public Long savePoint(Long placeId, Double latitude, Double longitude) {
 
-		// @Digit(integer=10, fraction = 7)
 		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND));
 		findPlace.setPoint(latitude, longitude);
 

@@ -59,9 +59,13 @@ public enum BaseResponseStatus {
 	// Common
 	RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
 	RESPONSE_EMPTY(false, 3001, "조회할 정보가 없습니다."),
+	DELETE_EMPTY(false, 3002, "삭제할 정보가 없습니다."),
 
 	// [POST]
 	FAILED_TO_LOGIN(false, 3014, "없는 아이디거나 비밀번호가 틀렸습니다."),
+
+	// [PLACE]
+	SEARCH_NOT_FOUND(false, 3015, "조회된 장소가 없습니다"),
 
 
 	/**

@@ -1,6 +1,7 @@
 package com.sikhye.chabak.src.member.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
+import com.sikhye.chabak.src.place.entity.PlaceReview;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,4 +54,7 @@ public class Member {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
+	@OneToMany(mappedBy = "member")
+	private List<PlaceReview> placeReviews = new ArrayList<>();
 }

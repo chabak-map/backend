@@ -46,9 +46,9 @@ class MemberServiceImplTest {
 
 		//given
 		JoinReq joinReq = JoinReq.builder()
-			.email("mytest1234@mytest1234.com")
-			.nickname("mytest1234")
-			.password("mytest1234")
+			.email("spring123@naver.com")
+			.nickname("spring123")
+			.password("spring123")
 			.phoneNumber("01012341234")
 			.build();
 
@@ -69,9 +69,9 @@ class MemberServiceImplTest {
 
 		//given
 		JoinReq joinReq = JoinReq.builder()
-			.email("mytest1234@mytest1234.com")
-			.nickname("test12341234")
-			.password("mytest1234")
+			.email("spring123@naver.com")
+			.nickname("spr1234")
+			.password("spring123")
 			.phoneNumber("01012341234")
 			.build();
 
@@ -87,9 +87,9 @@ class MemberServiceImplTest {
 
 		//given
 		JoinReq joinReq = JoinReq.builder()
-			.email("test12341234@test.com")
-			.nickname("mytest1234")
-			.password("mytest1234")
+			.email("spr1234@naver.com")
+			.nickname("spring123")
+			.password("spring123")
 			.phoneNumber("01012341234")
 			.build();
 
@@ -104,7 +104,7 @@ class MemberServiceImplTest {
 	@Order(4)
 	public void memberLoginTest() throws BaseException {
 		//given
-		LoginReq loginReq = new LoginReq("mytest1234@mytest1234.com", "mytest1234");
+		LoginReq loginReq = new LoginReq("spring123@naver.com", "spring123");
 
 		//when
 		LoginRes loginMember = memberService.login(loginReq);

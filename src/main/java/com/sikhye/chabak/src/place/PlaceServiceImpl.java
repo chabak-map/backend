@@ -1,19 +1,16 @@
 package com.sikhye.chabak.src.place;
 
 import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.src.member.MemberService;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.src.place.dto.PlaceRes;
 import com.sikhye.chabak.src.place.dto.PlaceReviewRes;
 import com.sikhye.chabak.src.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.src.place.entity.Place;
 import com.sikhye.chabak.src.place.entity.PlaceImage;
 import com.sikhye.chabak.src.place.entity.PlaceReview;
-import com.sikhye.chabak.src.place.entity.PlaceTag;
 import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
 import com.sikhye.chabak.src.place.repository.PlaceRepository;
 import com.sikhye.chabak.src.place.repository.PlaceReviewRepository;
-import com.sikhye.chabak.src.place.repository.PlaceTagRepository;
+import com.sikhye.chabak.src.tag.TagService;
 import com.sikhye.chabak.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sikhye.chabak.base.BaseResponseStatus.DELETE_EMPTY;
-import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND;
+import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_PLACE;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
@@ -38,23 +36,17 @@ public class PlaceServiceImpl implements PlaceService {
 	private final PlaceRepository placeRepository;
 	private final PlaceImageRepository placeImageRepository;
 	private final PlaceReviewRepository placeReviewRepository;
-	private final PlaceTagRepository placeTagRepository;
-	private final MemberService memberService;
+	private final TagService tagService;
 	private final JwtService jwtService;
-
-	@Override
-	public List<PlaceTag> findTags(Long placeId) {
-		return placeTagRepository.findTagListByPlaceIdAndStatus(placeId, used).orElse(null);
-	}
 
 	@Override
 	public PlaceDetailRes getPlace(Long placeId) {
 
 		// 장소/이미지/리뷰
-		Place place = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND));
+		Place place = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId, used);
 		Optional<List<PlaceReview>> placeReviewResults = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(placeId, used);
-		List<PlaceTag> placeTags = findTags(place.getId());
+		List<String> placeTagNames = tagService.findPlaceTags(place.getId());
 
 
 		long imageCount = 0L;
@@ -85,13 +77,13 @@ public class PlaceServiceImpl implements PlaceService {
 			.phoneNumber(place.getPhoneNumber())    // TODO: 복호화 필요
 			.reviewCount(reviewCount)
 			.imageCount(imageCount)
-			.tagNames(placeTags.stream().map(PlaceTag::getName).collect(Collectors.toList()))
+			.tagNames(placeTagNames)
 			.build();
 	}
 
 	@Override
 	public List<PlaceSearchRes> aroundPlace(Double latitude, Double longitude, Double radius) {
-		return placeRepository.findPlaceNearbyPoint(latitude, longitude, radius).orElse(null);
+		return placeRepository.findPlaceNearbyPoint(latitude, longitude, radius).orElse(Collections.emptyList());
 	}
 
 	@Override
@@ -107,7 +99,7 @@ public class PlaceServiceImpl implements PlaceService {
 	@Transactional
 	public Long savePoint(Long placeId, Double latitude, Double longitude) {
 
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND));
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 		findPlace.setPoint(latitude, longitude);
 
 		return findPlace.getId();

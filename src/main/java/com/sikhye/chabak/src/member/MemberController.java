@@ -20,7 +20,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV2");
+		return new BaseResponse<>("helloV3");
 	}
 
 

@@ -23,7 +23,6 @@ public class PlaceDetailRes {
 	private List<PlaceReviewRes> placeReviewResList;
 
 	@Builder
-
 	public PlaceDetailRes(String name, String address, long reviewCount, long imageCount, String phoneNumber, List<String> placeImageUrls, List<String> tagNames, List<PlaceReviewRes> placeReviewResList) {
 		this.name = name;
 		this.address = address;

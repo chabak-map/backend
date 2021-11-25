@@ -65,7 +65,8 @@ public enum BaseResponseStatus {
 	FAILED_TO_LOGIN(false, 3014, "없는 아이디거나 비밀번호가 틀렸습니다."),
 
 	// [PLACE]
-	SEARCH_NOT_FOUND(false, 3015, "조회된 장소가 없습니다"),
+	SEARCH_NOT_FOUND_PLACE(false, 3015, "조회된 장소가 없습니다"),
+	SEARCH_NOT_FOUND_POST(false, 3016, "조회된 포스트가 없습니다"),
 
 
 	/**

@@ -1,7 +1,8 @@
-package com.sikhye.chabak.src.place.entity;
+package com.sikhye.chabak.src.tag.entity;
 
 
 import com.sikhye.chabak.base.entity.BaseStatus;
+import com.sikhye.chabak.src.place.entity.Place;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +20,8 @@ import static javax.persistence.FetchType.*;
 @Table(name = "PlaceTag")
 public class PlaceTag {
 
-	@Id	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
@@ -41,9 +43,13 @@ public class PlaceTag {
 		this.status = BaseStatus.deleted;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	// 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "PLACE_ID")	// >> pt. 대문자로 해야 PLACE에 있는 ID필드로 인식한다. 그게 아니면 Tags에 있는 place_id로 인식함
+	@JoinColumn(name = "PLACE_ID")    // >> pt. 연관관계 매핑
 	private Place place;
 
 }

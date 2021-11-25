@@ -1,7 +1,5 @@
 package com.sikhye.chabak.src.place;
 
-import com.sikhye.chabak.base.BaseResponseStatus;
-import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.base.exception.BaseException;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.src.place.dto.PlaceReviewRes;
@@ -20,8 +18,9 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sikhye.chabak.base.BaseResponseStatus.*;
-import static com.sikhye.chabak.base.entity.BaseStatus.*;
+import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_PLACE;
+import static com.sikhye.chabak.base.entity.BaseStatus.deleted;
+import static com.sikhye.chabak.base.entity.BaseStatus.used;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -45,7 +44,7 @@ class PlaceServiceImplTest {
 
 
 	@AfterAll
-	public void deleteMemberTable() throws Exception {
+	public void deleteMemberTable() {
 		Optional<Place> findPlace = placeRepository.findById(1L);
 		findPlace.ifPresent(Place::setStatusToUsed);
 	}
@@ -54,7 +53,7 @@ class PlaceServiceImplTest {
 	@Test
 	@DisplayName("001. 장소 불러오기")
 	@Order(1)
-	public void getPlaceTest() throws Exception {
+	public void getPlaceTest() {
 		//given
 		PlaceDetailRes place = placeService.getPlace(3L);
 
@@ -76,14 +75,14 @@ class PlaceServiceImplTest {
 	@Test
 	@DisplayName("002. 장소 좌표값 설정")
 	@Order(2)
-	public void setPointTest() throws Exception {
-	    //given
+	public void setPointTest() {
+		//given
 		Long updatePlace = placeService.savePoint(1L, 12.34, 56.78);
 		em.flush();
 		em.clear();
 
-	    //when
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND));
+		//when
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 
 		//then
@@ -96,7 +95,7 @@ class PlaceServiceImplTest {
 	@Test
 	@DisplayName("003. 장소 삭제하기")
 	@Order(3)
-	public void deletePlaceTest() throws Exception {
+	public void deletePlaceTest() {
 		//given
 		placeService.statusToDelete(1L);
 
@@ -110,7 +109,7 @@ class PlaceServiceImplTest {
 	@Test
 	@DisplayName("004. 주변장소 조회")
 	@Order(4)
-	public void aroundPlaceTest() throws Exception {
+	public void aroundPlaceTest() {
 		//given
 		List<PlaceSearchRes> placeSearchRes = placeService.aroundPlace(35.64317357, 127.14203310, 1D);
 

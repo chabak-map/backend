@@ -49,3 +49,7 @@
 - 포스팅 관련 API 구현
 - 포스팅 글 업로드 테스트 중
 
+### 2021-11-27 진행상황
+- - -
+- 댓글 관련 API 구현 중
+- Intellij Code Convention 적용 -> README 작성 필요

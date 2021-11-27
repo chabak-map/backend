@@ -75,7 +75,7 @@ public class JwtService {
 
 		// 3. userIdx 추출
 //        return claims.getBody().get("userIdx",Integer.class);
-		// >> pt2 : Object To Long
+		// ptpt: Object To Long
 		return Long.valueOf(String.valueOf(claims.getBody().get("userIdx")));
 	}
 

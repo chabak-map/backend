@@ -47,7 +47,7 @@ public class CacheConfig {
 
 		Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-		// >> ppp 01. SMS 캐시 설정을 해줘야 적용됨
+		// ptpt 01. SMS 캐시 설정을 해줘야 적용됨
 		// https://newbedev.com/spring-boot-caching-with-redis-key-have-xac-xed-x00-x05t-x00-x06
 		// 캐시매니저를 만들어도 문제가 발생한 경우 :: SMS라는 캐시에도 default처럼 설정해줬어야함
 		log.info("============= SMS cache config =============");

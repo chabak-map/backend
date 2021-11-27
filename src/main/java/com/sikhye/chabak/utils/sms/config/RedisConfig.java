@@ -13,7 +13,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
 @Configuration
-// >> pt04. basepackge 정해줘야 다른 패키지에서 redis repo 사용 가능
+// ptpt: basepackge 정해줘야 다른 패키지에서 redis repo 사용 가능
 @EnableRedisRepositories(basePackages = "com.sikhye.chabak")
 public class RedisConfig {
 

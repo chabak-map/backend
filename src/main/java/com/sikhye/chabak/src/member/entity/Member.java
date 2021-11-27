@@ -2,7 +2,8 @@ package com.sikhye.chabak.src.member.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.place.entity.PlaceReview;
-import com.sikhye.chabak.src.tag.entity.Posting;
+import com.sikhye.chabak.src.post.entity.Posting;
+import com.sikhye.chabak.src.post.entity.PostingComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,4 +62,7 @@ public class Member {
 
 	@OneToMany(mappedBy = "member")
 	private List<Posting> postings = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member")
+	private List<PostingComment> postingComments = new ArrayList<>();
 }

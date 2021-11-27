@@ -96,7 +96,7 @@ test {
 // ==========================================
 // QueryDSL 추가 시작
 // ==========================================
-// >> 01. gradle에서 querydsl 관련 :: querydsl 추가 시작
+// ptpt. gradle에서 querydsl 관련 :: querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {

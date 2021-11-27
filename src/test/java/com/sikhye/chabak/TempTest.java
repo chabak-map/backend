@@ -17,7 +17,7 @@
 //@SpringBootTest
 //@WebAppConfiguration
 ////@AutoConfigureMockMvc	// 컨트롤러 테스트 ( postman 쓸 것임 )
-//// >> pt03. (https://velog.io/@joosing/JUnit-BeforeAll-non-static%EC%9C%BC%EB%A1%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
+//// ptpt: (https://velog.io/@joosing/JUnit-BeforeAll-non-static%EC%9C%BC%EB%A1%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //@Transactional
 //class TempTest {
@@ -31,7 +31,7 @@
 //	@PersistenceContext
 //	private EntityManager em;
 //
-//// >> pt01. 테스트 관련 어노테이션
+//// ptpt. 테스트 관련 어노테이션
 ////	@BeforeEach
 ////	@AfterEach
 ////	@Commit // rollback 하지 않음

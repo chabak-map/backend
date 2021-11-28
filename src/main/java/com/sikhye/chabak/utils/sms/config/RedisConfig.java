@@ -86,7 +86,8 @@ public class RedisConfig {
 //		RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
 //			.entryTtl(Duration.ofSeconds(expireTime))
 //			.disableCachingNullValues()
-//			.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+//			.serializeValuesWith(RedisSerializationContext.SerializationPair
+//			.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 //		cacheConfig.usePrefix();
 //
 //		log.info("Duration -> " + cacheConfig.getTtl().getSeconds());

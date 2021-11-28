@@ -53,3 +53,8 @@
 - - -
 - 댓글 관련 API 구현 중
 - Intellij Code Convention 적용 -> README 작성 필요
+
+### 2021-11-28 진행상황
+- - -
+- 댓글 관련 API 구현 완료
+- 코딩 컨벤션 적용 방법 README 작성

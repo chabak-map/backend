@@ -37,6 +37,7 @@
 ```
 ### 3. CheckStyle
 [naver-code-convention 다운로드](https://github.com/naver/hackday-conventions-java/tree/master/rule-config)
+- rules, suppressions.xml 파일은 `rules-config` 폴더에 위치해 있습니다. 
 ```shell
   [IntelliJ]
   1. Preferences > Plugins > Marketplace > 'CheckStyle-IDEA' 설치 및 재시작

@@ -16,3 +16,4 @@ public class PostingRepositoryCustomImpl implements PostingRepositoryCustom {
 		this.queryFactory = new JPAQueryFactory(em);
 	}
 }
+

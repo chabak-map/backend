@@ -1,7 +1,9 @@
-package com.sikhye.chabak.src.post.entity;
+package com.sikhye.chabak.src.comment.entity;
 
+import com.sikhye.chabak.base.entity.BaseEntity;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.member.entity.Member;
+import com.sikhye.chabak.src.post.entity.Posting;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,9 +17,10 @@ import javax.persistence.*;
 @DynamicInsert
 @Entity
 @Table(name = "PostingComment")
-public class PostingComment {
+public class PostingComment extends BaseEntity {
 
-	@Id	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "posting_id")
@@ -40,6 +43,10 @@ public class PostingComment {
 
 	public void setStatusToDelete() {
 		this.status = BaseStatus.deleted;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

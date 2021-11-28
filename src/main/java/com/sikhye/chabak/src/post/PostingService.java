@@ -3,7 +3,6 @@ package com.sikhye.chabak.src.post;
 import com.sikhye.chabak.src.post.dto.PostingDetailRes;
 import com.sikhye.chabak.src.post.dto.PostingReq;
 import com.sikhye.chabak.src.post.dto.PostingRes;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

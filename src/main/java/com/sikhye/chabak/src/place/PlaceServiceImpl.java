@@ -1,15 +1,15 @@
 package com.sikhye.chabak.src.place;
 
 import com.sikhye.chabak.base.exception.BaseException;
+import com.sikhye.chabak.src.comment.dto.CommentRes;
+import com.sikhye.chabak.src.comment.entity.PlaceReview;
+import com.sikhye.chabak.src.comment.repository.PlaceReviewRepository;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.src.place.dto.PlaceReviewRes;
 import com.sikhye.chabak.src.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.src.place.entity.Place;
 import com.sikhye.chabak.src.place.entity.PlaceImage;
-import com.sikhye.chabak.src.place.entity.PlaceReview;
 import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
 import com.sikhye.chabak.src.place.repository.PlaceRepository;
-import com.sikhye.chabak.src.place.repository.PlaceReviewRepository;
 import com.sikhye.chabak.src.tag.TagService;
 import com.sikhye.chabak.utils.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +67,8 @@ public class PlaceServiceImpl implements PlaceService {
 			.name(place.getName())
 			.address(place.getAddress())
 			.placeImageUrls(placeImages.stream().map(PlaceImage::getImageUrl).collect(Collectors.toList()))
-			.placeReviewResList(placeReviews.stream().map(placeReview -> {
-				return PlaceReviewRes.builder()
+			.commentResList(placeReviews.stream().map(placeReview -> {
+				return CommentRes.builder()
 					.name(placeReview.getMember().getNickname())
 					.content(placeReview.getContent())
 					.writingDate(placeReview.getCreatedAt().toLocalDate())

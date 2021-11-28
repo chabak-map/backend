@@ -53,3 +53,4 @@ public class PlaceTag {
 	private Place place;
 
 }
+

@@ -44,3 +44,4 @@ public class PostingImage {
 	private Posting posting;
 
 }
+

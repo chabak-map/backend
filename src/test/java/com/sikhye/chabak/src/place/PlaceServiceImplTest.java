@@ -1,8 +1,8 @@
 package com.sikhye.chabak.src.place;
 
 import com.sikhye.chabak.base.exception.BaseException;
+import com.sikhye.chabak.src.comment.dto.CommentRes;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.src.place.dto.PlaceReviewRes;
 import com.sikhye.chabak.src.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.src.place.entity.Place;
 import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
@@ -61,10 +61,10 @@ class PlaceServiceImplTest {
 		String placeName = place.getName();
 		System.out.println("place.getTagNames() = " + place.getTagNames());
 
-		PlaceReviewRes placeReviewRes = place.getPlaceReviewResList().get(0);
-		System.out.println("placeReviewRes = " + placeReviewRes.getName());
-		System.out.println("placeReviewRes.getContent() = " + placeReviewRes.getContent());
-		System.out.println("placeReviewRes.getWritingDate() = " + placeReviewRes.getWritingDate());
+		CommentRes commentRes = place.getCommentResList().get(0);
+		System.out.println("placeReviewRes = " + commentRes.getName());
+		System.out.println("placeReviewRes.getContent() = " + commentRes.getContent());
+		System.out.println("placeReviewRes.getWritingDate() = " + commentRes.getWritingDate());
 
 		//then
 		assertEquals(placeName, "옥정호차박지");

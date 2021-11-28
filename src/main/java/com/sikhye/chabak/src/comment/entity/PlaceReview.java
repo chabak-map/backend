@@ -1,8 +1,9 @@
-package com.sikhye.chabak.src.place.entity;
+package com.sikhye.chabak.src.comment.entity;
 
 import com.sikhye.chabak.base.entity.BaseEntity;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.member.entity.Member;
+import com.sikhye.chabak.src.place.entity.Place;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,16 +37,18 @@ public class PlaceReview extends BaseEntity {
 	private BaseStatus status;
 
 	@Builder
-	public PlaceReview(Long placeId, Long memberId, String content, Place place, Member member) {
+	public PlaceReview(Long placeId, Long memberId, String content) {
 		this.placeId = placeId;
 		this.memberId = memberId;
 		this.content = content;
-		this.place = place;
-		this.member = member;
 	}
 
 	public void setStatusToDelete() {
 		this.status = BaseStatus.deleted;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	@ManyToOne(fetch = LAZY)

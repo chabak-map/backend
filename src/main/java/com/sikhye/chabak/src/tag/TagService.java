@@ -26,7 +26,7 @@ public interface TagService {
 	List<String> findPostingTags(Long postingId);
 
 	// 포스팅 태그 등록 API
-	 List<PostingTagRes> addPostingTags(Long placeId, PostingTagReq postingTagReq);
+	List<PostingTagRes> addPostingTags(Long placeId, PostingTagReq postingTagReq);
 
 	// 포스팅 태그 수정 API
 	Long editPostingTag(Long postingId, Long postingTagId, String postingTagName);

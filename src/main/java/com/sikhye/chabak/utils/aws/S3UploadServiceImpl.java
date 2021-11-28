@@ -79,3 +79,4 @@ public class S3UploadServiceImpl implements BasicUploadService {
 		return amazonS3.getUrl(component.getBucket(), pathWithName).toString();
 	}
 }
+

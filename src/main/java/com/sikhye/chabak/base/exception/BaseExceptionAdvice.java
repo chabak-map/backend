@@ -2,7 +2,6 @@ package com.sikhye.chabak.base.exception;
 
 import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.base.BaseResponseStatus;
-import com.sikhye.chabak.base.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

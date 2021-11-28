@@ -15,3 +15,4 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, Posting
 
 	Optional<Posting> findPostingByIdAndStatus(Long postingId, BaseStatus status);
 }
+

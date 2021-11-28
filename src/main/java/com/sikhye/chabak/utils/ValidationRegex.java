@@ -28,15 +28,23 @@ public class ValidationRegex {
 	}
 
 
-
-	public static boolean isEmpty(Object target){
+	public static boolean isEmpty(Object target) {
 		if (target == null) return true;
-		if ((target instanceof String) && (((String)target).trim().length() == 0)) { return true; }
-		if (target instanceof Map) { return ((Map<?, ?>) target).isEmpty(); }
-		if (target instanceof Map) { return ((Map<?, ?>)target).isEmpty(); }
-		if (target instanceof List) { return ((List<?>)target).isEmpty(); }
-		if (target instanceof Object[]) { return (((Object[])target).length == 0); }
+		if ((target instanceof String) && (((String) target).trim().length() == 0)) {
+			return true;
+		}
+		if (target instanceof Map) {
+			return ((Map<?, ?>) target).isEmpty();
+		}
+		if (target instanceof Map) {
+			return ((Map<?, ?>) target).isEmpty();
+		}
+		if (target instanceof List) {
+			return ((List<?>) target).isEmpty();
+		}
+		if (target instanceof Object[]) {
+			return (((Object[]) target).length == 0);
+		}
 		return false;
 	}
 }
-

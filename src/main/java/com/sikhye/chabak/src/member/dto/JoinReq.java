@@ -11,17 +11,18 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import static com.fasterxml.jackson.annotation.JsonProperty.*;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JoinReq {
 
-	@Length(min=3, max = 20)
+	@Length(min = 3, max = 20)
 	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{3,20}$")
 	private String nickname;
 
-	@Email @NotBlank
+	@Email
+	@NotBlank
 	private String email;
 
 	@NotBlank
@@ -38,3 +39,4 @@ public class JoinReq {
 		this.phoneNumber = phoneNumber;
 	}
 }
+

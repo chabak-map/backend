@@ -1,12 +1,12 @@
 package com.sikhye.chabak.src.post;
 
 import com.sikhye.chabak.base.exception.BaseException;
+import com.sikhye.chabak.src.comment.repository.PostingCommentRepository;
 import com.sikhye.chabak.src.post.dto.PostingDetailRes;
 import com.sikhye.chabak.src.post.dto.PostingReq;
 import com.sikhye.chabak.src.post.dto.PostingRes;
 import com.sikhye.chabak.src.post.entity.Posting;
 import com.sikhye.chabak.src.post.entity.PostingImage;
-import com.sikhye.chabak.src.post.repository.PostingCommentRepository;
 import com.sikhye.chabak.src.post.repository.PostingImageRepository;
 import com.sikhye.chabak.src.post.repository.PostingRepository;
 import com.sikhye.chabak.utils.JwtService;

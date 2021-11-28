@@ -1,7 +1,5 @@
 package com.sikhye.chabak.base;
 
-import com.sikhye.chabak.base.BaseResponseStatus;
-
 import static com.sikhye.chabak.base.BaseResponseStatus.*;
 
 public class ValidationExceptionProvider {

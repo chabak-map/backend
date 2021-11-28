@@ -18,3 +18,5 @@ public class PostingTagRes {
 		this.postingTagName = postingTagName;
 	}
 }
+
+

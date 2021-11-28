@@ -1,9 +1,9 @@
 package com.sikhye.chabak.src.member.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
-import com.sikhye.chabak.src.place.entity.PlaceReview;
+import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.post.entity.Posting;
-import com.sikhye.chabak.src.post.entity.PostingComment;
+import com.sikhye.chabak.src.comment.entity.PostingComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

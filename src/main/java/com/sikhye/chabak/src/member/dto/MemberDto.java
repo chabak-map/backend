@@ -27,3 +27,4 @@ public class MemberDto {
 		this.imageUrl = imageUrl;
 	}
 }
+

@@ -1,6 +1,7 @@
 package com.sikhye.chabak.src.place.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
+import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.tag.entity.PlaceTag;
 import lombok.AccessLevel;
 import lombok.Builder;

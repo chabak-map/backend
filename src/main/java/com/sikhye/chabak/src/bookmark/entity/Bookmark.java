@@ -19,45 +19,47 @@ import javax.persistence.*;
 @Table(name = "Bookmark")
 public class Bookmark extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "place_id")
-	private Long placeId;
+    @Column(name = "place_id")
+    private Long placeId;
 
-	@Column(name = "member_id")
-	private Long memberId;
+    @Column(name = "member_id")
+    private Long memberId;
 
-	@Enumerated(EnumType.STRING)
-	private BaseStatus status;
+    @Enumerated(EnumType.STRING)
+    private BaseStatus status;
 
-	@Builder
-	public Bookmark(Long placeId, Long memberId) {
-		this.placeId = placeId;
-		this.memberId = memberId;
-	}
+    @Builder
+    public Bookmark(Long placeId, Long memberId) {
+        this.placeId = placeId;
+        this.memberId = memberId;
+    }
 
-	public void setStatusToUsed() {
-		this.status = BaseStatus.used;
-	}
+    public void setStatusToUsed() {
+        this.status = BaseStatus.used;
+    }
 
-	// 연관관계
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MEMBER_ID")
-	private Member member;
+    public void setStatusToDelete() {
+        this.status = BaseStatus.deleted;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACE_ID")
-	private Place place;
+    // 연관관계
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
-	//	// 연관관계 지원 함수
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PLACE_ID")
+    private Place place;
+
+    //	// 연관관계 지원 함수
 //	public void changePlace(Place place) {
 //		this.place = place;
 //		team.getPlaces().add(this);	// 리스트에 자신을 추가
 //	}
-
-
 
 
 }

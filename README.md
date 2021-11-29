@@ -53,6 +53,17 @@
     
   [Eclipse]
   1. http://docs.navercorp.com/coding-convention/java.html#eclipse
-
 ```
 
+### 3-1. line separator 다를 시 에러 설정
+Preferences > Editor > Inspections > "General: Inconsistent line separators" 에서 클릭 후 Severity를 Error로 설정"
+
+### 4. git에서 파일을 불러올 시 개행문자 처리를 해 주어야 LF -> CRLF로 바뀌지 않습니다.
+```shell
+git clone git@github.com:chabak-map/backend.git
+cd backend
+git config core.eol lf
+gitconfig core.autocrlf input
+git checkout -t origin/feature/bookmark
+git remote update
+```

@@ -1,6 +1,7 @@
 package com.sikhye.chabak.src.tag.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
+import com.sikhye.chabak.src.post.entity.Posting;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

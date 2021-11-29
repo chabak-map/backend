@@ -47,9 +47,10 @@ public class PlaceTag {
 		this.name = name;
 	}
 
-	// 연관관계 매핑
+	// ptpt: 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "PLACE_ID")    // >> pt. 연관관계 매핑
+	@JoinColumn(name = "PLACE_ID")
 	private Place place;
 
 }
+

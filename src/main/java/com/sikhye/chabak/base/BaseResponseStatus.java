@@ -28,7 +28,8 @@ public enum BaseResponseStatus {
 	EMPTY_PARAMETER(false, 2007, "파라미터 값을 확인해주세요."),
 	INVALID_VERIFY_CODE(false, 2008, "잘못된 인증코드입니다."),
 	EMPTY_OR_INVALID_TOKEN(false, 2009, "발급된 토큰이 없거나 파싱 오류입니다."),
-	WRONG_ACCESS(false, 2010, "잘못된 접근입니다."),
+	NOT_TO_DELETE(false, 2010, "삭제할 대상이 없습니다."),
+  WRONG_ACCESS(false, 2011, "잘못된 접근입니다."),
 
 	// Common 형식 관련: 2100~
 	INVALID_EMAIL(false, 2101, "올바른 이메일 형식을 입력해주세요."),

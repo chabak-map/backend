@@ -1,8 +1,10 @@
-package com.sikhye.chabak.src.tag.entity;
+package com.sikhye.chabak.src.post.entity;
 
 import com.sikhye.chabak.base.entity.BaseEntity;
 import com.sikhye.chabak.base.entity.BaseStatus;
+import com.sikhye.chabak.src.comment.entity.PostingComment;
 import com.sikhye.chabak.src.member.entity.Member;
+import com.sikhye.chabak.src.tag.entity.PostingTag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,4 +56,12 @@ public class Posting extends BaseEntity {
 
 	@OneToMany(mappedBy = "posting")
 	private List<PostingTag> postingTags = new ArrayList<>();
+
+	@OneToMany(mappedBy = "posting")
+	private List<PostingComment> postingComments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "posting")
+	private List<PostingImage> postingImages = new ArrayList<>();
+
+
 }

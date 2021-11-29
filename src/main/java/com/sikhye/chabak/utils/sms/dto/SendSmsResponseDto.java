@@ -16,4 +16,3 @@ public class SendSmsResponseDto {
 	private String requestId;
 	private LocalDateTime requestTime;
 }
-

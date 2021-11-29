@@ -8,3 +8,4 @@
 //public interface EmailTokenRepository extends CrudRepository<EmailToken, String> {
 //	Optional<EmailToken> findByMemberId(Long memberId);
 //}
+

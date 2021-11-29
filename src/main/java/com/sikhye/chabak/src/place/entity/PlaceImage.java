@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,8 +51,6 @@ public class PlaceImage {
 //		this.place = place;
 //		team.getPlaces().add(this);	// 리스트에 자신을 추가
 //	}
-
-
 
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.sikhye.chabak.base.BaseResponseStatus.DELETE_EMPTY;
-import static com.sikhye.chabak.base.BaseResponseStatus.WRONG_ACCESS;
+import static com.sikhye.chabak.base.BaseResponseStatus.NOT_TO_DELETE;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 import static java.util.Collections.emptyList;
 
@@ -39,39 +39,16 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
 		return bookmarks.stream()
-				.map(bookmark -> {
-					PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId());
-					return BookmarkRes.builder()
-							.name(place.getName())    // TODO: 최적화 (getPlace 아닌 다른 함수 만들기)
-							.address(place.getAddress())
-							.imageUrl(place.getPlaceImageUrls().get(0)) // TODO: NPE 발생 가능 (이미지 미 존재 시)
-							.placeTagNames(place.getTagNames())    // TODO: NPE 발생 가능
-							.build();
-				})
-				.collect(Collectors.toList());
-
-	}
-
-	@Override
-	public List<BookmarkRes> testFindBookmark(Long memberId) {
-
-		// 멤버 ID를 기준으로 북마크 조회
-		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, used).orElse(emptyList());
-
-		log.info("########### size = {}", bookmarks.size());
-
-		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
-		return bookmarks.stream()
-				.map(bookmark -> {
-					PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId());
-					return BookmarkRes.builder()
-							.name(place.getName())    // TODO: 최적화 (getPlace 아닌 다른 함수 만들기)
-							.address(place.getAddress())
-							.imageUrl(place.getPlaceImageUrls().get(0)) // TODO: NPE 발생 가능 (이미지 미 존재 시)
-							.placeTagNames(place.getTagNames())    // TODO: NPE 발생 가능
-							.build();
-				})
-				.collect(Collectors.toList());
+			.map(bookmark -> {
+				PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId());
+				return BookmarkRes.builder()
+					.name(place.getName())    // TODO: 최적화 (getPlace 아닌 다른 함수 만들기)
+					.address(place.getAddress())
+					.imageUrl(place.getPlaceImageUrls().get(0)) // TODO: NPE 발생 가능 (이미지 미 존재 시)
+					.placeTagNames(place.getTagNames())    // TODO: NPE 발생 가능
+					.build();
+			})
+			.collect(Collectors.toList());
 
 	}
 
@@ -83,9 +60,9 @@ public class BookmarkServiceImpl implements BookmarkService {
 		Long memberId = jwtService.getUserIdx();
 
 		Bookmark newBookmark = Bookmark.builder()
-				.memberId(memberId)
-				.placeId(placeId)
-				.build();
+			.memberId(memberId)
+			.placeId(placeId)
+			.build();
 		return bookmarkRepository.save(newBookmark).getId();
 	}
 
@@ -95,13 +72,13 @@ public class BookmarkServiceImpl implements BookmarkService {
 		Long memberId = jwtService.getUserIdx();
 
 		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, used)
-				.orElseThrow(() -> new BaseException(DELETE_EMPTY));
+			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
 		if (memberId.equals(findBookmark.getId())) {
 			findBookmark.setStatusToDelete();
 			return findBookmark.getId();
 		} else {
-			throw new BaseException(WRONG_ACCESS);
+			throw new BaseException(NOT_TO_DELETE);
 		}
 	}
 }

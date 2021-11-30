@@ -4,9 +4,7 @@ import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.src.bookmark.dto.BookmarkRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,4 +21,13 @@ public class BookmarkController {
 		return new BaseResponse<>(bookmarkService.findBookmark());
 	}
 
+	@PostMapping("/{placeId}")
+	public BaseResponse<Long> addBookmark(@PathVariable Long placeId) {
+		return new BaseResponse<>(bookmarkService.registerBookmark(placeId));
+	}
+
+	@PatchMapping("/{bookmarkId}/status")
+	public BaseResponse<Long> statusToDeleteBookmark(@PathVariable Long bookmarkId) {
+		return new BaseResponse<>(bookmarkService.statusToDeleteBookmark(bookmarkId));
+	}
 }

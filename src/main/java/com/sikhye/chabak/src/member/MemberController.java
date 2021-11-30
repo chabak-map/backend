@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV3");
+		return new BaseResponse<>("helloV4");
 	}
 
 
@@ -69,6 +70,42 @@ public class MemberController {
 
 		return new BaseResponse<>(memberService.uploadImage(memberImage));
 
+	}
+
+	@PatchMapping
+	public BaseResponse<Long> editMemberInform(@Valid EditMemberReq editMemberReq) {
+		return new BaseResponse<>(memberService.editMemberInform(editMemberReq));
+	}
+
+	@PatchMapping("/password")
+	public BaseResponse<Long> editMemberPassword(@Valid @RequestBody PasswordReq passwordReq) {
+		return new BaseResponse<>(memberService.editPassword(passwordReq));
+	}
+
+	@PostMapping("/help/email")
+	public BaseResponse<String> findMemberEmail(@RequestBody Map<String, String> param) {
+		return new BaseResponse<>(memberService.findMemberEmail(param.get("phoneNumber")));
+	}
+
+	// ptpt: RequestBody 를 새로운 객체 생성 없이도 사용이 가능
+	@PostMapping("/help/password")
+	public BaseResponse<Long> findMember(@RequestBody Map<String, String> param) {
+		return new BaseResponse<>(memberService.findMember(param.get("phoneNumber"), param.get("email")));
+	}
+
+	@PatchMapping("/status")
+	public BaseResponse<Long> statusToDeleteMember() {
+		return new BaseResponse<>(memberService.statusToDeleteMember());
+	}
+
+	@PostMapping("/check/nickname")
+	public BaseResponse<Boolean> checkDuplicatedNickname(@RequestBody Map<String, String> param) {
+		return new BaseResponse<>(memberService.isDuplicatedNickname(param.get("nickname")));
+	}
+
+	@PostMapping("/check/email")
+	public BaseResponse<Boolean> checkDuplicatedEmail(@RequestBody Map<String, String> param) {
+		return new BaseResponse<>(memberService.isDuplicatedEmail(param.get("email")));
 	}
 
 

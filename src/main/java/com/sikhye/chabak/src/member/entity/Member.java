@@ -2,8 +2,8 @@ package com.sikhye.chabak.src.member.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.comment.entity.PlaceReview;
-import com.sikhye.chabak.src.post.entity.Posting;
 import com.sikhye.chabak.src.comment.entity.PostingComment;
+import com.sikhye.chabak.src.post.entity.Posting;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,6 +55,15 @@ public class Member {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public void editMemberInfo(String nickname, String imageUrl) {
+		this.nickname = nickname;
+		this.imageUrl = imageUrl;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@OneToMany(mappedBy = "member")

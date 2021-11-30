@@ -14,4 +14,12 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
 	Optional<Member> findMemberByIdAndStatus(Long memberId, BaseStatus status);
 
+	Optional<Member> findMemberByPhoneNumberAndStatus(String phoneNumber, BaseStatus status);
+
+	Optional<Member> findMemberByPhoneNumberAndEmailAndStatus(String phoneNumber, String email, BaseStatus status);
+
+	Boolean existsByNicknameAndStatus(String nickname, BaseStatus status);
+
+	Boolean existsByEmailAndStatus(String email, BaseStatus status);
+
 }

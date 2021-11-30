@@ -44,7 +44,7 @@ public class PlaceServiceImpl implements PlaceService {
 
 		// 장소/이미지/리뷰
 		Place place = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
-		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId, used);
+		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId, used);	// TODO: orElse 변경
 		Optional<List<PlaceReview>> placeReviewResults = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(placeId, used);
 		List<String> placeTagNames = tagService.findPlaceTags(place.getId());
 

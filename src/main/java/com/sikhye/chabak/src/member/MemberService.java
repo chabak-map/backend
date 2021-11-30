@@ -1,10 +1,7 @@
 package com.sikhye.chabak.src.member;
 
 import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.src.member.dto.JoinReq;
-import com.sikhye.chabak.src.member.dto.LoginReq;
-import com.sikhye.chabak.src.member.dto.LoginRes;
-import com.sikhye.chabak.src.member.dto.MemberDto;
+import com.sikhye.chabak.src.member.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
@@ -26,6 +23,27 @@ public interface MemberService {
 
 	// 06. 회원 프로필 이미지 업로드
 	String uploadImage(MultipartFile memberImage);
+
+	// 07. 회원 정보 수정
+	Long editMemberInform(EditMemberReq editMemberReq);
+
+	// 08. 패스워드 수정
+	Long editPassword(PasswordReq passwordReq);
+
+	// 09. 회원 이메일 찾기
+	String findMemberEmail(String phoneNumber);
+
+	// 09-1. 회원 비밀번호 찾기 (이메일, 휴대폰번호)
+	Long findMember(String phoneNumber, String email);
+
+	// 10. 회원 탈퇴
+	Long statusToDeleteMember();
+
+	// 11. 회원 닉네임 중복체크
+	Boolean isDuplicatedNickname(String nickname);
+
+	// 12. 회원 이메일 중복체크
+	Boolean isDuplicatedEmail(String email);
 
 
 }

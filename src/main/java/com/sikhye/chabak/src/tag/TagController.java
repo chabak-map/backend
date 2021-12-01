@@ -5,20 +5,21 @@ import com.sikhye.chabak.src.tag.dto.PlaceTagReq;
 import com.sikhye.chabak.src.tag.dto.PlaceTagRes;
 import com.sikhye.chabak.src.tag.dto.PostingTagReq;
 import com.sikhye.chabak.src.tag.dto.PostingTagRes;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping
 public class TagController {
 
 	private final TagService tagService;
 
+	public TagController(TagService tagService) {
+		this.tagService = tagService;
+	}
 
 	// ======================================
 	// 					장소

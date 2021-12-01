@@ -12,7 +12,7 @@ import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
 import com.sikhye.chabak.src.place.repository.PlaceRepository;
 import com.sikhye.chabak.src.tag.TagService;
 import com.sikhye.chabak.utils.JwtService;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,6 @@ import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_PLACE;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class PlaceServiceImpl implements PlaceService {
@@ -39,12 +38,21 @@ public class PlaceServiceImpl implements PlaceService {
 	private final TagService tagService;
 	private final JwtService jwtService;
 
+	@Builder
+	public PlaceServiceImpl(PlaceRepository placeRepository, PlaceImageRepository placeImageRepository, PlaceReviewRepository placeReviewRepository, TagService tagService, JwtService jwtService) {
+		this.placeRepository = placeRepository;
+		this.placeImageRepository = placeImageRepository;
+		this.placeReviewRepository = placeReviewRepository;
+		this.tagService = tagService;
+		this.jwtService = jwtService;
+	}
+
 	@Override
 	public PlaceDetailRes getPlace(Long placeId) {
 
 		// 장소/이미지/리뷰
 		Place place = placeRepository.findPlaceByIdAndStatus(placeId, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
-		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId, used);	// TODO: orElse 변경
+		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId, used);    // TODO: orElse 변경
 		Optional<List<PlaceReview>> placeReviewResults = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(placeId, used);
 		List<String> placeTagNames = tagService.findPlaceTags(place.getId());
 

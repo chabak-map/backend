@@ -8,7 +8,7 @@ import com.sikhye.chabak.src.comment.entity.PostingComment;
 import com.sikhye.chabak.src.comment.repository.PlaceReviewRepository;
 import com.sikhye.chabak.src.comment.repository.PostingCommentRepository;
 import com.sikhye.chabak.utils.JwtService;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,6 @@ import static com.sikhye.chabak.base.BaseResponseStatus.INVALID_USER_JWT;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class CommentServiceImpl implements CommentService {
@@ -31,6 +30,12 @@ public class CommentServiceImpl implements CommentService {
 	private final PostingCommentRepository postingCommentRepository;
 	private final JwtService jwtService;
 
+	@Builder
+	public CommentServiceImpl(PlaceReviewRepository placeReviewRepository, PostingCommentRepository postingCommentRepository, JwtService jwtService) {
+		this.placeReviewRepository = placeReviewRepository;
+		this.postingCommentRepository = postingCommentRepository;
+		this.jwtService = jwtService;
+	}
 
 	@Override
 	public List<CommentRes> findPlaceComments(Long placeId) {

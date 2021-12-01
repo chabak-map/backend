@@ -1,16 +1,13 @@
 package com.sikhye.chabak.src.post.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "PostingImage")
@@ -33,6 +30,9 @@ public class PostingImage {
 	public PostingImage(Long postingId, String imageUrl) {
 		this.postingId = postingId;
 		this.imageUrl = imageUrl;
+	}
+
+	public PostingImage() {
 	}
 
 	public void setStatusToDelete() {

@@ -3,7 +3,6 @@ package com.sikhye.chabak.src.comment;
 import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.src.comment.dto.CommentReq;
 import com.sikhye.chabak.src.comment.dto.CommentRes;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +10,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping
 public class CommentController {
 
 	private final CommentService commentService;
+
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 
 	@GetMapping("/places/{placeId}/comments")
 	public BaseResponse<List<CommentRes>> findPlaceComments(@PathVariable Long placeId) {

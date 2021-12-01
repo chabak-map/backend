@@ -11,7 +11,7 @@ import com.sikhye.chabak.src.post.repository.PostingImageRepository;
 import com.sikhye.chabak.src.post.repository.PostingRepository;
 import com.sikhye.chabak.utils.JwtService;
 import com.sikhye.chabak.utils.aws.BasicUploadService;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,6 @@ import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_POST;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional
 public class PostingServiceImpl implements PostingService {
@@ -37,6 +36,14 @@ public class PostingServiceImpl implements PostingService {
 	private final BasicUploadService s3UploadService;
 	private final JwtService jwtService;
 
+	@Builder
+	public PostingServiceImpl(PostingRepository postingRepository, PostingImageRepository postingImageRepository, PostingCommentRepository postingCommentRepository, BasicUploadService s3UploadService, JwtService jwtService) {
+		this.postingRepository = postingRepository;
+		this.postingImageRepository = postingImageRepository;
+		this.postingCommentRepository = postingCommentRepository;
+		this.s3UploadService = s3UploadService;
+		this.jwtService = jwtService;
+	}
 
 	@Override
 	public List<PostingRes> findPostsWithPaging() {

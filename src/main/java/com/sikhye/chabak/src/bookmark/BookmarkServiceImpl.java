@@ -6,7 +6,7 @@ import com.sikhye.chabak.src.bookmark.entity.Bookmark;
 import com.sikhye.chabak.src.place.PlaceService;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.utils.JwtService;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,6 @@ import static com.sikhye.chabak.base.entity.BaseStatus.used;
 import static java.util.Collections.emptyList;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class BookmarkServiceImpl implements BookmarkService {
@@ -28,6 +27,13 @@ public class BookmarkServiceImpl implements BookmarkService {
 	private final PlaceService placeService;
 	private final BookmarkRepository bookmarkRepository;
 	private final JwtService jwtService;
+
+	@Builder
+	public BookmarkServiceImpl(PlaceService placeService, BookmarkRepository bookmarkRepository, JwtService jwtService) {
+		this.placeService = placeService;
+		this.bookmarkRepository = bookmarkRepository;
+		this.jwtService = jwtService;
+	}
 
 	@Override
 	public List<BookmarkRes> findBookmark() {

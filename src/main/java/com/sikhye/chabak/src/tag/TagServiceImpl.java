@@ -9,7 +9,7 @@ import com.sikhye.chabak.src.tag.entity.PlaceTag;
 import com.sikhye.chabak.src.tag.entity.PostingTag;
 import com.sikhye.chabak.src.tag.repository.PlaceTagRepository;
 import com.sikhye.chabak.src.tag.repository.PostingTagRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,6 @@ import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_POST;
 import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
@@ -31,6 +30,11 @@ public class TagServiceImpl implements TagService {
 	private final PlaceTagRepository placeTagRepository;
 	private final PostingTagRepository postingTagRepository;
 
+	@Builder
+	public TagServiceImpl(PlaceTagRepository placeTagRepository, PostingTagRepository postingTagRepository) {
+		this.placeTagRepository = placeTagRepository;
+		this.postingTagRepository = postingTagRepository;
+	}
 
 	@Override
 	public List<String> findPlaceTags(Long placeId) {

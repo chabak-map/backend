@@ -4,10 +4,8 @@ import com.sikhye.chabak.base.entity.BaseEntity;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.member.entity.Member;
 import com.sikhye.chabak.src.place.entity.Place;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -15,7 +13,6 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "PlaceReview")
@@ -41,6 +38,9 @@ public class PlaceReview extends BaseEntity {
 		this.placeId = placeId;
 		this.memberId = memberId;
 		this.content = content;
+	}
+
+	public PlaceReview() {
 	}
 
 	public void setStatusToDelete() {

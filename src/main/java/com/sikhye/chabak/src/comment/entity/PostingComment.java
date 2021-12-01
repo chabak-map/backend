@@ -4,16 +4,13 @@ import com.sikhye.chabak.base.entity.BaseEntity;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.member.entity.Member;
 import com.sikhye.chabak.src.post.entity.Posting;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "PostingComment")
@@ -39,6 +36,9 @@ public class PostingComment extends BaseEntity {
 		this.postingId = postingId;
 		this.memberId = memberId;
 		this.content = content;
+	}
+
+	public PostingComment() {
 	}
 
 	public void setStatusToDelete() {

@@ -1,15 +1,12 @@
 package com.sikhye.chabak.src.member.dto;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Pattern;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDto {
 
 	private Long id;
@@ -19,6 +16,9 @@ public class MemberDto {
 	private String nickname;
 
 	private String imageUrl;
+
+	public MemberDto() {
+	}
 
 	@Builder
 	public MemberDto(Long id, String nickname, String imageUrl) {

@@ -4,10 +4,8 @@ import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.comment.entity.PostingComment;
 import com.sikhye.chabak.src.post.entity.Posting;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "Member")
@@ -47,6 +44,9 @@ public class Member {
 		this.password = password;
 		this.phoneNumber = phoneNumber;
 		this.imageUrl = imageUrl;
+	}
+
+	public Member() {
 	}
 
 	public void setStatusToDelete() {

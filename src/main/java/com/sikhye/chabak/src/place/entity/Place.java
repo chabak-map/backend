@@ -3,10 +3,8 @@ package com.sikhye.chabak.src.place.entity;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.tag.entity.PlaceTag;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -14,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "Place")
@@ -44,6 +41,9 @@ public class Place {
 		this.content = content;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	public Place() {
 	}
 
 	public void setStatusToDelete() {

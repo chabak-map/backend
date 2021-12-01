@@ -2,10 +2,8 @@ package com.sikhye.chabak.src.tag.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.post.entity.Posting;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -13,7 +11,6 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "PostingTag")
@@ -30,6 +27,10 @@ public class PostingTag {
 
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
+
+	public PostingTag() {
+
+	}
 
 	public void setStatusToDelete() {
 		this.status = BaseStatus.deleted;

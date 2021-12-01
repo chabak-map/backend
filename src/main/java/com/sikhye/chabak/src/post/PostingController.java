@@ -4,7 +4,6 @@ import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.src.post.dto.PostingDetailRes;
 import com.sikhye.chabak.src.post.dto.PostingReq;
 import com.sikhye.chabak.src.post.dto.PostingRes;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +11,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/posts")
 public class PostingController {
 
 	private final PostingService postingService;
+
+	public PostingController(PostingService postingService) {
+		this.postingService = postingService;
+	}
 
 	@GetMapping
 	public BaseResponse<List<PostingRes>> findAllPosts() {

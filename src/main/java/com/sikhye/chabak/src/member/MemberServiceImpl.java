@@ -8,7 +8,7 @@ import com.sikhye.chabak.utils.JwtService;
 import com.sikhye.chabak.utils.aws.BasicUploadService;
 import com.sikhye.chabak.utils.sms.SmsService;
 import com.sikhye.chabak.utils.sms.entity.SmsCacheKey;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -25,7 +25,6 @@ import static com.sikhye.chabak.base.entity.BaseStatus.used;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
@@ -35,6 +34,16 @@ public class MemberServiceImpl implements MemberService {
 	private final BasicUploadService s3UploadService;
 	private final AES256 aes256Service;
 	private final JwtService jwtService;
+
+	@Builder
+	public MemberServiceImpl(MemberRepository memberRepository, RedisTemplate<String, String> redisTemplate, SmsService smsService, BasicUploadService s3UploadService, AES256 aes256Service, JwtService jwtService) {
+		this.memberRepository = memberRepository;
+		this.redisTemplate = redisTemplate;
+		this.smsService = smsService;
+		this.s3UploadService = s3UploadService;
+		this.aes256Service = aes256Service;
+		this.jwtService = jwtService;
+	}
 
 	@Override
 	public LoginRes login(LoginReq loginReq) {

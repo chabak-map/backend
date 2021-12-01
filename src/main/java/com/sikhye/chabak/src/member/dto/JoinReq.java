@@ -1,10 +1,8 @@
 package com.sikhye.chabak.src.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -14,7 +12,6 @@ import javax.validation.constraints.Pattern;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JoinReq {
 
 	@Length(min = 3, max = 20)
@@ -30,6 +27,9 @@ public class JoinReq {
 	private String password;
 
 	private String phoneNumber;
+
+	public JoinReq() {
+	}
 
 	@Builder
 	public JoinReq(String nickname, String email, String password, String phoneNumber) {

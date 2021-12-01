@@ -3,7 +3,6 @@ package com.sikhye.chabak.src.member;
 import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.base.exception.BaseException;
 import com.sikhye.chabak.src.member.dto.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,12 +11,15 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/members")
 public class MemberController {
 
 	private final MemberService memberService;
+
+	public MemberController(MemberService memberService) {
+		this.memberService = memberService;
+	}
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {

@@ -1,17 +1,14 @@
 package com.sikhye.chabak.src.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostingReq {
 
@@ -28,6 +25,9 @@ public class PostingReq {
 		this.title = title;
 		this.content = content;
 		this.images = images;
+	}
+
+	public PostingReq() {
 	}
 
 	public Boolean isEmptyOrNullImages() {

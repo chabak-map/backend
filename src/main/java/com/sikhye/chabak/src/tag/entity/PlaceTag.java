@@ -3,10 +3,8 @@ package com.sikhye.chabak.src.tag.entity;
 
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.place.entity.Place;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -14,7 +12,6 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
 @Table(name = "PlaceTag")
@@ -37,6 +34,10 @@ public class PlaceTag {
 	public PlaceTag(String name, Long placeId) {
 		this.name = name;
 		this.placeId = placeId;
+	}
+
+	public PlaceTag() {
+
 	}
 
 	public void setStatusToDelete() {

@@ -3,19 +3,21 @@ package com.sikhye.chabak.src.place;
 import com.sikhye.chabak.base.BaseResponse;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.src.place.dto.PlaceSearchRes;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/places")
 public class PlaceController {
 
 	private final PlaceService placeService;
+
+	public PlaceController(PlaceService placeService) {
+		this.placeService = placeService;
+	}
 
 	// 장소 상세정보
 	@GetMapping("/{placeId}")

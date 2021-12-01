@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.oauth.social;
+package com.sikhye.chabak.src.oauth.social;
 
 public enum SocialLoginType {
 	GOOGLE,

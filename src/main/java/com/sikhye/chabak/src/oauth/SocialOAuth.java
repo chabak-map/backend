@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.oauth;//package com.sikhye.univcity.utils.oauth;
+package com.sikhye.chabak.src.oauth;//package com.sikhye.univcity.utils.oauth;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.sikhye.univcity.utils.oauth.social.SocialLoginType;

@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.sms.dto;
+package com.sikhye.chabak.src.member.sms.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,10 @@
-package com.sikhye.chabak.utils.sms;
+package com.sikhye.chabak.src.member.sms;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sikhye.chabak.utils.sms.dto.MessagesRequestDto;
-import com.sikhye.chabak.utils.sms.dto.SendSmsResponseDto;
-import com.sikhye.chabak.utils.sms.dto.SmsRequestDto;
+import com.sikhye.chabak.src.member.sms.dto.MessagesRequestDto;
+import com.sikhye.chabak.src.member.sms.dto.SendSmsResponseDto;
+import com.sikhye.chabak.src.member.sms.dto.SmsRequestDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;

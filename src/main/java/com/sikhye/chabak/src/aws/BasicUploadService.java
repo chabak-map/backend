@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.aws;
+package com.sikhye.chabak.src.aws;
 
 import org.springframework.web.multipart.MultipartFile;
 

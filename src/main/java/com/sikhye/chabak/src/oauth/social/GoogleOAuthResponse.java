@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.oauth.social;
+package com.sikhye.chabak.src.oauth.social;
 
 import lombok.Getter;
 import lombok.Setter;

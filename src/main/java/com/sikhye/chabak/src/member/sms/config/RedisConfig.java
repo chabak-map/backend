@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.sms.config;
+package com.sikhye.chabak.src.member.sms.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

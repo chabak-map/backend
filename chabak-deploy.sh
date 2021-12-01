@@ -23,4 +23,5 @@ fi
 
 echo "> $JAR_PATH 배포"
 #nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
-nohup java -jar $JAR_PATH &
+#code deploy에 출력이 되기 때문에 nohup.out 파일을 사용해야 한다.
+nohup java -jar $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &

@@ -1,6 +1,7 @@
 package com.sikhye.chabak.src.post;
 
 import com.sikhye.chabak.base.exception.BaseException;
+import com.sikhye.chabak.src.aws.BasicUploadService;
 import com.sikhye.chabak.src.comment.repository.PostingCommentRepository;
 import com.sikhye.chabak.src.post.dto.PostingDetailRes;
 import com.sikhye.chabak.src.post.dto.PostingReq;
@@ -10,7 +11,6 @@ import com.sikhye.chabak.src.post.entity.PostingImage;
 import com.sikhye.chabak.src.post.repository.PostingImageRepository;
 import com.sikhye.chabak.src.post.repository.PostingRepository;
 import com.sikhye.chabak.utils.JwtService;
-import com.sikhye.chabak.utils.aws.BasicUploadService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

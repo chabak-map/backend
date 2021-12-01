@@ -1,6 +1,6 @@
-package com.sikhye.chabak.utils.sms.config;
+package com.sikhye.chabak.src.member.sms.config;
 
-import com.sikhye.chabak.utils.sms.entity.SmsCacheKey;
+import com.sikhye.chabak.src.member.sms.entity.SmsCacheKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;

@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.aws;
+package com.sikhye.chabak.src.aws;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

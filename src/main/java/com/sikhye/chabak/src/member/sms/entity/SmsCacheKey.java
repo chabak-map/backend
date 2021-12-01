@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.sms.entity;
+package com.sikhye.chabak.src.member.sms.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

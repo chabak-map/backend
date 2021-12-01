@@ -1,4 +1,4 @@
-package com.sikhye.chabak.utils.aws;
+package com.sikhye.chabak.src.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

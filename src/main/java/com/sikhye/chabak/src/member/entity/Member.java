@@ -1,5 +1,7 @@
 package com.sikhye.chabak.src.member.entity;
 
+import com.sikhye.chabak.base.entity.BaseEntity;
+import com.sikhye.chabak.base.entity.BaseRole;
 import com.sikhye.chabak.base.entity.BaseStatus;
 import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.comment.entity.PostingComment;
@@ -16,7 +18,7 @@ import java.util.List;
 @DynamicInsert
 @Entity
 @Table(name = "Member")
-public class Member {
+public class Member extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +38,10 @@ public class Member {
 
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
+
+	@Enumerated(EnumType.STRING)
+	private BaseRole role;
+
 
 	@Builder
 	public Member(String nickname, String email, String password, String phoneNumber, String imageUrl) {

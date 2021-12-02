@@ -7,7 +7,7 @@ import com.sikhye.chabak.src.comment.entity.PlaceReview;
 import com.sikhye.chabak.src.comment.entity.PostingComment;
 import com.sikhye.chabak.src.comment.repository.PlaceReviewRepository;
 import com.sikhye.chabak.src.comment.repository.PostingCommentRepository;
-import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.JwtTokenService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,13 +28,13 @@ public class CommentServiceImpl implements CommentService {
 
 	private final PlaceReviewRepository placeReviewRepository;
 	private final PostingCommentRepository postingCommentRepository;
-	private final JwtService jwtService;
+	private final JwtTokenService jwtTokenService;
 
 	@Builder
-	public CommentServiceImpl(PlaceReviewRepository placeReviewRepository, PostingCommentRepository postingCommentRepository, JwtService jwtService) {
+	public CommentServiceImpl(PlaceReviewRepository placeReviewRepository, PostingCommentRepository postingCommentRepository, JwtTokenService jwtTokenService) {
 		this.placeReviewRepository = placeReviewRepository;
 		this.postingCommentRepository = postingCommentRepository;
-		this.jwtService = jwtService;
+		this.jwtTokenService = jwtTokenService;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long addPlaceComment(Long placeId, CommentReq commentReq) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PlaceReview toSavePlaceReview = PlaceReview.builder()
 			.placeId(placeId)
@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long editPlaceComment(Long placeId, Long commentId, CommentReq commentReq) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
 
@@ -83,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long statusToDeletePlaceComment(Long placeId, Long commentId) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
 
@@ -114,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long addPostComment(Long postId, CommentReq commentReq) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PostingComment toSavePostingComment = PostingComment.builder()
 			.postingId(postId)
@@ -129,7 +129,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long editPostComment(Long postId, Long commentId, CommentReq commentReq) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
 
@@ -145,7 +145,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional
 	public Long statusToDeletePostComment(Long postId, Long commentId) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
 

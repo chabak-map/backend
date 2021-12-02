@@ -11,7 +11,7 @@ import com.sikhye.chabak.src.place.entity.PlaceImage;
 import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
 import com.sikhye.chabak.src.place.repository.PlaceRepository;
 import com.sikhye.chabak.src.tag.TagService;
-import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.JwtTokenService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,15 +36,15 @@ public class PlaceServiceImpl implements PlaceService {
 	private final PlaceImageRepository placeImageRepository;
 	private final PlaceReviewRepository placeReviewRepository;
 	private final TagService tagService;
-	private final JwtService jwtService;
+	private final JwtTokenService jwtTokenService;
 
 	@Builder
-	public PlaceServiceImpl(PlaceRepository placeRepository, PlaceImageRepository placeImageRepository, PlaceReviewRepository placeReviewRepository, TagService tagService, JwtService jwtService) {
+	public PlaceServiceImpl(PlaceRepository placeRepository, PlaceImageRepository placeImageRepository, PlaceReviewRepository placeReviewRepository, TagService tagService, JwtTokenService jwtTokenService) {
 		this.placeRepository = placeRepository;
 		this.placeImageRepository = placeImageRepository;
 		this.placeReviewRepository = placeReviewRepository;
 		this.tagService = tagService;
-		this.jwtService = jwtService;
+		this.jwtTokenService = jwtTokenService;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.sikhye.chabak.utils;
 
+import com.sikhye.chabak.base.entity.BaseRole;
 import com.sikhye.chabak.base.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -17,13 +18,10 @@ import static com.sikhye.chabak.base.BaseResponseStatus.EMPTY_JWT;
 import static com.sikhye.chabak.base.BaseResponseStatus.INVALID_JWT;
 
 @Service
-public class JwtService {
+public class JwtTokenService {
 
 	@Value("${secret.JWT_SECRET_KEY}")
 	private String JWT_SECRET_KEY;
-
-	@Value("${secret.USER_INFO_PASSWORD_KEY}")
-	private String USER_INFO_PASSWORD_KEY;
 
 
 	/*
@@ -31,13 +29,14 @@ public class JwtService {
 	@param userIdx
 	@return String
 	 */
-	public String createJwt(Long userIdx) {
+	public String createJwt(Long memberId, BaseRole role) {
 		Date now = new Date();
 		return Jwts.builder()
 			.setHeaderParam("type", "jwt")
-			.claim("userIdx", userIdx)
+			.claim("memberId", memberId)
+			.claim("role", role.toString())
 			.setIssuedAt(now)
-			.setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 365)))
+			.setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 365)))    // TODO: 토큰유효 3일
 			.signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
 			.compact();
 	}
@@ -52,11 +51,11 @@ public class JwtService {
 	}
 
 	/*
-	JWT에서 userIdx 추출
-	@return int
+	JWT에서 유저권한 추출
+	@return String
 	@throws BaseException
 	 */
-	public Long getUserIdx() throws BaseException {
+	public String getMemberRole() throws BaseException {
 		//1. JWT 추출
 		String accessToken = getJwt();
 		if (accessToken == null || accessToken.length() == 0) {
@@ -74,9 +73,35 @@ public class JwtService {
 		}
 
 		// 3. userIdx 추출
-//        return claims.getBody().get("userIdx",Integer.class);
 		// ptpt: Object To Long
-		return Long.valueOf(String.valueOf(claims.getBody().get("userIdx")));
+		return String.valueOf(claims.getBody().get("role"));
+	}
+
+	/*
+	JWT에서 userIdx 추출
+	@return int
+	@throws BaseException
+	 */
+	public Long getMemberId() throws BaseException {
+		//1. JWT 추출
+		String accessToken = getJwt();
+		if (accessToken == null || accessToken.length() == 0) {
+			throw new BaseException(EMPTY_JWT);
+		}
+
+		// 2. JWT parsing
+		Jws<Claims> claims;
+		try {
+			claims = Jwts.parser()
+				.setSigningKey(JWT_SECRET_KEY)
+				.parseClaimsJws(accessToken);
+		} catch (Exception ignored) {
+			throw new BaseException(INVALID_JWT);
+		}
+
+		// 3. userIdx 추출
+		// ptpt: Object To Long
+		return Long.valueOf(String.valueOf(claims.getBody().get("memberId")));
 	}
 
 	public Long getUserEmail(String token) throws BaseException {
@@ -96,8 +121,7 @@ public class JwtService {
 		}
 
 		// 3. userIdx 추출
-//		return claims.getBody().get("userIdx",Integer.class);
-		return Long.valueOf(String.valueOf(claims.getBody().get("userIdx")));
+		return Long.valueOf(String.valueOf(claims.getBody().get("memberId")));
 	}
 
 }

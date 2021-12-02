@@ -5,7 +5,7 @@ import com.sikhye.chabak.src.bookmark.dto.BookmarkRes;
 import com.sikhye.chabak.src.bookmark.entity.Bookmark;
 import com.sikhye.chabak.src.place.PlaceService;
 import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.JwtTokenService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,19 +26,19 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 	private final PlaceService placeService;
 	private final BookmarkRepository bookmarkRepository;
-	private final JwtService jwtService;
+	private final JwtTokenService jwtTokenService;
 
 	@Builder
-	public BookmarkServiceImpl(PlaceService placeService, BookmarkRepository bookmarkRepository, JwtService jwtService) {
+	public BookmarkServiceImpl(PlaceService placeService, BookmarkRepository bookmarkRepository, JwtTokenService jwtTokenService) {
 		this.placeService = placeService;
 		this.bookmarkRepository = bookmarkRepository;
-		this.jwtService = jwtService;
+		this.jwtTokenService = jwtTokenService;
 	}
 
 	@Override
 	public List<BookmarkRes> findBookmark() {
 		// 멤버 ID 추출
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		// 멤버 ID를 기준으로 북마크 조회
 		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, used).orElse(emptyList());
@@ -63,7 +63,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	@Transactional
 	public Long registerBookmark(Long placeId) {
 		// 멤버 ID 추출
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		Bookmark newBookmark = Bookmark.builder()
 			.memberId(memberId)
@@ -75,7 +75,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	@Override
 	@Transactional
 	public Long statusToDeleteBookmark(Long bookmarkId) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, used)
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));

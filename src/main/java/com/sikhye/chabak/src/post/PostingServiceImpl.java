@@ -10,7 +10,7 @@ import com.sikhye.chabak.src.post.entity.Posting;
 import com.sikhye.chabak.src.post.entity.PostingImage;
 import com.sikhye.chabak.src.post.repository.PostingImageRepository;
 import com.sikhye.chabak.src.post.repository.PostingRepository;
-import com.sikhye.chabak.utils.JwtService;
+import com.sikhye.chabak.utils.JwtTokenService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,15 +34,15 @@ public class PostingServiceImpl implements PostingService {
 	private final PostingImageRepository postingImageRepository;
 	private final PostingCommentRepository postingCommentRepository;
 	private final BasicUploadService s3UploadService;
-	private final JwtService jwtService;
+	private final JwtTokenService jwtTokenService;
 
 	@Builder
-	public PostingServiceImpl(PostingRepository postingRepository, PostingImageRepository postingImageRepository, PostingCommentRepository postingCommentRepository, BasicUploadService s3UploadService, JwtService jwtService) {
+	public PostingServiceImpl(PostingRepository postingRepository, PostingImageRepository postingImageRepository, PostingCommentRepository postingCommentRepository, BasicUploadService s3UploadService, JwtTokenService jwtTokenService) {
 		this.postingRepository = postingRepository;
 		this.postingImageRepository = postingImageRepository;
 		this.postingCommentRepository = postingCommentRepository;
 		this.s3UploadService = s3UploadService;
-		this.jwtService = jwtService;
+		this.jwtTokenService = jwtTokenService;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class PostingServiceImpl implements PostingService {
 
 	@Override
 	public List<PostingRes> findMemberPosts() {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 		List<Posting> memberPostings = postingRepository.findPostingsByMemberIdAndStatus(memberId, used).orElse(Collections.emptyList());
 
 		return getPostingResList(memberPostings);
@@ -70,7 +70,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public Long createPost(PostingReq postingReq) {
-		Long memberId = jwtService.getUserIdx();
+		Long memberId = jwtTokenService.getMemberId();
 
 		// 글 처리
 		Posting toSavePosting = Posting.builder()

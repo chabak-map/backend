@@ -43,3 +43,5 @@ application-credentials.yml
 Secret.java
 application-prod.yml
 application*.tar
+application-*.gpg
+logs/

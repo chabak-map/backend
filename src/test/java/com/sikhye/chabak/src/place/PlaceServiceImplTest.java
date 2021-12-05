@@ -1,27 +1,35 @@
 package com.sikhye.chabak.src.place;
 
-import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.src.comment.dto.CommentRes;
-import com.sikhye.chabak.src.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.src.place.dto.PlaceSearchRes;
-import com.sikhye.chabak.src.place.entity.Place;
-import com.sikhye.chabak.src.place.repository.PlaceImageRepository;
-import com.sikhye.chabak.src.place.repository.PlaceRepository;
-import org.junit.jupiter.api.*;
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static com.sikhye.chabak.global.time.BaseStatus.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Optional;
-
-import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_PLACE;
-import static com.sikhye.chabak.base.entity.BaseStatus.deleted;
-import static com.sikhye.chabak.base.entity.BaseStatus.used;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.service.comment.dto.CommentRes;
+import com.sikhye.chabak.service.place.PlaceService;
+import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
+import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
+import com.sikhye.chabak.service.place.entity.Place;
+import com.sikhye.chabak.service.place.repository.PlaceImageRepository;
+import com.sikhye.chabak.service.place.repository.PlaceRepository;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -42,13 +50,11 @@ class PlaceServiceImplTest {
 	@PersistenceContext
 	private EntityManager em;
 
-
 	@AfterAll
 	public void deleteMemberTable() {
 		Optional<Place> findPlace = placeRepository.findById(1L);
 		findPlace.ifPresent(Place::setStatusToUsed);
 	}
-
 
 	@Test
 	@DisplayName("001. 장소 불러오기")
@@ -82,8 +88,8 @@ class PlaceServiceImplTest {
 		em.clear();
 
 		//when
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, used).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
-
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, used)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
 		assertEquals(updatePlace, 1L);
@@ -127,7 +133,6 @@ class PlaceServiceImplTest {
 
 		//then
 	}
-
 
 }
 

@@ -1,25 +1,32 @@
 package com.sikhye.chabak.src.comment;
 
-import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.src.comment.dto.CommentReq;
-import com.sikhye.chabak.src.comment.dto.CommentRes;
-import com.sikhye.chabak.src.comment.entity.PlaceReview;
-import com.sikhye.chabak.src.comment.entity.PostingComment;
-import com.sikhye.chabak.src.comment.repository.PlaceReviewRepository;
-import com.sikhye.chabak.src.comment.repository.PostingCommentRepository;
-import org.junit.jupiter.api.*;
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static com.sikhye.chabak.global.time.BaseStatus.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.sikhye.chabak.base.BaseResponseStatus.DELETE_EMPTY;
-import static com.sikhye.chabak.base.entity.BaseStatus.deleted;
-import static com.sikhye.chabak.base.entity.BaseStatus.used;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.service.comment.CommentService;
+import com.sikhye.chabak.service.comment.dto.CommentReq;
+import com.sikhye.chabak.service.comment.dto.CommentRes;
+import com.sikhye.chabak.service.comment.entity.PlaceReview;
+import com.sikhye.chabak.service.comment.entity.PostingComment;
+import com.sikhye.chabak.service.comment.repository.PlaceReviewRepository;
+import com.sikhye.chabak.service.comment.repository.PostingCommentRepository;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -40,7 +47,6 @@ class CommentServiceImplTest {
 	@Autowired
 	private EntityManager em;
 
-
 	@Test
 	@DisplayName("001. 장소 댓글 조회")
 	@Order(1)
@@ -49,7 +55,6 @@ class CommentServiceImplTest {
 		List<CommentRes> placeComments = commentService.findPlaceComments(1L);
 
 		//when
-
 
 		//then
 		assertEquals(placeComments.size(), 2);
@@ -63,10 +68,8 @@ class CommentServiceImplTest {
 		//given
 		Long commentId = commentService.addPlaceComment(1L, new CommentReq("장소 댓글 테스트"));
 
-
 		//when
 		PlaceReview placeReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
-
 
 		//then
 		assertEquals(placeReview.getContent(), "장소 댓글 테스트");
@@ -130,10 +133,8 @@ class CommentServiceImplTest {
 		//given
 		Long commentId = commentService.addPostComment(1L, new CommentReq("포스트 댓글 테스트"));
 
-
 		//when
 		PostingComment postingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
-
 
 		//then
 		assertEquals(postingComment.getContent(), "장소 댓글 테스트");
@@ -153,7 +154,8 @@ class CommentServiceImplTest {
 		em.clear();
 
 		//when
-		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(editCommentId, used);
+		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(editCommentId,
+			used);
 
 		//then
 		assertEquals(findPostingComment.getContent(), "수정된 포스트 댓글 테스트");
@@ -176,6 +178,5 @@ class CommentServiceImplTest {
 		//then
 		assertEquals(deletedComment.getStatus(), deleted);
 	}
-
 
 }

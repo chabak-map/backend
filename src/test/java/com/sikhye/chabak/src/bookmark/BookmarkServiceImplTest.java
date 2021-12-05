@@ -1,5 +1,6 @@
 package com.sikhye.chabak.src.bookmark;
 
+import com.sikhye.chabak.service.bookmark.BookmarkService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;

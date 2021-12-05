@@ -22,6 +22,8 @@
   1. Preferences > Plugins > Marketplace > 'EditorConfig' 플러그인 설치 
   2. root 위치에 .editorconfig 확인
   3. Preferences > Editor > Code Style > Java  :: "Settings may be overridden by EditorConfig" 메시지 확인
+  4. Code Style에서 line separator 에서 '\n'으로 설정
+  5. 추가적으로 Scheme는 intellij 파일로 설정
   
   [Eclipse]
   1. https://marketplace.eclipse.org/content/editorconfig-eclipse 설치

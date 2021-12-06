@@ -1,28 +1,30 @@
 package com.sikhye.chabak.utils;
 
-import com.sikhye.chabak.base.entity.BaseRole;
-import com.sikhye.chabak.base.exception.BaseException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import static com.sikhye.chabak.base.BaseResponseStatus.*;
+import static com.sikhye.chabak.utils.JwtValue.*;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import com.sikhye.chabak.base.entity.BaseRole;
+import com.sikhye.chabak.base.exception.BaseException;
 
-import static com.sikhye.chabak.base.BaseResponseStatus.EMPTY_JWT;
-import static com.sikhye.chabak.base.BaseResponseStatus.INVALID_JWT;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtTokenService {
 
 	@Value("${secret.JWT_SECRET_KEY}")
 	private String JWT_SECRET_KEY;
-
 
 	/*
 	JWT 생성
@@ -46,8 +48,8 @@ public class JwtTokenService {
 	@return String
 	 */
 	public String getJwt() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		return request.getHeader("X-ACCESS-TOKEN");
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		return request.getHeader(X_ACCESS_TOKEN.toString());
 	}
 
 	/*
@@ -55,7 +57,7 @@ public class JwtTokenService {
 	@return String
 	@throws BaseException
 	 */
-	public String getMemberRole() throws BaseException {
+	public BaseRole getMemberRole() throws BaseException {
 		//1. JWT 추출
 		String accessToken = getJwt();
 		if (accessToken == null || accessToken.length() == 0) {
@@ -74,7 +76,7 @@ public class JwtTokenService {
 
 		// 3. userIdx 추출
 		// ptpt: Object To Long
-		return String.valueOf(claims.getBody().get("role"));
+		return BaseRole.valueOf(String.valueOf(claims.getBody().get("role")));
 	}
 
 	/*

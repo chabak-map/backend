@@ -2,22 +2,7 @@
 <configuration>
     <springProperty name="filePath" source="logging.file.path"/>
 
-    <!--    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
-    <!--        &lt;!&ndash; On Windows machines setting withJansi to true enables ANSI-->
-    <!--             color code interpretation by the Jansi library. This requires-->
-    <!--             org.fusesource.jansi:jansi:1.8 on the class path.  Note that-->
-    <!--             Unix-based operating systems such as Linux and Mac OS X-->
-    <!--             support ANSI color codes by default. &ndash;&gt;-->
-    <!--        <withJansi>true</withJansi>-->
-    <!--        <encoder>-->
-    <!--            <pattern>[%thread] %highlight(%-5level) %cyan(%logger{15}) %magenta([Func:%M] - %msg %n</pattern>-->
-    <!--        </encoder>-->
-    <!--    </appender>-->
-    <!--    <root level="DEBUG">-->
-    <!--        <appender-ref ref="STDOUT"/>-->
-    <!--    </root>-->
-
-
+    <!-- console log -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <encoder>
@@ -25,12 +10,10 @@
             </pattern>
         </encoder>
     </appender>
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-    </root>
 
+    <!-- log file -->
     <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/app.log</file>
+        <file>${log.config.path}/app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/app.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -44,7 +27,7 @@
     </appender>
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/error.log</file>
+        <file>${log.config.path}/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
@@ -62,13 +45,23 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <!-- setting -->
+    <springProfile name="dev">
+        <property resource="logback-dev.properties"/>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="APP_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
 
-    <logger name="com.example.demo" level="INFO">
-        <appender-ref ref="APP_FILE"/>
-        <appender-ref ref="ERROR_FILE"/>
-    </logger>
+    <springProfile name="prod">
+        <property resource="logback-prod.properties"/>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="APP_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
 
 </configuration>

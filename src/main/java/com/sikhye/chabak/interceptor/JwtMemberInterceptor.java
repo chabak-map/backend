@@ -1,32 +1,29 @@
 package com.sikhye.chabak.interceptor;
 
-import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.utils.JwtTokenService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
+import static com.sikhye.chabak.base.BaseResponseStatus.*;
+import static com.sikhye.chabak.utils.JwtValue.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.sikhye.chabak.base.BaseResponseStatus.EMPTY_JWT;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import com.sikhye.chabak.base.exception.BaseException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 public class JwtMemberInterceptor implements HandlerInterceptor {
 
-	private final JwtTokenService jwtTokenService;
-
-	public JwtMemberInterceptor(JwtTokenService jwtTokenService) {
-		this.jwtTokenService = jwtTokenService;
-	}
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-							 Object handler) throws Exception {
+		Object handler) throws Exception {
 
 		String requestURI = request.getRequestURI();
-		String accessToken = request.getHeader("X-ACCESS-TOKEN");
+		log.info("토큰명 : {}", X_ACCESS_TOKEN.toString());
+		String accessToken = request.getHeader(X_ACCESS_TOKEN.toString());
 
 		log.info("인증 체크 인터셉터 실행 {}", requestURI);
 

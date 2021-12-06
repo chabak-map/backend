@@ -1,6 +1,5 @@
 package com.sikhye.chabak.interceptor;
 
-import lombok.Builder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,7 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
 	private final JwtMemberInterceptor jwtMemberInterceptor;
 	private final JwtAdminInterceptor jwtAdminInterceptor;
 
-	@Builder
 	public WebConfig(JwtMemberInterceptor jwtMemberInterceptor, JwtAdminInterceptor jwtAdminInterceptor) {
 		this.jwtMemberInterceptor = jwtMemberInterceptor;
 		this.jwtAdminInterceptor = jwtAdminInterceptor;

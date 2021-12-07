@@ -1,7 +1,7 @@
 package com.sikhye.chabak.src.place;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -88,7 +88,7 @@ class PlaceServiceImplTest {
 		em.clear();
 
 		//when
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, used)
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(1L, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
@@ -109,7 +109,7 @@ class PlaceServiceImplTest {
 		Optional<Place> findPlace = placeRepository.findById(1L);
 
 		//then
-		findPlace.ifPresent(place -> assertEquals(place.getStatus(), deleted));
+		findPlace.ifPresent(place -> assertEquals(place.getStatus(), DELETED));
 	}
 
 	@Test

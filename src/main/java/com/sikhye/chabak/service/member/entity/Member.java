@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 
+import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
-import com.sikhye.chabak.global.time.BaseStatus;
 import com.sikhye.chabak.service.comment.entity.PlaceReview;
 import com.sikhye.chabak.service.comment.entity.PostingComment;
 import com.sikhye.chabak.service.member.constant.BaseRole;
@@ -66,7 +66,7 @@ public class Member extends BaseEntity {
 	}
 
 	public void setStatusToDelete() {
-		this.status = BaseStatus.deleted;
+		this.status = BaseStatus.DELETED;
 	}
 
 	public void setImageUrl(String imageUrl) {

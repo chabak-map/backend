@@ -1,13 +1,21 @@
 package com.sikhye.chabak.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sikhye.chabak.global.response.BaseResponse;
 import com.sikhye.chabak.service.place.PlaceService;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -29,8 +37,8 @@ public class PlaceController {
 	// 주변 차박지 찾기
 	@GetMapping
 	public BaseResponse<List<PlaceSearchRes>> getAroundPlace(@RequestParam("lat") Double latitude,
-															 @RequestParam("lng") Double longitude,
-															 @RequestParam("r") Double radius) {
+		@RequestParam("lng") Double longitude,
+		@RequestParam("r") Double radius) {
 		return new BaseResponse<>(placeService.aroundPlace(latitude, longitude, radius));
 	}
 
@@ -45,10 +53,9 @@ public class PlaceController {
 	// TODO: 좌표값은 관리자만 설정할 수 있도록 변경 (JWT 토큰 이용)
 	@PostMapping("/{placeId}")
 	public BaseResponse<Long> savePoint(@PathVariable Long placeId,
-										@RequestParam("lat") Double latitude,
-										@RequestParam("lng") Double longitude) {
+		@RequestParam("lat") Double latitude,
+		@RequestParam("lng") Double longitude) {
 		return new BaseResponse<>(placeService.savePoint(placeId, latitude, longitude));
 	}
-
 
 }

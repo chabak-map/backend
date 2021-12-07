@@ -1,7 +1,7 @@
 package com.sikhye.chabak.src.comment;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -50,7 +50,7 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("001. 장소 댓글 조회")
 	@Order(1)
-	public void findPlaceCommentsTest() throws Exception {
+	public void findPlaceCommentsTest() {
 		//given
 		List<CommentRes> placeComments = commentService.findPlaceComments(1L);
 
@@ -64,12 +64,12 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("002. 장소 댓글 작성")
 	@Order(2)
-	public void addPlaceCommentTest() throws Exception {
+	public void addPlaceCommentTest() {
 		//given
 		Long commentId = commentService.addPlaceComment(1L, new CommentReq("장소 댓글 테스트"));
 
 		//when
-		PlaceReview placeReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
+		PlaceReview placeReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, USED);
 
 		//then
 		assertEquals(placeReview.getContent(), "장소 댓글 테스트");
@@ -78,17 +78,17 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("003. 장소 댓글 수정")
 	@Order(3)
-	public void editPlaceCommentTest() throws Exception {
+	public void editPlaceCommentTest() {
 		//given
 		Long commentId = commentService.addPlaceComment(1L, new CommentReq("장소 댓글 테스트"));
-		PlaceReview placeReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
+		PlaceReview placeReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, USED);
 		Long editCommentId = commentService.editPlaceComment(1L, placeReview.getId(), new CommentReq("수정된 장소 댓글 테스트"));
 
 		em.flush();
 		em.clear();
 
 		//when
-		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(editCommentId, used);
+		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(editCommentId, USED);
 
 		//then
 		assertEquals(findPlaceReview.getContent(), "수정된 장소 댓글 테스트");
@@ -97,7 +97,7 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("004. 장소 댓글 삭제")
 	@Order(4)
-	public void deletePlaceCommentTest() throws Exception {
+	public void deletePlaceCommentTest() {
 		//given
 		Long deletedId = commentService.statusToDeletePlaceComment(1L, 1L);
 
@@ -109,14 +109,14 @@ class CommentServiceImplTest {
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
 		//then
-		assertEquals(deletedReview.getStatus(), deleted);
+		assertEquals(deletedReview.getStatus(), DELETED);
 
 	}
 
 	@Test
 	@DisplayName("005. 포스트 댓글 리스트")
 	@Order(5)
-	public void findPostCommentsTest() throws Exception {
+	public void findPostCommentsTest() {
 		//given
 		List<CommentRes> postComments = commentService.findPostComments(1L);
 
@@ -129,12 +129,12 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("006. 포스트 댓글 작성")
 	@Order(6)
-	public void addPostCommentTest() throws Exception {
+	public void addPostCommentTest() {
 		//given
 		Long commentId = commentService.addPostComment(1L, new CommentReq("포스트 댓글 테스트"));
 
 		//when
-		PostingComment postingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
+		PostingComment postingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
 
 		//then
 		assertEquals(postingComment.getContent(), "장소 댓글 테스트");
@@ -143,10 +143,10 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("007. 포스트 댓글 수정")
 	@Order(7)
-	public void editPostCommentTest() throws Exception {
+	public void editPostCommentTest() {
 		//given
 		Long commentId = commentService.addPostComment(1L, new CommentReq("포스트 댓글 테스트"));
-		PostingComment postingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
+		PostingComment postingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
 		Long editCommentId = commentService.editPostComment(1L, postingComment.getId(),
 			new CommentReq("수정된 포스트 댓글 테스트"));
 
@@ -155,7 +155,7 @@ class CommentServiceImplTest {
 
 		//when
 		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(editCommentId,
-			used);
+			USED);
 
 		//then
 		assertEquals(findPostingComment.getContent(), "수정된 포스트 댓글 테스트");
@@ -164,7 +164,7 @@ class CommentServiceImplTest {
 	@Test
 	@DisplayName("008. 포스트 댓글 삭제")
 	@Order(8)
-	public void deletePostCommentTest() throws Exception {
+	public void deletePostCommentTest() {
 		//given
 		Long deletedId = commentService.statusToDeletePostComment(1L, 3L);
 
@@ -176,7 +176,7 @@ class CommentServiceImplTest {
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
 		//then
-		assertEquals(deletedComment.getStatus(), deleted);
+		assertEquals(deletedComment.getStatus(), DELETED);
 	}
 
 }

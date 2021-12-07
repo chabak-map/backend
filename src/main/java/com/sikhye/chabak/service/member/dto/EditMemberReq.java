@@ -1,10 +1,11 @@
 package com.sikhye.chabak.service.member.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 public class EditMemberReq {
@@ -15,6 +16,14 @@ public class EditMemberReq {
 	private MultipartFile image;
 
 	public EditMemberReq() {
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 
 	@Builder

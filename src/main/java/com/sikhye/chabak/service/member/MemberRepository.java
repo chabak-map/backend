@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.sikhye.chabak.global.time.BaseStatus;
+import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.service.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {

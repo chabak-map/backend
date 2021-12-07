@@ -1,7 +1,7 @@
 package com.sikhye.chabak.src.tag;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -108,7 +108,7 @@ class TagServiceImplTest {
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
-		assertEquals(placeTag.getStatus(), deleted);
+		assertEquals(placeTag.getStatus(), DELETED);
 	}
 
 	@Test
@@ -175,7 +175,7 @@ class TagServiceImplTest {
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
-		assertEquals(postingTag.getStatus(), deleted);
+		assertEquals(postingTag.getStatus(), DELETED);
 	}
 
 }

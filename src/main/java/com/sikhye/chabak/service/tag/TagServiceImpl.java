@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.tag;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +39,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public List<String> findPlaceTags(Long placeId) {
-		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByPlaceIdAndStatus(placeId, used)
+		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByPlaceIdAndStatus(placeId, USED)
 			.orElse(Collections.emptyList());
 
 		return placeTags.stream()
@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService {
 	@Override
 	@Transactional
 	public Long editPlaceTag(Long placeId, Long placeTagId, String placeTagName) {
-		PlaceTag findPlaceTag = placeTagRepository.findPlaceTagByIdAndStatus(placeTagId, used)
+		PlaceTag findPlaceTag = placeTagRepository.findPlaceTagByIdAndStatus(placeTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		if (!findPlaceTag.getPlaceId().equals(placeId))
@@ -82,7 +82,7 @@ public class TagServiceImpl implements TagService {
 	@Override
 	@Transactional
 	public Long placeTagStatusToDelete(Long placeId, Long placeTagId) {
-		PlaceTag findPlaceTag = placeTagRepository.findPlaceTagByIdAndStatus(placeTagId, used)
+		PlaceTag findPlaceTag = placeTagRepository.findPlaceTagByIdAndStatus(placeTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		if (!findPlaceTag.getPlaceId().equals(placeId))
@@ -95,7 +95,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public List<String> findPostingTags(Long postingId) {
-		List<PostingTag> postingTags = postingTagRepository.findPostingTagsByPostingIdAndStatus(postingId, used)
+		List<PostingTag> postingTags = postingTagRepository.findPostingTagsByPostingIdAndStatus(postingId, USED)
 			.orElse(Collections.emptyList());
 
 		return postingTags.stream()
@@ -124,7 +124,7 @@ public class TagServiceImpl implements TagService {
 	@Override
 	@Transactional
 	public Long editPostingTag(Long postingId, Long postingTagId, String postingTagName) {
-		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, used)
+		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
 		if (!findPostingTag.getPostingId().equals(postingId))
@@ -138,7 +138,7 @@ public class TagServiceImpl implements TagService {
 	@Override
 	@Transactional
 	public Long postingTagStatusToDelete(Long postingId, Long postingTagId) {
-		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, used)
+		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
 		if (!findPostingTag.getPostingId().equals(postingId))

@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.post;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +24,6 @@ import com.sikhye.chabak.service.post.entity.PostingImage;
 import com.sikhye.chabak.service.post.repository.PostingImageRepository;
 import com.sikhye.chabak.service.post.repository.PostingRepository;
 
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,8 +37,8 @@ public class PostingServiceImpl implements PostingService {
 	private final UploadService s3UploadService;
 	private final JwtTokenService jwtTokenService;
 
-	@Builder
-	public PostingServiceImpl(PostingRepository postingRepository, PostingImageRepository postingImageRepository,
+	public PostingServiceImpl(PostingRepository postingRepository,
+		PostingImageRepository postingImageRepository,
 		PostingCommentRepository postingCommentRepository, UploadService s3UploadService,
 		JwtTokenService jwtTokenService) {
 		this.postingRepository = postingRepository;
@@ -56,7 +55,7 @@ public class PostingServiceImpl implements PostingService {
 
 	@Override
 	public List<PostingRes> findPosts() {
-		List<Posting> findPostings = postingRepository.findPostingsByStatus(used).orElse(Collections.emptyList());
+		List<Posting> findPostings = postingRepository.findPostingsByStatus(USED).orElse(Collections.emptyList());
 
 		return getPostingResList(findPostings);
 
@@ -65,7 +64,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public List<PostingRes> findMemberPosts() {
 		Long memberId = jwtTokenService.getMemberId();
-		List<Posting> memberPostings = postingRepository.findPostingsByMemberIdAndStatus(memberId, used)
+		List<Posting> memberPostings = postingRepository.findPostingsByMemberIdAndStatus(memberId, USED)
 			.orElse(Collections.emptyList());
 
 		return getPostingResList(memberPostings);
@@ -103,7 +102,7 @@ public class PostingServiceImpl implements PostingService {
 
 	@Override
 	public PostingDetailRes findPostDetail(Long postId) {
-		Posting findPost = postingRepository.findPostingByIdAndStatus(postId, used)
+		Posting findPost = postingRepository.findPostingByIdAndStatus(postId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
 		return PostingDetailRes.builder()
@@ -126,7 +125,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public Long statusToDeletePost(Long postId) {
-		Posting toDeletePost = postingRepository.findPostingByIdAndStatus(postId, used)
+		Posting toDeletePost = postingRepository.findPostingByIdAndStatus(postId, USED)
 			.orElseThrow(() -> new BaseException(NOT_TO_DELETE));
 		toDeletePost.setStatusToDelete();
 
@@ -143,8 +142,8 @@ public class PostingServiceImpl implements PostingService {
 		return postings.stream()
 			.map(posting -> {
 					// ptpt: Optional map 사용
-					//					String postingImageUrl = postingImageRepository.findTop1ByPostingIdAndStatus(posting.getId(), used).map(PostingImage::getImageUrl).orElse("");
-					//					Long commentCount = postingCommentRepository.countByPostingIdAndStatus(posting.getId(), used);
+					//               String postingImageUrl = postingImageRepository.findTop1ByPostingIdAndStatus(posting.getId(), used).map(PostingImage::getImageUrl).orElse("");
+					//               Long commentCount = postingCommentRepository.countByPostingIdAndStatus(posting.getId(), used);
 
 					return PostingRes.builder()
 						.title(posting.getTitle())

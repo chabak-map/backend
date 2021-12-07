@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import com.sikhye.chabak.global.time.BaseStatus;
+import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.service.post.entity.Posting;
 
 import lombok.Builder;
@@ -44,7 +44,7 @@ public class PostingTag {
 	}
 
 	public void setStatusToDelete() {
-		this.status = BaseStatus.deleted;
+		this.status = BaseStatus.DELETED;
 	}
 
 	public void setName(String name) {

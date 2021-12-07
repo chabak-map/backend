@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.bookmark;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 import static java.util.Collections.*;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 		Long memberId = jwtTokenService.getMemberId();
 
 		// 멤버 ID를 기준으로 북마크 조회
-		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, used)
+		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, USED)
 			.orElse(emptyList());
 
 		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
@@ -80,7 +80,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	public Long statusToDeleteBookmark(Long bookmarkId) {
 		Long memberId = jwtTokenService.getMemberId();
 
-		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, used)
+		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, USED)
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
 		if (memberId.equals(findBookmark.getId())) {

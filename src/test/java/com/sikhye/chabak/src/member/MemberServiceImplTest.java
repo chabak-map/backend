@@ -12,7 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sikhye.chabak.global.time.BaseStatus;
+import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.service.member.MemberRepository;
 import com.sikhye.chabak.service.member.MemberService;
 import com.sikhye.chabak.service.member.entity.Member;
@@ -34,7 +34,7 @@ class MemberServiceImplTest {
 	@Rollback(false)
 	public void deleteMemberTable() {
 		Optional<Member> member = memberRepository.findMemberByEmailAndStatus("mytest1234@mytest1234.com",
-			BaseStatus.used);
+			BaseStatus.USED);
 		member.ifPresent(value -> memberRepository.delete(value));
 	}
 

@@ -15,7 +15,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sikhye.chabak.global.time.BaseStatus;
+import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class PlaceRepositoryCustomImpl implements PlaceRepositoryCustom {
 				place.latitude,
 				place.longitude))
 			.from(place)
-			.where(place.status.eq(BaseStatus.used)
+			.where(place.status.eq(BaseStatus.USED)
 				.and(
 					acos(
 						cos(radians(place.longitude).subtract(radians(asNumber(lng))))

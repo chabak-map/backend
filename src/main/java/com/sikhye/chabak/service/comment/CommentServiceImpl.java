@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.comment;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public List<CommentRes> findPlaceComments(Long placeId) {
-		List<PlaceReview> placeReviews = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(placeId, used)
+		List<PlaceReview> placeReviews = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(placeId, USED)
 			.orElse(Collections.emptyList());
 
 		return placeReviews.stream()
@@ -72,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
 	public Long editPlaceComment(Long placeId, Long commentId, CommentReq commentReq) {
 		Long memberId = jwtTokenService.getMemberId();
 
-		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
+		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, USED);
 
 		if (!memberId.equals(findPlaceReview.getMemberId())) {
 			throw new BaseException(INVALID_USER_JWT);
@@ -88,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
 	public Long statusToDeletePlaceComment(Long placeId, Long commentId) {
 		Long memberId = jwtTokenService.getMemberId();
 
-		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, used);
+		PlaceReview findPlaceReview = placeReviewRepository.findPlaceReviewByIdAndStatus(commentId, USED);
 
 		if (!memberId.equals(findPlaceReview.getMemberId())) {
 			throw new BaseException(INVALID_USER_JWT);
@@ -104,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<CommentRes> findPostComments(Long postId) {
 		List<PostingComment> postingComments = postingCommentRepository
-			.findPostingCommentsByPostingIdAndStatus(postId, used).orElse(Collections.emptyList());
+			.findPostingCommentsByPostingIdAndStatus(postId, USED).orElse(Collections.emptyList());
 
 		return postingComments.stream()
 			.map(postingComment -> CommentRes.builder()
@@ -134,7 +134,7 @@ public class CommentServiceImpl implements CommentService {
 	public Long editPostComment(Long postId, Long commentId, CommentReq commentReq) {
 		Long memberId = jwtTokenService.getMemberId();
 
-		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
+		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
 
 		if (!memberId.equals(findPostingComment.getMemberId())) {
 			throw new BaseException(INVALID_USER_JWT);
@@ -150,7 +150,7 @@ public class CommentServiceImpl implements CommentService {
 	public Long statusToDeletePostComment(Long postId, Long commentId) {
 		Long memberId = jwtTokenService.getMemberId();
 
-		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, used);
+		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
 
 		if (!memberId.equals(findPostingComment.getMemberId())) {
 			throw new BaseException(INVALID_USER_JWT);

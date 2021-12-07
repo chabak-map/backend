@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.place;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,12 +53,12 @@ public class PlaceServiceImpl implements PlaceService {
 	public PlaceDetailRes getPlace(Long placeId) {
 
 		// 장소/이미지/리뷰
-		Place place = placeRepository.findPlaceByIdAndStatus(placeId, used)
+		Place place = placeRepository.findPlaceByIdAndStatus(placeId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId,
-			used);    // TODO: orElse 변경
+			USED);    // TODO: orElse 변경
 		Optional<List<PlaceReview>> placeReviewResults = placeReviewRepository.findPlaceReviewsByPlaceIdAndStatus(
-			placeId, used);
+			placeId, USED);
 		List<String> placeTagNames = tagService.findPlaceTags(place.getId());
 
 		long imageCount = 0L;
@@ -101,7 +101,7 @@ public class PlaceServiceImpl implements PlaceService {
 	@Override
 	@Transactional
 	public Long statusToDelete(Long placeId) {
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used)
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, USED)
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
 		findPlace.setStatusToDelete();
@@ -112,7 +112,7 @@ public class PlaceServiceImpl implements PlaceService {
 	@Transactional
 	public Long savePoint(Long placeId, Double latitude, Double longitude) {
 
-		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, used)
+		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 		findPlace.setPoint(latitude, longitude);
 

@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.member;
 
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.global.time.BaseStatus.*;
 import static com.sikhye.chabak.service.member.constant.BaseRole.*;
 
 import java.util.Optional;
@@ -26,9 +26,8 @@ import com.sikhye.chabak.service.member.dto.PasswordReq;
 import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.member.sms.SmsService;
 import com.sikhye.chabak.service.member.sms.entity.SmsCacheKey;
-import com.sikhye.chabak.utils.encrypt.AES256;
+import com.sikhye.chabak.utils.encrypt.EncryptService;
 
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,17 +39,18 @@ public class MemberServiceImpl implements MemberService {
 	private final RedisTemplate<String, String> redisTemplate;
 	private final SmsService smsService;
 	private final UploadService s3UploadService;
-	private final AES256 aes256Service;
+	private final EncryptService encryptService;
 	private final JwtTokenService jwtTokenService;
 
-	@Builder
-	public MemberServiceImpl(MemberRepository memberRepository, RedisTemplate<String, String> redisTemplate,
-		SmsService smsService, UploadService s3UploadService, AES256 aes256Service, JwtTokenService jwtTokenService) {
+	public MemberServiceImpl(MemberRepository memberRepository,
+		RedisTemplate<String, String> redisTemplate, SmsService smsService,
+		UploadService s3UploadService, EncryptService encryptService,
+		JwtTokenService jwtTokenService) {
 		this.memberRepository = memberRepository;
 		this.redisTemplate = redisTemplate;
 		this.smsService = smsService;
 		this.s3UploadService = s3UploadService;
-		this.aes256Service = aes256Service;
+		this.encryptService = encryptService;
 		this.jwtTokenService = jwtTokenService;
 	}
 
@@ -60,12 +60,12 @@ public class MemberServiceImpl implements MemberService {
 		String password = loginReq.getPassword();
 
 		// 입력된 이메일 기준 패스워드 찾기
-		Member findMember = memberRepository.findMemberByEmailAndStatus(email, used)
+		Member findMember = memberRepository.findMemberByEmailAndStatus(email, USED)
 			.orElseThrow(() -> new BaseException(FAILED_TO_LOGIN));
 
 		String findPassword;
 		try {
-			findPassword = aes256Service.decrypt(findMember.getPassword());
+			findPassword = encryptService.decrypt(findMember.getPassword());
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -89,19 +89,19 @@ public class MemberServiceImpl implements MemberService {
 		String encryptedPassword;
 
 		try {
-			encryptedPassword = aes256Service.encrypt(joinReq.getPassword());
+			encryptedPassword = encryptService.encrypt(joinReq.getPassword());
 		} catch (Exception ignored) {
 			throw new BaseException(ENCRYPTION_ERROR);
 		}
 
 		// 닉네임, 이메일 중복체크
-		Optional<Member> findMemberEmail = memberRepository.findMemberByEmailAndStatus(joinReq.getEmail(), used);
+		Optional<Member> findMemberEmail = memberRepository.findMemberByEmailAndStatus(joinReq.getEmail(), USED);
 		if (findMemberEmail.isPresent()) {
 			throw new BaseException(POST_USERS_EXISTS_EMAIL);
 		}
 
 		Optional<Member> findMemberNickname = memberRepository.findMemberByNicknameAndStatus(joinReq.getNickname(),
-			used);
+			USED);
 		if (findMemberNickname.isPresent()) {
 			throw new BaseException(POST_USERS_EXISTS_NICKNAME);
 		}
@@ -124,7 +124,7 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDto lookup() {
 
 		Long memberId = jwtTokenService.getMemberId();
-		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, used)
+		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
 		return MemberDto.builder()
@@ -183,7 +183,7 @@ public class MemberServiceImpl implements MemberService {
 		String imageUrl = s3UploadService.uploadImage(memberImage, "images/member/");
 
 		// 이미지 URL 저장
-		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, used)
+		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
 		findMember.setImageUrl(imageUrl);
@@ -197,7 +197,7 @@ public class MemberServiceImpl implements MemberService {
 		// 변경 가능: 닉네임, 프로필 이미지
 		Long memberId = jwtTokenService.getMemberId();
 
-		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, used)
+		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
 		String imageUrl = s3UploadService.uploadImage(editMemberReq.getImage(), "images/member/");
@@ -213,12 +213,12 @@ public class MemberServiceImpl implements MemberService {
 
 		String encryptedPassword;
 		try {
-			encryptedPassword = aes256Service.encrypt(passwordReq.getPassword());
+			encryptedPassword = encryptService.encrypt(passwordReq.getPassword());
 		} catch (Exception exception) {
 			throw new BaseException(ENCRYPTION_ERROR);
 		}
 
-		memberRepository.findMemberByIdAndStatus(passwordReq.getMemberId(), used)
+		memberRepository.findMemberByIdAndStatus(passwordReq.getMemberId(), USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER)).setPassword(encryptedPassword);
 
 		return passwordReq.getMemberId();
@@ -227,13 +227,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public String findMemberEmail(String phoneNumber) {
-		return memberRepository.findMemberByPhoneNumberAndStatus(phoneNumber, used)
+		return memberRepository.findMemberByPhoneNumberAndStatus(phoneNumber, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER)).getEmail();
 	}
 
 	@Override
 	public Long findMember(String phoneNumber, String email) {
-		return memberRepository.findMemberByPhoneNumberAndEmailAndStatus(phoneNumber, email, used)
+		return memberRepository.findMemberByPhoneNumberAndEmailAndStatus(phoneNumber, email, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER)).getId();
 	}
 
@@ -242,7 +242,7 @@ public class MemberServiceImpl implements MemberService {
 	public Long statusToDeleteMember() {
 		Long memberId = jwtTokenService.getMemberId();
 
-		memberRepository.findMemberByIdAndStatus(memberId, used)
+		memberRepository.findMemberByIdAndStatus(memberId, USED)
 			.orElseThrow(() -> new BaseException(NOT_TO_DELETE)).setStatusToDelete();
 
 		return memberId;
@@ -250,12 +250,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Boolean isDuplicatedNickname(String nickname) {
-		return memberRepository.existsByNicknameAndStatus(nickname, used);
+		return memberRepository.existsByNicknameAndStatus(nickname, USED);
 	}
 
 	@Override
 	public Boolean isDuplicatedEmail(String email) {
-		return memberRepository.existsByEmailAndStatus(email, used);
+		return memberRepository.existsByEmailAndStatus(email, USED);
 	}
 
 	// ================================================

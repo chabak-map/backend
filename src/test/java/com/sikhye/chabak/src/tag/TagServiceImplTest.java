@@ -1,25 +1,32 @@
 package com.sikhye.chabak.src.tag;
 
-import com.sikhye.chabak.base.exception.BaseException;
-import com.sikhye.chabak.src.tag.dto.PlaceTagReq;
-import com.sikhye.chabak.src.tag.dto.PlaceTagRes;
-import com.sikhye.chabak.src.tag.dto.PostingTagReq;
-import com.sikhye.chabak.src.tag.dto.PostingTagRes;
-import com.sikhye.chabak.src.tag.entity.PlaceTag;
-import com.sikhye.chabak.src.tag.entity.PostingTag;
-import com.sikhye.chabak.src.tag.repository.PlaceTagRepository;
-import com.sikhye.chabak.src.tag.repository.PostingTagRepository;
-import org.junit.jupiter.api.*;
+import static com.sikhye.chabak.global.constant.BaseStatus.*;
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static com.sikhye.chabak.base.BaseResponseStatus.SEARCH_NOT_FOUND_PLACE;
-import static com.sikhye.chabak.base.entity.BaseStatus.deleted;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.service.tag.TagService;
+import com.sikhye.chabak.service.tag.dto.PlaceTagReq;
+import com.sikhye.chabak.service.tag.dto.PlaceTagRes;
+import com.sikhye.chabak.service.tag.dto.PostingTagReq;
+import com.sikhye.chabak.service.tag.dto.PostingTagRes;
+import com.sikhye.chabak.service.tag.entity.PlaceTag;
+import com.sikhye.chabak.service.tag.entity.PostingTag;
+import com.sikhye.chabak.service.tag.repository.PlaceTagRepository;
+import com.sikhye.chabak.service.tag.repository.PostingTagRepository;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -82,7 +89,8 @@ class TagServiceImplTest {
 		Long tagId = tagService.editPlaceTag(1L, 1L, "태그1");
 
 		//when
-		PlaceTag placeTag = placeTagRepository.findById(tagId).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
+		PlaceTag placeTag = placeTagRepository.findById(tagId)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
 		assertEquals(placeTag.getName(), "태그1");
@@ -96,12 +104,12 @@ class TagServiceImplTest {
 		Long tagId = tagService.placeTagStatusToDelete(1L, 1L);
 
 		//when
-		PlaceTag placeTag = placeTagRepository.findById(tagId).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
+		PlaceTag placeTag = placeTagRepository.findById(tagId)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
-		assertEquals(placeTag.getStatus(), deleted);
+		assertEquals(placeTag.getStatus(), DELETED);
 	}
-
 
 	@Test
 	@DisplayName("005. 포스팅 태그 조회")
@@ -148,7 +156,8 @@ class TagServiceImplTest {
 		Long tagId = tagService.editPostingTag(1L, 1L, "태그1");
 
 		//when
-		PostingTag postingTag = postingTagRepository.findById(tagId).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
+		PostingTag postingTag = postingTagRepository.findById(tagId)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
 		assertEquals(postingTag.getName(), "태그1");
@@ -162,11 +171,11 @@ class TagServiceImplTest {
 		Long tagId = tagService.postingTagStatusToDelete(1L, 1L);
 
 		//when
-		PostingTag postingTag = postingTagRepository.findById(tagId).orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
+		PostingTag postingTag = postingTagRepository.findById(tagId)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 
 		//then
-		assertEquals(postingTag.getStatus(), deleted);
+		assertEquals(postingTag.getStatus(), DELETED);
 	}
-
 
 }

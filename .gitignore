@@ -38,10 +38,13 @@ out/
 
 
 ### custom ###
-application-aws.yml
-application-credentials.yml
+#application-aws.yml
+#application-credentials.yml
 Secret.java
 application-prod.yml
 application*.tar
 application-*.gpg
 logs/
+logs/*
+application-infra.yml
+application-dev.yml

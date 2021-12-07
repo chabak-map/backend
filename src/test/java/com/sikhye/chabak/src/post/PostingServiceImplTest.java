@@ -1,8 +1,9 @@
 package com.sikhye.chabak.src.post;
 
-import com.sikhye.chabak.src.post.dto.PostingDetailRes;
-import com.sikhye.chabak.src.post.dto.PostingRes;
-import com.sikhye.chabak.src.post.repository.PostingRepository;
+import com.sikhye.chabak.service.post.PostingService;
+import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingRes;
+import com.sikhye.chabak.service.post.repository.PostingRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

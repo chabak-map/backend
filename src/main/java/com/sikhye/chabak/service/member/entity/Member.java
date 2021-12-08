@@ -78,6 +78,10 @@ public class Member extends BaseEntity {
 		this.imageUrl = imageUrl;
 	}
 
+	public void editMemberNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}

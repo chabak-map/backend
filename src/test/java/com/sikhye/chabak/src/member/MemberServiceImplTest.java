@@ -1,9 +1,15 @@
 package com.sikhye.chabak.src.member;
 
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +19,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
+import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.member.MemberRepository;
 import com.sikhye.chabak.service.member.MemberService;
+import com.sikhye.chabak.service.member.dto.EditMemberReq;
+import com.sikhye.chabak.service.member.dto.JoinReq;
+import com.sikhye.chabak.service.member.dto.LoginReq;
+import com.sikhye.chabak.service.member.dto.LoginRes;
+import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.entity.Member;
 
 @SpringBootTest
@@ -33,142 +45,126 @@ class MemberServiceImplTest {
 	@AfterAll
 	@Rollback(false)
 	public void deleteMemberTable() {
-		Optional<Member> member = memberRepository.findMemberByEmailAndStatus("mytest1234@mytest1234.com",
+		Optional<Member> member = memberRepository.findMemberByEmailAndStatus("admintest@admintest.com",
 			BaseStatus.USED);
 		member.ifPresent(value -> memberRepository.delete(value));
 	}
 
-	//	@Test
-	//	@DisplayName("001. 회원가입 테스트")
-	//	@Rollback(false)
-	//	@Order(1)
-	//	public void memberJoinTest() throws Exception {
-	//
-	//		//given
-	//		JoinReq joinReq = JoinReq.builder()
-	//			.email("spring123@naver.com")
-	//			.nickname("spring123")
-	//			.password("spring123")
-	//			.phoneNumber("01012341234")
-	//			.build();
-	//
-	//		//when
-	//		LoginRes result = memberService.join(joinReq);
-	//		Long memberId = result.getId();
-	//
-	//		Optional<Member> findMember = memberRepository.findMemberByEmailAndStatus("mytest1234@mytest1234.com", BaseStatus.used);
-	//		findMember.ifPresent(member -> assertEquals(memberId, member.getId()));
-	//
-	//	}
-	//
-	//
-	//	@Test
-	//	@DisplayName("002. 중복된 이메일 가입 시도")
-	//	@Order(2)
-	//	public void memberJoinDuplicatedEmailTest() throws BaseException {
-	//
-	//		//given
-	//		JoinReq joinReq = JoinReq.builder()
-	//			.email("spring123@naver.com")
-	//			.nickname("spr1234")
-	//			.password("spring123")
-	//			.phoneNumber("01012341234")
-	//			.build();
-	//
-	//		//when and then
-	//		BaseException exception = assertThrows(BaseException.class, () -> memberService.join(joinReq));
-	//		assertEquals(BaseResponseStatus.POST_USERS_EXISTS_EMAIL.getCode(), exception.getStatus().getCode());
-	//	}
-	//
-	//	@Test
-	//	@DisplayName("003. 중복된 닉네임 가입 시도")
-	//	@Order(3)
-	//	public void memberJoinDuplicatedNicknameTest() throws BaseException {
-	//
-	//		//given
-	//		JoinReq joinReq = JoinReq.builder()
-	//			.email("spr1234@naver.com")
-	//			.nickname("spring123")
-	//			.password("spring123")
-	//			.phoneNumber("01012341234")
-	//			.build();
-	//
-	//		//when and then
-	//		BaseException exception = assertThrows(BaseException.class, () -> memberService.join(joinReq));
-	//		assertEquals(BaseResponseStatus.POST_USERS_EXISTS_NICKNAME.getCode(), exception.getStatus().getCode());
-	//	}
-	//
-	//
-	//	@Test
-	//	@DisplayName("004. 로그인 테스트")
-	//	@Order(4)
-	//	public void memberLoginTest() throws BaseException {
-	//		//given
-	//		LoginReq loginReq = new LoginReq("spring123@naver.com", "spring123");
-	//
-	//		//when
-	//		LoginRes loginMember = memberService.login(loginReq);
-	//
-	//		//then
-	//		assertNotNull(loginMember);
-	//	}
+	@Test
+	@DisplayName("001. 회원가입 테스트")
+	@Rollback(false)
+	@Order(1)
+	public void memberJoinTest() {
 
-	//	@Test
-	//	@DisplayName("003. 멤버 조회 테스트")
-	//	public void memberLookupTest() throws Exception {
-	//
-	//		//given
-	//		Member memberByEmail = memberRepository.findMemberByEmail("test1234@test.com");
-	//
-	//		//when
-	//		Long memberId = memberByEmail.getId();
-	//		MemberDto memberDto = memberService.lookup();
-	//
-	//		//then
-	//		assertThat(memberDto.getNickname()).isEqualTo("test1234");
-	//
-	//	}
+		//given
+		JoinReq joinReq = JoinReq.builder()
+			.email("admintest@admintest.com")
+			.nickname("admin123")
+			.password("admin123")
+			.phoneNumber("01012341234")
+			.build();
 
-	//	@Test
-	//	@Order(1)
-	//	@DisplayName("004. 멤버 휴대폰 인증")
-	//	public void requestPhoneAuthTest() throws Exception {
-	//		//given
-	////		String phoneNumber = "";
-	//		String phoneNumber = "01012341234";
-	//
-	//		//when
-	//		memberService.requestPhoneAuth(phoneNumber);
-	//
-	//
-	//	}
-	//
-	//	@Test
-	//	@Order(2)
-	//	@DisplayName("005. 휴대폰 인증")
-	//	public void verifySmsTest() throws Exception {
-	//	    //given
-	//	    String code = "111111";
-	//		String phone = "01012341234";
-	//
-	//
-	//	    //when
-	//		Boolean aBoolean = memberService.verifySms(code, phone);
-	//
-	//		//then
-	//	}
+		//when
+		LoginRes result = memberService.join(joinReq);
+		Long memberId = result.getId();
 
-	//	@Test
-	//	@Order(1)
-	//	@DisplayName("006. AES256 테스트")
-	//	public void aes256Test() throws Exception {
-	//		//given
-	//		String s = memberService.aes256Method();
-	//		Assertions.assertEquals(s, "test");
-	//
-	//		//when
-	//
-	//		//then
-	//	}
+		Optional<Member> findMember = memberRepository.findMemberByEmailAndStatus("admintest@admintest.com",
+			BaseStatus.USED);
+		findMember.ifPresent(member -> assertEquals(memberId, member.getId()));
+
+	}
+
+	@Test
+	@DisplayName("002. 중복된 이메일 가입 시도")
+	@Order(2)
+	public void memberJoinDuplicatedEmailTest() throws BaseException {
+
+		//given
+		JoinReq joinReq = JoinReq.builder()
+			.email("admintest@admintest.com")
+			.nickname("admin123")
+			.password("admin123")
+			.phoneNumber("01012341234")
+			.build();
+
+		//when and then
+		BaseException exception = assertThrows(BaseException.class, () -> memberService.join(joinReq));
+		assertEquals(POST_USERS_EXISTS_EMAIL.getCode(), exception.getStatus().getCode());
+	}
+
+	@Test
+	@DisplayName("003. 중복된 닉네임 가입 시도")
+	@Order(3)
+	public void memberJoinDuplicatedNicknameTest() throws BaseException {
+
+		//given
+		JoinReq joinReq = JoinReq.builder()
+			.email("admintest123@admintest.com")
+			.nickname("admin123")
+			.password("admin123")
+			.phoneNumber("01012341234")
+			.build();
+
+		//when and then
+		BaseException exception = assertThrows(BaseException.class, () -> memberService.join(joinReq));
+		assertEquals(POST_USERS_EXISTS_NICKNAME.getCode(), exception.getStatus().getCode());
+	}
+
+	@Test
+	@DisplayName("004. 로그인 테스트")
+	@Order(4)
+	public void memberLoginTest() throws BaseException {
+		//given
+		LoginReq loginReq = new LoginReq("admintest@admintest.com", "admin123");
+
+		//when
+		LoginRes loginMember = memberService.login(loginReq);
+
+		//then
+		assertNotNull(loginMember);
+	}
+
+	@Test
+	@DisplayName("005. 멤버 조회 테스트")
+	@Order(5)
+	public void memberLookupTest() {
+
+		//given
+		Member memberByEmail = memberRepository
+			.findMemberByEmailAndStatus("admintest@admintest.com", BaseStatus.USED)
+			.orElseThrow(() -> new BaseException(CHECK_USER));
+
+		//when
+		Long memberId = memberByEmail.getId();
+		MemberDto memberDto = memberService.lookup();
+
+		//then
+		assertEquals(memberDto.getNickname(), "admin123");
+
+	}
+
+	@Test
+	@Order(6)
+	@DisplayName("006. 멤버 휴대폰 인증")
+	public void requestPhoneAuthTest() {
+		//given
+		String phoneNumber = "01012341234";
+
+		//when
+		memberService.requestPhoneAuth(phoneNumber);
+
+	}
+
+	@Test
+	@Order(7)
+	@DisplayName("007. 업로드 이미지 - 이미지가 없는 경우")
+	public void uploadImageTest() {
+		EditMemberReq editMemberReq = EditMemberReq.builder()
+			.nickname("nickname")
+			.build();
+
+		memberService.editMemberInform(editMemberReq);
+
+	}
 
 }

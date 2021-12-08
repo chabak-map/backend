@@ -10,12 +10,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.service.jwt.JwtTokenService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 public class JwtMemberInterceptor implements HandlerInterceptor {
+
+	private final JwtTokenService jwtTokenService;
+
+	public JwtMemberInterceptor(JwtTokenService jwtTokenService) {
+		this.jwtTokenService = jwtTokenService;
+	}
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -29,6 +36,11 @@ public class JwtMemberInterceptor implements HandlerInterceptor {
 		if (accessToken == null || accessToken.isBlank()) {
 			log.info("미인증 JWT 요청");
 			throw new BaseException(EMPTY_JWT);
+		}
+
+		if (!jwtTokenService.validateToken(accessToken)) {
+			log.info("JWT 토큰 유효기간 만료");
+			throw new BaseException(INVALID_JWT);
 		}
 
 		return true;

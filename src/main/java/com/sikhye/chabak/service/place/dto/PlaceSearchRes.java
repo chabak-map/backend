@@ -1,6 +1,7 @@
 package com.sikhye.chabak.service.place.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Builder;
 import lombok.Getter;
 

@@ -31,17 +31,19 @@ public class PlaceRepositoryCustomImpl implements PlaceRepositoryCustom {
 	}
 
 	public Optional<List<PlaceSearchRes>> findPlaceNearbyPoint(Double lat, Double lng, Double radius) {
+
 		// Haversine 공식
 		NumberPath<Double> distance = Expressions.numberPath(Double.class, "distance");
+
 		Optional<List<PlaceSearchRes>> resultLists = Optional.ofNullable(queryFactory
 			.select(Projections.constructor(PlaceSearchRes.class,
 				place.id,
-				acos(
+				round(acos(
 					cos(radians(place.longitude).subtract(radians(asNumber(lng))))
 						.multiply(cos(radians(asNumber(lat))))
 						.multiply(cos(radians(place.latitude)))
 						.add(sin(radians(asNumber(lat))).multiply(sin(radians(place.latitude)))))
-					.multiply(asNumber(6371))
+					.multiply(asNumber(6371)), 3)
 					.as(String.valueOf(distance)),
 				place.latitude,
 				place.longitude))

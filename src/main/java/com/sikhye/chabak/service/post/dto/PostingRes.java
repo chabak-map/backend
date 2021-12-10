@@ -1,15 +1,17 @@
 package com.sikhye.chabak.service.post.dto;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostingRes {
 
+	private Long id;
 	private String title;
 	private String nickname;
 	private String imageUrl;
@@ -20,7 +22,8 @@ public class PostingRes {
 	}
 
 	@Builder
-	public PostingRes(String title, String nickname, String imageUrl, Long commentCount, LocalDate createdAt) {
+	public PostingRes(Long id, String title, String nickname, String imageUrl, Long commentCount, LocalDate createdAt) {
+		this.id = id;
 		this.title = title;
 		this.nickname = nickname;
 		this.imageUrl = imageUrl;

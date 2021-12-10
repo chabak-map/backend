@@ -212,6 +212,7 @@ public class PostingServiceImpl implements PostingService {
 					//               Long commentCount = postingCommentRepository.countByPostingIdAndStatus(posting.getId(), used);
 
 					return PostingRes.builder()
+						.id(posting.getId())
 						.title(posting.getTitle())
 						.nickname(posting.getMember().getNickname())
 						.imageUrl(posting.getPostingImages().isEmpty() ? "" :

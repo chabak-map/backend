@@ -88,7 +88,7 @@ public class MemberController {
 	}
 
 	@PatchMapping
-	public BaseResponse<Long> editMemberInform(@Valid EditMemberReq editMemberReq) {
+	public BaseResponse<Long> editMemberInform(@Valid @RequestBody EditMemberReq editMemberReq) {
 		return new BaseResponse<>(memberService.editMemberInform(editMemberReq));
 	}
 

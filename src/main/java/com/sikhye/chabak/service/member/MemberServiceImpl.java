@@ -166,6 +166,9 @@ public class MemberServiceImpl implements MemberService {
 
 		String findCode = redisTemplate.opsForValue().get(key);
 
+		log.info("userInput Code = {}", verifyCode);
+		log.info("inRedis Code = {}", findCode);
+
 		if (!verifyCode.equals(findCode)) {
 			throw new BaseException(INVALID_VERIFY_CODE);
 		}
@@ -195,7 +198,11 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public Long editMemberInform(EditMemberReq editMemberReq) {
 		// 닉네임 중복체크
-		if (isDuplicatedNickname(editMemberReq.getNickname())) {
+		Boolean duplicatedNickname = isDuplicatedNickname(editMemberReq.getNickname());
+
+		System.out.println("duplicatedNickname = " + duplicatedNickname);
+
+		if (duplicatedNickname) {
 			throw new BaseException(POST_USERS_EXISTS_NICKNAME);
 		}
 

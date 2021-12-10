@@ -17,10 +17,10 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
-import com.sikhye.chabak.service.comment.entity.PlaceReview;
-import com.sikhye.chabak.service.comment.entity.PostingComment;
 import com.sikhye.chabak.service.member.constant.BaseRole;
+import com.sikhye.chabak.service.place.entity.PlaceComment;
 import com.sikhye.chabak.service.post.entity.Posting;
+import com.sikhye.chabak.service.post.entity.PostingComment;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -87,7 +87,7 @@ public class Member extends BaseEntity {
 	}
 
 	@OneToMany(mappedBy = "member")
-	private List<PlaceReview> placeReviews = new ArrayList<>();
+	private List<PlaceComment> placeReviews = new ArrayList<>();
 
 	@OneToMany(mappedBy = "member")
 	private List<Posting> postings = new ArrayList<>();

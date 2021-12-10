@@ -31,4 +31,9 @@ public class EditMemberReq {
 		this.nickname = nickname;
 		this.image = image;
 	}
+
+	@Builder
+	public EditMemberReq(String nickname) {
+		this.nickname = nickname;
+	}
 }

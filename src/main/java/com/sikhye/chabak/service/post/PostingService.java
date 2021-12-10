@@ -1,10 +1,14 @@
 package com.sikhye.chabak.service.post;
 
+import java.util.List;
+
+import com.sikhye.chabak.service.post.dto.PostingCommentReq;
+import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
-
-import java.util.List;
+import com.sikhye.chabak.service.post.dto.PostingTagReq;
+import com.sikhye.chabak.service.post.dto.PostingTagRes;
 
 public interface PostingService {
 
@@ -28,5 +32,29 @@ public interface PostingService {
 
 	// 06. 포스트 삭제 API (jwt 이용)
 	Long statusToDeletePost(Long postId);
+
+	// 포스팅 태그 조회 API
+	List<String> findPostingTags(Long postingId);
+
+	// 포스팅 태그 등록 API
+	List<PostingTagRes> addPostingTags(Long placeId, PostingTagReq postingTagReq);
+
+	// 포스팅 태그 수정 API
+	Long editPostingTag(Long postingId, Long postingTagId, String postingTagName);
+
+	// 포스팅 태그 삭제 API
+	Long postingTagStatusToDelete(Long postingId, Long postingTagId);
+
+	// 05. 포스트 댓글 조회
+	List<PostingCommentRes> findPostComments(Long postId);
+
+	// 06. 포스트 댓글 작성
+	Long addPostComment(Long postId, PostingCommentReq commentReq);
+
+	// 07. 포스트 댓글 수정
+	Long editPostComment(Long postId, Long commentId, PostingCommentReq commentReq);
+
+	// 08. 포스트 댓글 삭제
+	Long statusToDeletePostComment(Long postId, Long commentId);
 
 }

@@ -1,11 +1,11 @@
 package com.sikhye.chabak.service.place.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sikhye.chabak.service.comment.dto.CommentRes;
+
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,13 +18,14 @@ public class PlaceDetailRes {
 	private String phoneNumber;
 	private List<String> placeImageUrls;
 	private List<String> tagNames;
-	private List<CommentRes> commentResList;
+	private List<PlaceCommentRes> commentResList;
 
 	public PlaceDetailRes() {
 	}
 
 	@Builder
-	public PlaceDetailRes(String name, String address, long reviewCount, long imageCount, String phoneNumber, List<String> placeImageUrls, List<String> tagNames, List<CommentRes> commentResList) {
+	public PlaceDetailRes(String name, String address, long reviewCount, long imageCount, String phoneNumber,
+		List<String> placeImageUrls, List<String> tagNames, List<PlaceCommentRes> commentResList) {
 		this.name = name;
 		this.address = address;
 		this.reviewCount = reviewCount;

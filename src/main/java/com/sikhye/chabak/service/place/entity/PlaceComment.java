@@ -1,4 +1,4 @@
-package com.sikhye.chabak.service.tag.entity;
+package com.sikhye.chabak.service.place.entity;
 
 import static javax.persistence.FetchType.*;
 
@@ -16,7 +16,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
-import com.sikhye.chabak.service.place.entity.Place;
+import com.sikhye.chabak.global.time.BaseEntity;
+import com.sikhye.chabak.service.member.entity.Member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,43 +25,54 @@ import lombok.Getter;
 @Getter
 @DynamicInsert
 @Entity
-@Table(name = "PlaceTag")
-public class PlaceTag {
+@Table(name = "PlaceComment")
+public class PlaceComment extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name;
-
 	@Column(name = "place_id")
 	private Long placeId;
+
+	@Column(name = "member_id")
+	private Long memberId;
+
+	private String content;
 
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
 
 	@Builder
-	public PlaceTag(String name, Long placeId) {
-		this.name = name;
+	public PlaceComment(Long placeId, Long memberId, String content) {
 		this.placeId = placeId;
+		this.memberId = memberId;
+		this.content = content;
 	}
 
-	public PlaceTag() {
-
+	public PlaceComment() {
 	}
 
 	public void setStatusToDelete() {
 		this.status = BaseStatus.DELETED;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	// ptpt: 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "PLACE_ID")
 	private Place place;
 
-}
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "MEMBER_ID")
+	private Member member;
 
+	//	// 연관관계 지원 함수
+	//	public void changePlace(Place place) {
+	//		this.place = place;
+	//		team.getPlaces().add(this);	// 리스트에 자신을 추가
+	//	}
+
+}

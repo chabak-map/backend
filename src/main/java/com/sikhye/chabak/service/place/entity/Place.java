@@ -16,8 +16,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
-import com.sikhye.chabak.service.comment.entity.PlaceReview;
-import com.sikhye.chabak.service.tag.entity.PlaceTag;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -78,5 +76,5 @@ public class Place {
 	private List<PlaceTag> tags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "place")
-	private List<PlaceReview> placeReviews = new ArrayList<>();
+	private List<PlaceComment> placeComments = new ArrayList<>();
 }

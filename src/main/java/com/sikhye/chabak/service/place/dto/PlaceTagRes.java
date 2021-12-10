@@ -1,4 +1,4 @@
-package com.sikhye.chabak.service.tag.dto;
+package com.sikhye.chabak.service.place.dto;
 
 import lombok.Builder;
 import lombok.Getter;

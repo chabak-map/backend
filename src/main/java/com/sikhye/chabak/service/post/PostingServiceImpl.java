@@ -13,16 +13,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sikhye.chabak.global.exception.BaseException;
-import com.sikhye.chabak.service.comment.repository.PostingCommentRepository;
 import com.sikhye.chabak.service.image.UploadService;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
+import com.sikhye.chabak.service.post.dto.PostingCommentReq;
+import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
+import com.sikhye.chabak.service.post.dto.PostingTagReq;
+import com.sikhye.chabak.service.post.dto.PostingTagRes;
 import com.sikhye.chabak.service.post.entity.Posting;
+import com.sikhye.chabak.service.post.entity.PostingComment;
 import com.sikhye.chabak.service.post.entity.PostingImage;
+import com.sikhye.chabak.service.post.entity.PostingTag;
+import com.sikhye.chabak.service.post.repository.PostingCommentRepository;
 import com.sikhye.chabak.service.post.repository.PostingImageRepository;
 import com.sikhye.chabak.service.post.repository.PostingRepository;
+import com.sikhye.chabak.service.post.repository.PostingTagRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,16 +41,19 @@ public class PostingServiceImpl implements PostingService {
 	private final PostingRepository postingRepository;
 	private final PostingImageRepository postingImageRepository;
 	private final PostingCommentRepository postingCommentRepository;
+	private final PostingTagRepository postingTagRepository;
 	private final UploadService s3UploadService;
 	private final JwtTokenService jwtTokenService;
 
 	public PostingServiceImpl(PostingRepository postingRepository,
 		PostingImageRepository postingImageRepository,
-		PostingCommentRepository postingCommentRepository, UploadService s3UploadService,
+		PostingCommentRepository postingCommentRepository,
+		PostingTagRepository postingTagRepository, UploadService s3UploadService,
 		JwtTokenService jwtTokenService) {
 		this.postingRepository = postingRepository;
 		this.postingImageRepository = postingImageRepository;
 		this.postingCommentRepository = postingCommentRepository;
+		this.postingTagRepository = postingTagRepository;
 		this.s3UploadService = s3UploadService;
 		this.jwtTokenService = jwtTokenService;
 	}
@@ -132,6 +142,62 @@ public class PostingServiceImpl implements PostingService {
 		return toDeletePost.getId();
 	}
 
+	@Override
+	public List<String> findPostingTags(Long postingId) {
+		List<PostingTag> postingTags = postingTagRepository.findPostingTagsByPostingIdAndStatus(postingId, USED)
+			.orElse(Collections.emptyList());
+
+		return postingTags.stream()
+			.map(PostingTag::getName)
+			.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public List<PostingTagRes> addPostingTags(Long postingId, PostingTagReq postingTagReq) {
+		List<String> postingTagNames = postingTagReq.getPostingTags();
+
+		return postingTagNames.stream()
+			.map(s -> {
+				PostingTag toSavePostingTag = PostingTag.builder()
+					.name(s)
+					.postingId(postingId)
+					.build();
+
+				PostingTag savedPostingTag = postingTagRepository.save(toSavePostingTag);
+				return new PostingTagRes(savedPostingTag.getId(), savedPostingTag.getName());
+			})
+			.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public Long editPostingTag(Long postingId, Long postingTagId, String postingTagName) {
+		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
+
+		if (!findPostingTag.getPostingId().equals(postingId))
+			throw new BaseException(SEARCH_NOT_FOUND_POST);
+
+		findPostingTag.setName(postingTagName);
+
+		return postingTagId;
+	}
+
+	@Override
+	@Transactional
+	public Long postingTagStatusToDelete(Long postingId, Long postingTagId) {
+		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
+
+		if (!findPostingTag.getPostingId().equals(postingId))
+			throw new BaseException(SEARCH_NOT_FOUND_POST);
+
+		findPostingTag.setStatusToDelete();
+
+		return postingTagId;
+	}
+
 	// TODO: 글에서 이미지만 관리하는 API 필요 ( 이미지 CRUD )
 
 	// ==================================
@@ -155,6 +221,69 @@ public class PostingServiceImpl implements PostingService {
 				}
 			)
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostingCommentRes> findPostComments(Long postId) {
+		List<PostingComment> postingComments = postingCommentRepository
+			.findPostingCommentsByPostingIdAndStatus(postId, USED).orElse(Collections.emptyList());
+
+		return postingComments.stream()
+			.map(postingComment -> PostingCommentRes.builder()
+				.name(postingComment.getMember().getNickname())
+				.content(postingComment.getContent())
+				.writingDate(postingComment.getCreatedAt().toLocalDate())
+				.build()).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public Long addPostComment(Long postId, PostingCommentReq commentReq) {
+		Long memberId = jwtTokenService.getMemberId();
+
+		PostingComment toSavePostingComment = PostingComment.builder()
+			.postingId(postId)
+			.memberId(memberId)
+			.content(commentReq.getContent())
+			.build();
+
+		return postingCommentRepository.save(toSavePostingComment).getId();
+
+	}
+
+	@Override
+	@Transactional
+	public Long editPostComment(Long postId, Long commentId, PostingCommentReq commentReq) {
+		Long memberId = jwtTokenService.getMemberId();
+
+		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
+
+		if (!memberId.equals(findPostingComment.getMemberId())) {
+			throw new BaseException(INVALID_USER_JWT);
+		}
+
+		findPostingComment.setContent(commentReq.getContent());
+
+		return findPostingComment.getId();
+	}
+
+	@Override
+	@Transactional
+	public Long statusToDeletePostComment(Long postId, Long commentId) {
+		Long memberId = jwtTokenService.getMemberId();
+
+		PostingComment findPostingComment = postingCommentRepository.findPostingCommentByIdAndStatus(commentId, USED);
+
+		if (!memberId.equals(findPostingComment.getMemberId())) {
+			throw new BaseException(INVALID_USER_JWT);
+		} else if (!postId.equals(findPostingComment.getPostingId())) {
+			throw new BaseException(DELETE_EMPTY);
+		} else {
+			findPostingComment.setStatusToDelete();
+
+			return findPostingComment.getId();
+		}
+
 	}
 
 }

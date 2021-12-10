@@ -1,4 +1,4 @@
-package com.sikhye.chabak.service.tag.entity;
+package com.sikhye.chabak.service.place.entity;
 
 import static javax.persistence.FetchType.*;
 
@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
-import com.sikhye.chabak.service.post.entity.Posting;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +23,8 @@ import lombok.Getter;
 @Getter
 @DynamicInsert
 @Entity
-@Table(name = "PostingTag")
-public class PostingTag {
+@Table(name = "PlaceTag")
+public class PlaceTag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +32,19 @@ public class PostingTag {
 
 	private String name;
 
-	@Column(name = "posting_id")
-	private Long postingId;
+	@Column(name = "place_id")
+	private Long placeId;
 
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
 
-	public PostingTag() {
+	@Builder
+	public PlaceTag(String name, Long placeId) {
+		this.name = name;
+		this.placeId = placeId;
+	}
+
+	public PlaceTag() {
 
 	}
 
@@ -51,15 +56,10 @@ public class PostingTag {
 		this.name = name;
 	}
 
-	@Builder
-	public PostingTag(String name, Long postingId) {
-		this.name = name;
-		this.postingId = postingId;
-	}
-
-	// 연관관계 매핑
+	// ptpt: 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "POSTING_ID")
-	private Posting posting;
+	@JoinColumn(name = "PLACE_ID")
+	private Place place;
 
 }
+

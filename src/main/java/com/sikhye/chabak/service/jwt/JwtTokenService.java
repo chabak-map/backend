@@ -32,7 +32,8 @@ public class JwtTokenService {
 	}
 
 	// 토큰 유효기간 4일
-	private final long tokenValidTime = 1000L * 60 * 60 * 24 * 4;
+	// private final long tokenValidTime = 1000L * 60 * 60 * 24 * 4;
+	private final long tokenValidTime = 1000L * 60 * 60 * 24 * 365;
 
 	// JWT 토큰 생성
 	public String createJwt(Long memberId, BaseRole role) {
@@ -116,7 +117,7 @@ public class JwtTokenService {
 			Jws<Claims> claims = Jwts.parser()
 				.setSigningKey(properties.getJwtSecret())
 				.parseClaimsJws(jwtToken);
-			
+
 			return !claims.getBody().getExpiration().before(new Date());
 		} catch (Exception e) {
 			return false;

@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(jwtAdminInterceptor)
 			.order(2)
 			.addPathPatterns("/places/**")
-			.excludePathPatterns("/places/comments/**");
+			.excludePathPatterns("/places/*/comments/**");
 	}
 
 	@Override

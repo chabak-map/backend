@@ -21,9 +21,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
-import com.sikhye.chabak.service.comment.entity.PostingComment;
 import com.sikhye.chabak.service.member.entity.Member;
-import com.sikhye.chabak.service.tag.entity.PostingTag;
 
 import lombok.Builder;
 import lombok.Getter;

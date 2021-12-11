@@ -52,10 +52,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 			.map(bookmark -> {
 				PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId());
 				return BookmarkRes.builder()
-					.name(place.getName())    // TODO: 최적화 (getPlace 아닌 다른 함수 만들기)
+					.id(place.getId())
+					.name(place.getName())
 					.address(place.getAddress())
-					.imageUrl(place.getPlaceImageUrls().get(0)) // TODO: NPE 발생 가능 (이미지 미 존재 시)
-					.placeTagNames(place.getTagNames())    // TODO: NPE 발생 가능
+					.imageUrl(place.getPlaceImageUrls().isEmpty() ? null :
+						place.getPlaceImageUrls().get(0))
+					.placeTagNames(place.getTagNames())
 					.build();
 			})
 			.collect(Collectors.toList());
@@ -79,11 +81,11 @@ public class BookmarkServiceImpl implements BookmarkService {
 	@Transactional
 	public Long statusToDeleteBookmark(Long bookmarkId) {
 		Long memberId = jwtTokenService.getMemberId();
-
+		
 		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, USED)
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 
-		if (memberId.equals(findBookmark.getId())) {
+		if (memberId.equals(findBookmark.getMemberId())) {
 			findBookmark.setStatusToDelete();
 			return findBookmark.getId();
 		} else {

@@ -52,12 +52,17 @@ public enum BaseResponseStatus {
 	POST_USERS_INVALID_NICKNAME(false, 2020, "잘못된 닉네임입니다."),
 	POST_USERS_INVALID_PASSWORD(false, 2021, "잘못된 비밀번호 형식입니다."),
 
+	VALID_INPUT_NULL(false, 2031, "입력되지 않은 값이 있습니다."),
+	VALID_INPUT_BLANK(false, 2032, "입력되지 않은 값이 있습니다."),
+
 	/**
 	 * 3000 : Response 오류
 	 */
 	// Common
 	RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
+
 	RESPONSE_EMPTY(false, 3001, "조회할 정보가 없습니다."),
+
 	DELETE_EMPTY(false, 3002, "삭제할 정보가 없습니다."),
 
 	// [POST]
@@ -65,23 +70,35 @@ public enum BaseResponseStatus {
 
 	// [PLACE]
 	SEARCH_NOT_FOUND_PLACE(false, 3015, "조회된 장소가 없습니다"),
+
 	SEARCH_NOT_FOUND_POST(false, 3016, "조회된 포스트가 없습니다"),
 
 	/**
 	 * 4000 : Database, Server 오류
 	 */
 	DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
+
 	SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
+
 	SMS_ERROR(false, 4002, "SMS 인증 요청에 실패하였습니다."),
 
 	ENCRYPTION_ERROR(false, 4011, "암호화에 실패하였습니다."),
+
 	DECRYPTION_ERROR(false, 4012, "복호화에 실패하였습니다."),
 
 	S3_UPLOAD_ERROR(false, 4021, "이미지 업로드에 실패하였습니다."),
-	S3_FORMAT_ERROR(false, 4022, "이미지 형식이 올바르지 않습니다.");
+
+	S3_FORMAT_ERROR(false, 4022, "이미지 형식이 올바르지 않습니다."),
 
 	// 5000 : 필요시 만들어서 쓰세요
 	// 6000 : 필요시 만들어서 쓰세요
+	TEST_1(false, 6001, "테스트1"),
+
+	TEST_2(false, 6002, "테스트2"),
+
+	TEST_3(false, 6003, "테스트3"),
+
+	TEST_4(false, 6004, "테스트4");
 
 	private final boolean isSuccess;
 	private final int code;

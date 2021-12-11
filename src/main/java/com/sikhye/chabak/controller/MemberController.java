@@ -39,7 +39,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV4");
+		return new BaseResponse<>("helloV2021-12-08");
 	}
 
 	@PostMapping("/login")
@@ -88,7 +88,7 @@ public class MemberController {
 	}
 
 	@PatchMapping
-	public BaseResponse<Long> editMemberInform(@Valid EditMemberReq editMemberReq) {
+	public BaseResponse<Long> editMemberInform(@Valid @RequestBody EditMemberReq editMemberReq) {
 		return new BaseResponse<>(memberService.editMemberInform(editMemberReq));
 	}
 

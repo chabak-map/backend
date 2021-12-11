@@ -1,24 +1,25 @@
-package com.sikhye.chabak.service.comment.dto;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Getter;
+package com.sikhye.chabak.service.place.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Builder;
+import lombok.Getter;
+
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CommentRes {
+public class PlaceCommentRes {
 
 	private String name;
 	private String content;
 	private LocalDate writingDate;
 
-	public CommentRes() {
+	public PlaceCommentRes() {
 	}
 
 	@Builder
-	public CommentRes(String name, String content, LocalDate writingDate) {
+	public PlaceCommentRes(String name, String content, LocalDate writingDate) {
 		this.name = name;
 		this.content = content;
 		this.writingDate = writingDate;

@@ -1,11 +1,10 @@
-package com.sikhye.chabak.service.comment.entity;
-
-import static javax.persistence.FetchType.*;
+package com.sikhye.chabak.service.post.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +17,6 @@ import org.hibernate.annotations.DynamicInsert;
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
 import com.sikhye.chabak.service.member.entity.Member;
-import com.sikhye.chabak.service.place.entity.Place;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -26,15 +24,15 @@ import lombok.Getter;
 @Getter
 @DynamicInsert
 @Entity
-@Table(name = "PlaceReview")
-public class PlaceReview extends BaseEntity {
+@Table(name = "PostingComment")
+public class PostingComment extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "place_id")
-	private Long placeId;
+	@Column(name = "posting_id")
+	private Long postingId;
 
 	@Column(name = "member_id")
 	private Long memberId;
@@ -45,13 +43,13 @@ public class PlaceReview extends BaseEntity {
 	private BaseStatus status;
 
 	@Builder
-	public PlaceReview(Long placeId, Long memberId, String content) {
-		this.placeId = placeId;
+	public PostingComment(Long postingId, Long memberId, String content) {
+		this.postingId = postingId;
 		this.memberId = memberId;
 		this.content = content;
 	}
 
-	public PlaceReview() {
+	public PostingComment() {
 	}
 
 	public void setStatusToDelete() {
@@ -62,18 +60,12 @@ public class PlaceReview extends BaseEntity {
 		this.content = content;
 	}
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "PLACE_ID")
-	private Place place;
-
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "MEMBER_ID")
 	private Member member;
 
-	//	// 연관관계 지원 함수
-	//	public void changePlace(Place place) {
-	//		this.place = place;
-	//		team.getPlaces().add(this);	// 리스트에 자신을 추가
-	//	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "POSTING_ID")
+	private Posting posting;
 
 }

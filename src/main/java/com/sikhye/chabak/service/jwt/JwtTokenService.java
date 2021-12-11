@@ -19,7 +19,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtTokenService {
 
@@ -112,8 +114,9 @@ public class JwtTokenService {
 	public boolean validateToken(String jwtToken) {
 		try {
 			Jws<Claims> claims = Jwts.parser()
-				.setSigningKey(properties.getUserInfoPasswordKey())
+				.setSigningKey(properties.getJwtSecret())
 				.parseClaimsJws(jwtToken);
+			
 			return !claims.getBody().getExpiration().before(new Date());
 		} catch (Exception e) {
 			return false;

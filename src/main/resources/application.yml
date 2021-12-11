@@ -1,6 +1,13 @@
+server:
+  servlet:
+    encoding:
+      force-response: true
+
 spring:
   profiles:
     include:
+      #      - dev
+      #      - prod
       - infra
 
   jpa:

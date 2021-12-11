@@ -1,4 +1,4 @@
-package com.sikhye.chabak.service.tag.repository;
+package com.sikhye.chabak.service.place.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
-import com.sikhye.chabak.service.tag.entity.PlaceTag;
+import com.sikhye.chabak.service.place.entity.PlaceTag;
 
 public interface PlaceTagRepository extends JpaRepository<PlaceTag, Long> {
 

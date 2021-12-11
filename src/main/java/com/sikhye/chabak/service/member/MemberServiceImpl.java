@@ -166,6 +166,9 @@ public class MemberServiceImpl implements MemberService {
 
 		String findCode = redisTemplate.opsForValue().get(key);
 
+		log.info("userInput Code = {}", verifyCode);
+		log.info("inRedis Code = {}", findCode);
+
 		if (!verifyCode.equals(findCode)) {
 			throw new BaseException(INVALID_VERIFY_CODE);
 		}
@@ -194,15 +197,28 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional
 	public Long editMemberInform(EditMemberReq editMemberReq) {
-		// 변경 가능: 닉네임, 프로필 이미지
-		Long memberId = jwtTokenService.getMemberId();
+		// 닉네임 중복체크
+		Boolean duplicatedNickname = isDuplicatedNickname(editMemberReq.getNickname());
 
+		System.out.println("duplicatedNickname = " + duplicatedNickname);
+
+		if (duplicatedNickname) {
+			throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+		}
+
+		// 회원 정보 파악
+		Long memberId = jwtTokenService.getMemberId();
 		Member findMember = memberRepository.findMemberByIdAndStatus(memberId, USED)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
-		String imageUrl = s3UploadService.uploadImage(editMemberReq.getImage(), "images/member/");
-
-		findMember.editMemberInfo(editMemberReq.getNickname(), imageUrl);
+		// 이미지가 유무에 따른 이미지 작업
+		// >> ptpt 이미지가 없을 경우
+		if (editMemberReq.getImage() != null) {
+			String imageUrl = s3UploadService.uploadImage(editMemberReq.getImage(), "images/member/");
+			findMember.editMemberInfo(editMemberReq.getNickname(), imageUrl);
+		} else {
+			findMember.editMemberNickname(editMemberReq.getNickname());
+		}
 
 		return findMember.getId();
 	}

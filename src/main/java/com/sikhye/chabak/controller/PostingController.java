@@ -10,13 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sikhye.chabak.global.response.BaseResponse;
 import com.sikhye.chabak.service.post.PostingService;
+import com.sikhye.chabak.service.post.dto.PostingCommentReq;
+import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
+import com.sikhye.chabak.service.post.dto.PostingTagReq;
+import com.sikhye.chabak.service.post.dto.PostingTagRes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,5 +67,51 @@ public class PostingController {
 	@PatchMapping("/{postId}/status")
 	public BaseResponse<Long> statusDeleteToPost(@PathVariable Long postId) {
 		return new BaseResponse<>(postingService.statusToDeletePost(postId));
+	}
+
+	@GetMapping("/posts/{postId}/tags")
+	public BaseResponse<List<String>> getPostingTags(@PathVariable Long postId) {
+		return new BaseResponse<>(postingService.findPostingTags(postId));
+	}
+
+	@PostMapping("/posts/{postId}/tags")
+	public BaseResponse<List<PostingTagRes>> addPostingTags(@PathVariable Long postId,
+		@RequestBody PostingTagReq postingTagReq) {
+		return new BaseResponse<>(postingService.addPostingTags(postId, postingTagReq));
+	}
+
+	@PatchMapping("/posts/{postId}/tags/{tagId}")
+	public BaseResponse<Long> editPostingTag(@PathVariable Long postId,
+		@PathVariable Long tagId,
+		@RequestParam String tagName) {
+		return new BaseResponse<>(postingService.editPostingTag(postId, tagId, tagName));
+	}
+
+	@PatchMapping("/posts/{postId}/tags/{tagId}/status")
+	public BaseResponse<Long> statusToDeletePostingTag(@PathVariable Long postId,
+		@PathVariable Long tagId) {
+		return new BaseResponse<>(postingService.postingTagStatusToDelete(postId, tagId));
+	}
+
+	@GetMapping("/posts/{postId}/comments")
+	public BaseResponse<List<PostingCommentRes>> findPostComments(@PathVariable Long postId) {
+		return new BaseResponse<>(postingService.findPostComments(postId));
+	}
+
+	@PostMapping("/posts/{postId}/comments")
+	public BaseResponse<Long> addPostComment(@PathVariable Long postId,
+		@Valid @RequestBody PostingCommentReq commentReq) {
+		return new BaseResponse<>(postingService.addPostComment(postId, commentReq));
+	}
+
+	@PatchMapping("/posts/{postId}/comments/{commentId}")
+	public BaseResponse<Long> editPostComment(@PathVariable Long postId, @PathVariable Long commentId,
+		@Valid @RequestBody PostingCommentReq commentReq) {
+		return new BaseResponse<>(postingService.editPostComment(postId, commentId, commentReq));
+	}
+
+	@PatchMapping("/posts/{postId}/comments/{commentId}/status")
+	public BaseResponse<Long> statusToDeletePostComment(@PathVariable Long postId, @PathVariable Long commentId) {
+		return new BaseResponse<>(postingService.statusToDeletePostComment(postId, commentId));
 	}
 }

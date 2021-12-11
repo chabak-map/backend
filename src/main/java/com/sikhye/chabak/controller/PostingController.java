@@ -48,7 +48,7 @@ public class PostingController {
 
 	// >> ptpt: 이미지까지 한 번에 넣어주면 글 + 이미지 동시 입력 가능 >> 생성자가 아니라 setter 이용해야 함
 	@PostMapping
-	public BaseResponse<Long> addPosts(@Valid PostingReq postingReq) {
+	public BaseResponse<Long> addPosts(@Valid @RequestBody PostingReq postingReq) {
 
 		return new BaseResponse<>(postingService.createPost(postingReq));
 	}
@@ -69,48 +69,48 @@ public class PostingController {
 		return new BaseResponse<>(postingService.statusToDeletePost(postId));
 	}
 
-	@GetMapping("/posts/{postId}/tags")
+	@GetMapping("/{postId}/tags")
 	public BaseResponse<List<String>> getPostingTags(@PathVariable Long postId) {
 		return new BaseResponse<>(postingService.findPostingTags(postId));
 	}
 
-	@PostMapping("/posts/{postId}/tags")
+	@PostMapping("/{postId}/tags")
 	public BaseResponse<List<PostingTagRes>> addPostingTags(@PathVariable Long postId,
 		@RequestBody PostingTagReq postingTagReq) {
 		return new BaseResponse<>(postingService.addPostingTags(postId, postingTagReq));
 	}
 
-	@PatchMapping("/posts/{postId}/tags/{tagId}")
+	@PatchMapping("/{postId}/tags/{tagId}")
 	public BaseResponse<Long> editPostingTag(@PathVariable Long postId,
 		@PathVariable Long tagId,
 		@RequestParam String tagName) {
 		return new BaseResponse<>(postingService.editPostingTag(postId, tagId, tagName));
 	}
 
-	@PatchMapping("/posts/{postId}/tags/{tagId}/status")
+	@PatchMapping("/{postId}/tags/{tagId}/status")
 	public BaseResponse<Long> statusToDeletePostingTag(@PathVariable Long postId,
 		@PathVariable Long tagId) {
 		return new BaseResponse<>(postingService.postingTagStatusToDelete(postId, tagId));
 	}
 
-	@GetMapping("/posts/{postId}/comments")
+	@GetMapping("/{postId}/comments")
 	public BaseResponse<List<PostingCommentRes>> findPostComments(@PathVariable Long postId) {
 		return new BaseResponse<>(postingService.findPostComments(postId));
 	}
 
-	@PostMapping("/posts/{postId}/comments")
+	@PostMapping("/{postId}/comments")
 	public BaseResponse<Long> addPostComment(@PathVariable Long postId,
 		@Valid @RequestBody PostingCommentReq commentReq) {
 		return new BaseResponse<>(postingService.addPostComment(postId, commentReq));
 	}
 
-	@PatchMapping("/posts/{postId}/comments/{commentId}")
+	@PatchMapping("/{postId}/comments/{commentId}")
 	public BaseResponse<Long> editPostComment(@PathVariable Long postId, @PathVariable Long commentId,
 		@Valid @RequestBody PostingCommentReq commentReq) {
 		return new BaseResponse<>(postingService.editPostComment(postId, commentId, commentReq));
 	}
 
-	@PatchMapping("/posts/{postId}/comments/{commentId}/status")
+	@PatchMapping("/{postId}/comments/{commentId}/status")
 	public BaseResponse<Long> statusToDeletePostComment(@PathVariable Long postId, @PathVariable Long commentId) {
 		return new BaseResponse<>(postingService.statusToDeletePostComment(postId, commentId));
 	}

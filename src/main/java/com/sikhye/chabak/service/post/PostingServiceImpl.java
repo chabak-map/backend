@@ -155,6 +155,9 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public List<PostingTagRes> addPostingTags(Long postingId, PostingTagReq postingTagReq) {
+		// 포스팅 작성 유저와 동일 권한인지 확인
+		validateMember(postingId);
+
 		List<String> postingTagNames = postingTagReq.getPostingTags();
 
 		return postingTagNames.stream()
@@ -173,6 +176,8 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public Long editPostingTag(Long postingId, Long postingTagId, String postingTagName) {
+		validateMember(postingId);
+
 		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
@@ -187,6 +192,8 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public Long postingTagStatusToDelete(Long postingId, Long postingTagId) {
+		validateMember(postingId);
+
 		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
@@ -285,6 +292,19 @@ public class PostingServiceImpl implements PostingService {
 			return findPostingComment.getId();
 		}
 
+	}
+
+	// ==============================================
+	// INTERNAL USE
+	// ==============================================
+	private void validateMember(Long postingId) {
+		Long memberId = jwtTokenService.getMemberId();
+		Long findMemberId = postingRepository.findPostingByIdAndStatus(postingId, USED)
+			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST)).getMemberId();
+
+		if (!memberId.equals(findMemberId)) {
+			throw new BaseException(INVALID_USER_JWT);
+		}
 	}
 
 }

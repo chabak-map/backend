@@ -48,7 +48,7 @@ public class PostingController {
 
 	// >> ptpt: 이미지까지 한 번에 넣어주면 글 + 이미지 동시 입력 가능 >> 생성자가 아니라 setter 이용해야 함
 	@PostMapping
-	public BaseResponse<Long> addPosts(@Valid PostingReq postingReq) {
+	public BaseResponse<Long> addPosts(@Valid @RequestBody PostingReq postingReq) {
 
 		return new BaseResponse<>(postingService.createPost(postingReq));
 	}

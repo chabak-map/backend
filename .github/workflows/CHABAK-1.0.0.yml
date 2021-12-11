@@ -25,7 +25,7 @@ jobs:
         shell: bash
 
       - name: Unzip application yml
-        run: tar xvf $RESOURCE_PATH/application.tar
+        run: tar xvf $RESOURCE_PATH/application.tar -C $RESOURCE_PATH
         shell: bash
 
       - name: Set up JDK 11

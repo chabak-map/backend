@@ -55,16 +55,16 @@ import com.sikhye.chabak.service.member.entity.Member;
 class MemberServiceImplTest {
 
 	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private WebApplicationContext wac;
-
-	@Autowired
 	private MemberService memberService;
 
 	@Autowired
 	private MemberRepository memberRepository;
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	private WebApplicationContext wac;
 
 	@Autowired
 	private EntityManager em;
@@ -280,5 +280,5 @@ class MemberServiceImplTest {
 		//then
 		assertThrows(BaseException.class, () -> memberService.findMember(phoneNumber, email));
 	}
-	
+
 }

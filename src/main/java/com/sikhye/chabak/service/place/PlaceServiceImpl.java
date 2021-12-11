@@ -80,6 +80,7 @@ public class PlaceServiceImpl implements PlaceService {
 		}
 
 		return PlaceDetailRes.builder()
+			.id(place.getId())
 			.name(place.getName())
 			.address(place.getAddress())
 			.placeImageUrls(placeImages.stream().map(PlaceImage::getImageUrl).collect(Collectors.toList()))

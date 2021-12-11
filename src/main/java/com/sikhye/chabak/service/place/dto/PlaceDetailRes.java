@@ -11,6 +11,7 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlaceDetailRes {
 
+	private Long id;
 	private String name;
 	private String address;
 	private long reviewCount;
@@ -24,8 +25,9 @@ public class PlaceDetailRes {
 	}
 
 	@Builder
-	public PlaceDetailRes(String name, String address, long reviewCount, long imageCount, String phoneNumber,
+	public PlaceDetailRes(Long id, String name, String address, long reviewCount, long imageCount, String phoneNumber,
 		List<String> placeImageUrls, List<String> tagNames, List<PlaceCommentRes> commentResList) {
+		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.reviewCount = reviewCount;

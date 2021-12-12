@@ -54,7 +54,7 @@ public class JwtTokenService {
  	*/
 	public String getJwt() {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-		return request.getHeader(X_ACCESS_TOKEN.toString());
+		return request.getHeader(X_ACCESS_TOKEN.label);
 	}
 
 	/*

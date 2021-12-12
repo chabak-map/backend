@@ -3,26 +3,25 @@ package com.sikhye.chabak.global.config;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.Getter;
 
 @Getter
-@Configuration
+@Validated
+@ConstructorBinding
 @ConfigurationProperties(prefix = "secret")    // >> ptpt : configurationProperties
 public class ConfigProperties {
 
 	@NotBlank
-	private String jwtSecret;
+	private final String jwtSecret;
 
 	@NotBlank
-	private String userInfoPasswordKey;
+	private final String userInfoPasswordKey;
 
-	public void setJwtSecret(String jwtSecret) {
+	public ConfigProperties(String jwtSecret, String userInfoPasswordKey) {
 		this.jwtSecret = jwtSecret;
-	}
-
-	public void setUserInfoPasswordKey(String userInfoPasswordKey) {
 		this.userInfoPasswordKey = userInfoPasswordKey;
 	}
 }

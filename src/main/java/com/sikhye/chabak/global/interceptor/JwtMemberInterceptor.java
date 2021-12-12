@@ -29,7 +29,7 @@ public class JwtMemberInterceptor implements HandlerInterceptor {
 		Object handler) throws Exception {
 
 		String requestURI = request.getRequestURI();
-		String accessToken = request.getHeader(X_ACCESS_TOKEN.toString());
+		String accessToken = request.getHeader(X_ACCESS_TOKEN.label);
 
 		log.info("인증 체크 인터셉터 실행 {}", requestURI);
 

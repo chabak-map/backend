@@ -90,9 +90,8 @@ dependencies {
     // 로그 처리 시 조건 추가
     implementation 'org.codehaus.janino:janino:3.0.12'
 
-    // 카카오 API에 사용할 Json Object
-    implementation 'org.json:json'
-
+    //kakao api json parser
+    implementation group: 'org.json', name: 'json', version: '20210307'
 }
 
 test {

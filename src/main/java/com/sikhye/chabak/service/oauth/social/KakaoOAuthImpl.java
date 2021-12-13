@@ -96,10 +96,10 @@ public class KakaoOAuthImpl implements SocialOAuth {
 		);
 
 		JSONObject body = new JSONObject(response.getBody());
-		String id = body.getString("id");
+		Long id = body.getLong("id");
 		String email = body.getJSONObject("kakao_account").getString("email");
 		String nickname = body.getJSONObject("properties").getString("nickname");
 
-		return new UserInfo(id, email, nickname);
+		return new UserInfo(id.toString(), email, nickname);
 	}
 }

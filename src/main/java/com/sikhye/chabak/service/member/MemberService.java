@@ -1,5 +1,7 @@
 package com.sikhye.chabak.service.member;
 
+import java.util.Optional;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sikhye.chabak.global.exception.BaseException;
@@ -9,6 +11,8 @@ import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
+import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.oauth.constant.OAuthType;
 
 public interface MemberService {
 
@@ -50,5 +54,11 @@ public interface MemberService {
 
 	// 12. 회원 이메일 중복체크
 	Boolean isDuplicatedEmail(String email);
+
+	// 13. 이메일로 회원찾기
+	Optional<Member> findMemberBy(String email);
+
+	// 14. 소셜 ID로 회원찾기
+	Optional<Member> findMemberBy(OAuthType socialType, String socialId);
 
 }

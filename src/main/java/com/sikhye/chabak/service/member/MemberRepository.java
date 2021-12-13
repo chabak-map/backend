@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.oauth.constant.OAuthType;
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
@@ -18,6 +19,9 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 	Optional<Member> findMemberByPhoneNumberAndStatus(String phoneNumber, BaseStatus status);
 
 	Optional<Member> findMemberByPhoneNumberAndEmailAndStatus(String phoneNumber, String email, BaseStatus status);
+
+	Optional<Member> findMemberBySocialTypeAndSocialIdAndStatus(OAuthType socialType, String socialId,
+		BaseStatus status);
 
 	Boolean existsByNicknameAndStatus(String nickname, BaseStatus status);
 

@@ -1,15 +1,17 @@
 package com.sikhye.chabak.service.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
+import static com.fasterxml.jackson.annotation.JsonProperty.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import static com.fasterxml.jackson.annotation.JsonProperty.Access;
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 public class JoinReq {

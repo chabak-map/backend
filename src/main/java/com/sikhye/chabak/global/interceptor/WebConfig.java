@@ -23,12 +23,12 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(jwtMemberInterceptor)            // 인터셉터 등록
 			.order(1)                                            // 인터셉터 호출 우선순위
 			.addPathPatterns("/**")                              // 인터셉터 적용할 URI 패턴
-			.excludePathPatterns("/error", "/members/**", "/auth/**"); // 인터셉터에서 제외할 URI 패턴
+			.excludePathPatterns("/error", "/members/**", "/auth/**", "/**.ico"); // 인터셉터에서 제외할 URI 패턴
 
 		registry.addInterceptor(jwtAdminInterceptor)
 			.order(2)
 			.addPathPatterns("/places/**")
-			.excludePathPatterns("/places/*/comments/**");
+			.excludePathPatterns("/places/*/comments/**", "/error", "/members/**", "/auth/**", "/**.ico");
 	}
 
 	@Override

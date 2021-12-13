@@ -1,10 +1,12 @@
 package com.sikhye.chabak.service.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 public class LoginReq {
@@ -20,6 +22,7 @@ public class LoginReq {
 	public LoginReq() {
 	}
 
+	@Builder
 	public LoginReq(String email, String password) {
 		this.email = email;
 		this.password = password;

@@ -2,10 +2,12 @@ package com.sikhye.chabak.service.member;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static com.sikhye.chabak.service.member.constant.BaseRole.*;
 
 import java.util.Optional;
 import java.util.Random;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -26,6 +28,7 @@ import com.sikhye.chabak.service.member.dto.PasswordReq;
 import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.member.sms.SmsService;
 import com.sikhye.chabak.service.member.sms.entity.SmsCacheKey;
+import com.sikhye.chabak.service.oauth.constant.OAuthType;
 import com.sikhye.chabak.utils.encrypt.EncryptService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +44,9 @@ public class MemberServiceImpl implements MemberService {
 	private final UploadService s3UploadService;
 	private final EncryptService encryptService;
 	private final JwtTokenService jwtTokenService;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public MemberServiceImpl(MemberRepository memberRepository,
 		RedisTemplate<String, String> redisTemplate, SmsService smsService,
@@ -75,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
 		// 현재 찾은 비밀번호와 유저 입력 패스워드 비교
 		if (password.equals(findPassword)) {
 			Long memberId = findMember.getId();
-			String jwt = jwtTokenService.createJwt(memberId, ROLE_USER);
+			String jwt = jwtTokenService.createJwt(memberId, findMember.getRole());
 			return new LoginRes(memberId, jwt);
 		} else {
 			throw new BaseException(FAILED_TO_LOGIN);
@@ -113,10 +119,12 @@ public class MemberServiceImpl implements MemberService {
 			.phoneNumber(joinReq.getPhoneNumber())
 			.build();
 
+		// >> ptpt: default 값 적용시키기 위해 save와 flush 동시 사용
 		Member savedMember = memberRepository.save(newMember);
+		em.refresh(savedMember);
 
 		// JWT 토큰 생성
-		String jwt = jwtTokenService.createJwt(savedMember.getId(), ROLE_USER);
+		String jwt = jwtTokenService.createJwt(savedMember.getId(), savedMember.getRole());
 		return new LoginRes(savedMember.getId(), jwt);
 	}
 
@@ -272,6 +280,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Boolean isDuplicatedEmail(String email) {
 		return memberRepository.existsByEmailAndStatus(email, USED);
+	}
+
+	@Override
+	public Optional<Member> findMemberBy(String email) {
+		return memberRepository.findMemberByEmailAndStatus(email, USED);
+	}
+
+	@Override
+	public Optional<Member> findMemberBy(OAuthType socialType, String socialId) {
+		return memberRepository.findMemberBySocialTypeAndSocialIdAndStatus(socialType, socialId, USED);
 	}
 
 	// ================================================

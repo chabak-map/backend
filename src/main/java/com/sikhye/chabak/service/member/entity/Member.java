@@ -18,6 +18,7 @@ import org.hibernate.annotations.DynamicInsert;
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
 import com.sikhye.chabak.service.member.constant.BaseRole;
+import com.sikhye.chabak.service.oauth.constant.OAuthType;
 import com.sikhye.chabak.service.place.entity.PlaceComment;
 import com.sikhye.chabak.service.post.entity.Posting;
 import com.sikhye.chabak.service.post.entity.PostingComment;
@@ -53,6 +54,13 @@ public class Member extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private BaseRole role;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "social_type")
+	private OAuthType socialType;
+
+	@Column(name = "social_id")
+	private String socialId;
+
 	@Builder
 	public Member(String nickname, String email, String password, String phoneNumber, String imageUrl) {
 		this.nickname = nickname;
@@ -84,6 +92,11 @@ public class Member extends BaseEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setSocialInfo(OAuthType socialType, String socialId) {
+		this.socialType = socialType;
+		this.socialId = socialId;
 	}
 
 	@OneToMany(mappedBy = "member")

@@ -81,7 +81,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	@Transactional
 	public Long statusToDeleteBookmark(Long bookmarkId) {
 		Long memberId = jwtTokenService.getMemberId();
-		
+
 		Bookmark findBookmark = bookmarkRepository.findBookmarkByIdAndStatus(bookmarkId, USED)
 			.orElseThrow(() -> new BaseException(DELETE_EMPTY));
 

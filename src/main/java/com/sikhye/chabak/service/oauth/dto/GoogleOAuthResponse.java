@@ -1,8 +1,11 @@
 package com.sikhye.chabak.service.oauth.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Getter;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GoogleOAuthResponse {
 
 	private String accessToken;

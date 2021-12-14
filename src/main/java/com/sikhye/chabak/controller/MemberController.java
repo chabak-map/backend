@@ -39,7 +39,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV2021-12-13");
+		return new BaseResponse<>("helloV2021-12-14");
 	}
 
 	@PostMapping("/login")
@@ -102,7 +102,7 @@ public class MemberController {
 		return new BaseResponse<>(memberService.findMemberEmail(param.get("phoneNumber")));
 	}
 
-	// ptpt: RequestBody 를 새로운 객체 생성 없이도 사용이 가능
+	// ptpt: Controller에서 RequestBody 를 새로운 객체 생성 없이도 사용이 가능
 	@PostMapping("/help/password")
 	public BaseResponse<Long> findMember(@RequestBody Map<String, String> param) {
 		return new BaseResponse<>(memberService.findMember(param.get("phoneNumber"), param.get("email")));

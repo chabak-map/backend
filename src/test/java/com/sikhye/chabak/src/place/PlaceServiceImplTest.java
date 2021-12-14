@@ -41,10 +41,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.place.PlaceService;
+import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
-import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
 import com.sikhye.chabak.service.place.entity.Place;
@@ -126,16 +126,16 @@ class PlaceServiceImplTest {
 		Double radius = 1D;
 
 		//when
-		List<PlaceSearchRes> placeSearchRes = placeService.aroundPlace(latitude, longitude, radius);
+		List<PlaceAroundRes> placeSearchRes = placeService.aroundPlace(latitude, longitude, radius);
 
 		System.out.println("========================");
 		placeSearchRes.stream()
-			.map(PlaceSearchRes::getPlaceId)
+			.map(PlaceAroundRes::getPlaceId)
 			.forEach(System.out::println);
 
 		System.out.println("========================");
 		placeSearchRes.stream()
-			.map(PlaceSearchRes::getDistance)
+			.map(PlaceAroundRes::getDistance)
 			.forEach(System.out::println);
 		System.out.println("========================");
 

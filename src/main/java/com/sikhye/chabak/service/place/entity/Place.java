@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sikhye.chabak.global.constant.BaseStatus;
 
 import lombok.Builder;
@@ -23,6 +25,7 @@ import lombok.Getter;
 @Getter
 @DynamicInsert
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Table(name = "Place")
 public class Place {
 
@@ -64,7 +67,6 @@ public class Place {
 		this.longitude = longitude;
 	}
 
-	// TODO: for test
 	public void setStatusToUsed() {
 		this.status = BaseStatus.USED;
 	}

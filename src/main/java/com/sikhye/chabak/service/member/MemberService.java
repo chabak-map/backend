@@ -58,7 +58,8 @@ public interface MemberService {
 	// 13. 이메일로 회원찾기
 	Optional<Member> findMemberBy(String email);
 
-	// 14. 소셜 ID로 회원찾기
 	Optional<Member> findMemberBy(OAuthType socialType, String socialId);
+
+	Optional<Member> findMemberBy(Long memberId);
 
 }

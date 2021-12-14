@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sikhye.chabak.global.constant.BaseStatus;
 
 import lombok.Builder;
@@ -23,6 +25,9 @@ import lombok.Getter;
 @Getter
 @DynamicInsert
 @Entity
+// >> ptpt: 양방향 참조 및 셀프 참조인 경우에 서로 참조하는 문제가 발생하는데 이를 해결
+// 서로가 서로를 참조함 ( place -> placeimage -> place -> 반복 )- infinite recursion
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Table(name = "PlaceImage")
 public class PlaceImage {
 

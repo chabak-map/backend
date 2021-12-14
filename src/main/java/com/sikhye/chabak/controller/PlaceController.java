@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sikhye.chabak.global.response.BaseResponse;
 import com.sikhye.chabak.service.place.PlaceService;
+import com.sikhye.chabak.service.place.constant.SortType;
+import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
@@ -43,7 +45,7 @@ public class PlaceController {
 
 	// 주변 차박지 찾기
 	@GetMapping
-	public BaseResponse<List<PlaceSearchRes>> getAroundPlace(@RequestParam("lat") Double latitude,
+	public BaseResponse<List<PlaceAroundRes>> getAroundPlace(@RequestParam("lat") Double latitude,
 		@RequestParam("lng") Double longitude,
 		@RequestParam("r") Double radius) {
 		return new BaseResponse<>(placeService.aroundPlace(latitude, longitude, radius));
@@ -113,4 +115,17 @@ public class PlaceController {
 		return new BaseResponse<>(placeService.statusToDeletePlaceComment(placeId, commentId));
 	}
 
+	@GetMapping("/search")
+	public BaseResponse<List<PlaceSearchRes>> placeSearch(
+		@RequestParam("query") String query,
+		@RequestParam("sort") String sort,
+		@RequestParam("lat") Double latitude,
+		@RequestParam("lng") Double longitude
+	) {
+		if (sort.equals(SortType.DISTANCE.name())) {
+			return new BaseResponse<>(placeService.searchPlacesDistanceOrder(query, latitude, longitude));
+		} else {
+			return new BaseResponse<>(placeService.searchPlacesRelateOrder(query, latitude, longitude));
+		}
+	}
 }

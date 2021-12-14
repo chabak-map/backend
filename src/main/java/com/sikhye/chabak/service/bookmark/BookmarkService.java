@@ -1,8 +1,8 @@
 package com.sikhye.chabak.service.bookmark;
 
-import com.sikhye.chabak.service.bookmark.dto.BookmarkRes;
-
 import java.util.List;
+
+import com.sikhye.chabak.service.bookmark.dto.BookmarkRes;
 
 public interface BookmarkService {
 

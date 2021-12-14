@@ -3,20 +3,27 @@ package com.sikhye.chabak.service.place;
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
+import com.sikhye.chabak.service.member.MemberService;
+import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
+import com.sikhye.chabak.service.place.dto.PlaceImageRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
@@ -40,16 +47,19 @@ public class PlaceServiceImpl implements PlaceService {
 	private final PlaceImageRepository placeImageRepository;
 	private final PlaceCommentRepository placeCommentRepository;
 	private final PlaceTagRepository placeTagRepository;
+	private final MemberService memberService;
 	private final JwtTokenService jwtTokenService;
 
 	public PlaceServiceImpl(PlaceRepository placeRepository,
 		PlaceImageRepository placeImageRepository,
 		PlaceCommentRepository placeCommentRepository,
-		PlaceTagRepository placeTagRepository, JwtTokenService jwtTokenService) {
+		PlaceTagRepository placeTagRepository, MemberService memberService,
+		JwtTokenService jwtTokenService) {
 		this.placeRepository = placeRepository;
 		this.placeImageRepository = placeImageRepository;
 		this.placeCommentRepository = placeCommentRepository;
 		this.placeTagRepository = placeTagRepository;
+		this.memberService = memberService;
 		this.jwtTokenService = jwtTokenService;
 	}
 
@@ -99,7 +109,7 @@ public class PlaceServiceImpl implements PlaceService {
 	}
 
 	@Override
-	public List<PlaceSearchRes> aroundPlace(Double latitude, Double longitude, Double radius) {
+	public List<PlaceAroundRes> aroundPlace(Double latitude, Double longitude, Double radius) {
 		return placeRepository.findPlaceNearbyPoint(latitude, longitude, radius).orElse(Collections.emptyList());
 	}
 
@@ -242,6 +252,116 @@ public class PlaceServiceImpl implements PlaceService {
 		}
 	}
 
+	/**
+	 * 거리순 장소 검색
+	 *
+	 * @param query 검색어
+	 * @param lat 현재 위도
+	 * @param lng 현재 경도
+	 * @return 거리순으로 나열된 장소 리스트
+	 */
+	@Override
+	public List<PlaceSearchRes> searchPlacesDistanceOrder(String query, Double lat, Double lng) {
+
+		Long memberId = jwtTokenService.getMemberId();
+
+		Member findMember = memberService.findMemberBy(memberId)
+			.orElseThrow(() -> new BaseException(CHECK_USER));
+
+		// ptpt :: 비어있는 리스트로 반환 ( repository 결과가 없을 때 )
+		// 1) 장소이름
+		List<Place> places = placeRepository.findPlacesByNameLikeAndStatus(query, USED)
+			.orElse(Collections.emptyList());
+
+		// 2) 장소태그
+		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByNameLikeAndStatus(
+			query, USED).orElse(Collections.emptyList());
+
+		// 3) 장소 태그에서 중복된 placeId는 필터링 한다.
+		List<Place> combinedPlaces = Stream.concat( // 5) 장소이름, 장소태그를 합친다.
+				placeTags.stream()
+					.map(PlaceTag::getPlaceId)
+					.distinct()
+					.map((placeId) -> placeRepository.findPlaceByIdAndStatus(placeId, USED)
+						.orElse(null)), // 4) 장소태그의 placeId를 가지고 장소이름을 검색한다.
+				places.stream())
+			.collect(Collectors.toList());
+
+		// 6) PlaceSearchRes로 변환한다.
+		List<PlaceSearchRes> searchPlaces = combinedPlaces.stream()
+			.map(place ->
+				PlaceSearchRes.builder()
+					.name(place.getName())
+					.address(place.getAddress())
+					.reviewCount(placeCommentRepository.countByPlaceIdAndStatus(place.getId(), USED))
+					.distance(getDistance(lat, lng, place.getLatitude(), place.getLongitude()))
+					.placeTags(place.getTags().stream().map(placeTag -> new PlaceTagRes(placeTag.getPlaceId(),
+						placeTag.getName())).collect(Collectors.toList()))
+					.placeImages(place.getPlaceImages().stream()
+						.map(placeImage -> PlaceImageRes.builder()
+							.imageId(placeImage.getId())
+							.imageUrl(placeImage.getImageUrl())
+							.build())
+						.collect(Collectors.toList()))
+					.isBookmarked(findMember.getBookmarks()
+						.stream()
+						.anyMatch(bookmark -> bookmark.getPlaceId().equals(place.getId())))
+					.build())
+			.sorted(Comparator.comparingDouble(PlaceSearchRes::getDistance)) // 7)  sorting
+			.collect(Collectors.toList());
+
+		return searchPlaces;
+	}
+
+	@Override
+	public List<PlaceSearchRes> searchPlacesRelateOrder(String query, Double lat, Double lng) {
+		return null;
+	}
+
+	// ====================================================================
+	// INTERNAL USE
+	// ====================================================================
+
+	/**
+	 * 두 지점간 거리 계산
+	 *
+	 * @param srcLat 시작지 위도
+	 * @param srcLng 시작지 경도
+	 * @param dstLat 목적지 위도
+	 * @param dstLng 목적지 경도
+	 * @return km단위 거리
+	 */
+	private double getDistance(double srcLat, double srcLng, double dstLat, double dstLng) {
+
+		// 소수점 반올림 설정
+		NumberFormat nf = NumberFormat.getNumberInstance();
+		nf.setMaximumFractionDigits(3);
+		nf.setGroupingUsed(false);    // 지수표현 제거
+
+		double theta = srcLng - dstLng;
+		double dist =
+			Math.sin(deg2rad(srcLat)) * Math.sin(deg2rad(dstLat)) + Math.cos(deg2rad(srcLat)) * Math.cos(
+				deg2rad(dstLat))
+				* Math.cos(deg2rad(theta));
+
+		dist = Math.acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 60 * 1.1515;
+
+		dist = dist * 1.609344;
+
+		return Double.parseDouble(nf.format(dist));
+	}
+
+	// This function converts decimal degrees to radians
+	private static double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	// This function converts radians to decimal degrees
+	private static double rad2deg(double rad) {
+		return (rad * 180 / Math.PI);
+	}
 }
 
 // .placeImages(placeImages.stream().map(PlaceImage::getImageUrl).collect(Collectors.toList()))

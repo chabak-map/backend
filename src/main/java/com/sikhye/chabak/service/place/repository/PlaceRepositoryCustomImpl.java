@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sikhye.chabak.global.constant.BaseStatus;
-import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
+import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,13 +30,13 @@ public class PlaceRepositoryCustomImpl implements PlaceRepositoryCustom {
 		this.queryFactory = new JPAQueryFactory(em);
 	}
 
-	public Optional<List<PlaceSearchRes>> findPlaceNearbyPoint(Double lat, Double lng, Double radius) {
+	public Optional<List<PlaceAroundRes>> findPlaceNearbyPoint(Double lat, Double lng, Double radius) {
 
 		// Haversine 공식
 		NumberPath<Double> distance = Expressions.numberPath(Double.class, "distance");
 
-		Optional<List<PlaceSearchRes>> resultLists = Optional.ofNullable(queryFactory
-			.select(Projections.constructor(PlaceSearchRes.class,
+		Optional<List<PlaceAroundRes>> resultLists = Optional.ofNullable(queryFactory
+			.select(Projections.constructor(PlaceAroundRes.class,
 				place.id,
 				round(acos(
 					cos(radians(place.longitude).subtract(radians(asNumber(lng))))

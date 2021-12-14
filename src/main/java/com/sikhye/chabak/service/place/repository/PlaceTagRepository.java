@@ -14,4 +14,5 @@ public interface PlaceTagRepository extends JpaRepository<PlaceTag, Long> {
 
 	Optional<PlaceTag> findPlaceTagByIdAndStatus(Long placeTagId, BaseStatus status);
 
+	Optional<List<PlaceTag>> findPlaceTagsByNameLikeAndStatus(String tagName, BaseStatus status);
 }

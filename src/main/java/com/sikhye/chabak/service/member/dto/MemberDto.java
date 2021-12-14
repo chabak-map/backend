@@ -1,12 +1,16 @@
 package com.sikhye.chabak.service.member.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Builder;
+import lombok.Getter;
+
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberDto {
 
 	private Long id;

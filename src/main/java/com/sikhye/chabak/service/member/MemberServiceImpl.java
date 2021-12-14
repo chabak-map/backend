@@ -292,6 +292,11 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findMemberBySocialTypeAndSocialIdAndStatus(socialType, socialId, USED);
 	}
 
+	@Override
+	public Optional<Member> findMemberBy(Long memberId) {
+		return memberRepository.findMemberByIdAndStatus(memberId, USED);
+	}
+
 	// ================================================
 	// INTERNAL USE
 	// ================================================

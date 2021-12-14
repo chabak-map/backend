@@ -16,4 +16,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
 	// select * from Bookmark where id = :id and status = :status
 	Optional<Bookmark> findBookmarkByIdAndStatus(Long id, BaseStatus status);
+
+	Boolean existsBookmarkByMemberIdAndPlaceIdAndStatus(Long memberId, Long placeId, BaseStatus status);
 }

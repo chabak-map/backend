@@ -1,27 +1,34 @@
 package com.sikhye.chabak.service.place.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlaceSearchRes {
 
-	private Long placeId;
+	private String name;
+	private String address;
+	private Long reviewCount;
 	private Double distance;
-	private Double latitude;
-	private Double longitude;
-
-	@Builder
-	public PlaceSearchRes(Long placeId, Double distance, Double latitude, Double longitude) {
-		this.placeId = placeId;
-		this.distance = distance;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
+	private List<PlaceTagRes> placeTags;
+	private List<PlaceImageRes> placeImages;    // TODO: 이미지는 TOP 3개만 제공
+	private Boolean isBookmarked;
 
 	public PlaceSearchRes() {
+
+	}
+
+	@Builder
+	public PlaceSearchRes(String name, String address, Long reviewCount, Double distance,
+		List<PlaceTagRes> placeTags, List<PlaceImageRes> placeImages, Boolean isBookmarked) {
+		this.name = name;
+		this.address = address;
+		this.reviewCount = reviewCount;
+		this.distance = distance;
+		this.placeTags = placeTags;
+		this.placeImages = placeImages;
+		this.isBookmarked = isBookmarked;
 	}
 }

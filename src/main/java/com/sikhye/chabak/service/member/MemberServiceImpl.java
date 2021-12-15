@@ -26,9 +26,9 @@ import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
 import com.sikhye.chabak.service.member.entity.Member;
-import com.sikhye.chabak.service.member.sms.SmsService;
-import com.sikhye.chabak.service.member.sms.entity.SmsCacheKey;
 import com.sikhye.chabak.service.oauth.constant.OAuthType;
+import com.sikhye.chabak.service.sms.SmsService;
+import com.sikhye.chabak.service.sms.entity.SmsCacheKey;
 import com.sikhye.chabak.utils.encrypt.EncryptService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -142,6 +142,7 @@ public class MemberServiceImpl implements MemberService {
 			.build();
 	}
 
+	// >> ptpt: @cachePut
 	@Override
 	@Transactional
 	@CachePut(value = SmsCacheKey.SMS, key = "#phoneNumber")
@@ -166,6 +167,7 @@ public class MemberServiceImpl implements MemberService {
 		return verifyCode;
 	}
 
+	// >> ptpt: @CacheEvict
 	@Override
 	@CacheEvict(value = SmsCacheKey.SMS, key = "#phoneNumber")
 	public Boolean verifySms(String verifyCode, String phoneNumber) throws BaseException {

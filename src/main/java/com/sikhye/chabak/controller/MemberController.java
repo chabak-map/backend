@@ -22,7 +22,7 @@ import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
-import com.sikhye.chabak.service.member.dto.SmsReq;
+import com.sikhye.chabak.service.sms.dto.SmsReq;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +39,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV2021-12-14");
+		return new BaseResponse<>("helloV2021-12-15");
 	}
 
 	@PostMapping("/login")

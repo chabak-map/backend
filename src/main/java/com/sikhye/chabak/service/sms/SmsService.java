@@ -1,23 +1,5 @@
-package com.sikhye.chabak.service.member.sms;
+package com.sikhye.chabak.service.sms;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sikhye.chabak.service.member.sms.dto.MessagesRequestDto;
-import com.sikhye.chabak.service.member.sms.dto.SendSmsResponseDto;
-import com.sikhye.chabak.service.member.sms.dto.SmsRequestDto;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +9,26 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sikhye.chabak.service.sms.dto.MessagesRequestDto;
+import com.sikhye.chabak.service.sms.dto.SendSmsResponseDto;
+import com.sikhye.chabak.service.sms.dto.SmsRequestDto;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
@@ -43,7 +45,13 @@ public class SmsService {
 	@Value("${naver.cloud.SERVICE_ID}")
 	private String serviceId;
 
-	public SendSmsResponseDto sendSms(String recipientPhoneNumber, String content) throws ParseException, JsonProcessingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, URISyntaxException {
+	public SendSmsResponseDto sendSms(String recipientPhoneNumber, String content) throws
+		ParseException,
+		JsonProcessingException,
+		UnsupportedEncodingException,
+		InvalidKeyException,
+		NoSuchAlgorithmException,
+		URISyntaxException {
 		Long time = System.currentTimeMillis();
 		List<MessagesRequestDto> messages = new ArrayList<>();
 
@@ -74,11 +82,12 @@ public class SmsService {
 
 		// restTemplate로 post 요청을 보낸다. 별 일 없으면 202 코드 반환된다.
 		RestTemplate restTemplate = new RestTemplate();
-		SendSmsResponseDto sendSmsResponseDto = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"), body, SendSmsResponseDto.class);
-		System.out.println(sendSmsResponseDto.getStatusCode());
+		SendSmsResponseDto sendSmsResponseDto = restTemplate.postForObject(
+			new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"), body,
+			SendSmsResponseDto.class);
+
 		return sendSmsResponseDto;
 	}
-
 
 	public String makeSignature(Long time) throws
 		NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {

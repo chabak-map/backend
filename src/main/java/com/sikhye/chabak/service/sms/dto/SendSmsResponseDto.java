@@ -1,11 +1,11 @@
-package com.sikhye.chabak.service.member.sms.dto;
+package com.sikhye.chabak.service.sms.dto;
+
+import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor

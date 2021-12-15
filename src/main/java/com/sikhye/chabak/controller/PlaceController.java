@@ -20,6 +20,7 @@ import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
+import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
@@ -127,5 +128,10 @@ public class PlaceController {
 		} else {
 			return new BaseResponse<>(placeService.searchPlacesRelateOrder(query, latitude, longitude));
 		}
+	}
+
+	@GetMapping("/rank")
+	public BaseResponse<List<PlaceRankRes>> placeRank() {
+		return new BaseResponse<>(placeService.getTop5PlaceRanks());
 	}
 }

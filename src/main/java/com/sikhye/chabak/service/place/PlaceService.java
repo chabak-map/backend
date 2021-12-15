@@ -6,6 +6,7 @@ import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
+import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
@@ -52,5 +53,8 @@ public interface PlaceService {
 	List<PlaceSearchRes> searchPlacesDistanceOrder(String query, Double lat, Double lng);
 
 	List<PlaceSearchRes> searchPlacesRelateOrder(String query, Double lat, Double lng);
+
+	// 14. 장소 랭킹
+	List<PlaceRankRes> getTop5PlaceRanks();
 
 }

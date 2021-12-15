@@ -2,6 +2,7 @@ package com.sikhye.chabak.service.place;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static java.util.Objects.*;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -9,9 +10,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.service.place.dto.PlaceImageRes;
+import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
@@ -48,18 +53,22 @@ public class PlaceServiceImpl implements PlaceService {
 	private final PlaceCommentRepository placeCommentRepository;
 	private final PlaceTagRepository placeTagRepository;
 	private final MemberService memberService;
+	private final RedisTemplate<String, String> redisTemplate;
 	private final JwtTokenService jwtTokenService;
+
+	private final String ZSET_KEY = "views";
 
 	public PlaceServiceImpl(PlaceRepository placeRepository,
 		PlaceImageRepository placeImageRepository,
 		PlaceCommentRepository placeCommentRepository,
 		PlaceTagRepository placeTagRepository, MemberService memberService,
-		JwtTokenService jwtTokenService) {
+		RedisTemplate<String, String> redisTemplate, JwtTokenService jwtTokenService) {
 		this.placeRepository = placeRepository;
 		this.placeImageRepository = placeImageRepository;
 		this.placeCommentRepository = placeCommentRepository;
 		this.placeTagRepository = placeTagRepository;
 		this.memberService = memberService;
+		this.redisTemplate = redisTemplate;
 		this.jwtTokenService = jwtTokenService;
 	}
 
@@ -89,28 +98,35 @@ public class PlaceServiceImpl implements PlaceService {
 			reviewCount = placeReviews.size();
 		}
 
-		return PlaceDetailRes.builder()
+		PlaceDetailRes placeDetail = PlaceDetailRes.builder()
 			.id(place.getId())
 			.name(place.getName())
 			.address(place.getAddress())
 			.placeImageUrls(placeImages.stream().map(PlaceImage::getImageUrl).collect(Collectors.toList()))
-			.commentResList(placeReviews.stream().map(placeReview -> {
-				return PlaceCommentRes.builder()
-					.name(placeReview.getMember().getNickname())
-					.content(placeReview.getContent())
-					.writingDate(placeReview.getCreatedAt().toLocalDate())
-					.build();
-			}).collect(Collectors.toList()))
-			.phoneNumber(place.getPhoneNumber())    // TODO: 복호화 필요
+			.commentResList(placeReviews.stream()
+				.map(placeReview ->
+					PlaceCommentRes.builder()
+						.name(placeReview.getMember().getNickname())
+						.content(placeReview.getContent())
+						.writingDate(placeReview.getCreatedAt().toLocalDate())
+						.build())
+				.collect(Collectors.toList()))
+			.phoneNumber(place.getPhoneNumber())
 			.reviewCount(reviewCount)
 			.imageCount(imageCount)
 			.tagNames(placeTagNames)
 			.build();
+
+		//조회 수 증가
+		redisTemplate.opsForZSet().incrementScore(ZSET_KEY, Long.toString(place.getId()), 1);
+		// redisTemplate.opsForZSet().add();
+
+		return placeDetail;
 	}
 
 	@Override
 	public List<PlaceAroundRes> aroundPlace(Double latitude, Double longitude, Double radius) {
-		return placeRepository.findPlaceNearbyPoint(latitude, longitude, radius).orElse(Collections.emptyList());
+		return placeRepository.findPlaceNearbyPoint(latitude, longitude, radius).orElseGet(Collections::emptyList);
 	}
 
 	@Override
@@ -137,7 +153,7 @@ public class PlaceServiceImpl implements PlaceService {
 	@Override
 	public List<String> findPlaceTags(Long placeId) {
 		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByPlaceIdAndStatus(placeId, USED)
-			.orElse(Collections.emptyList());
+			.orElseGet(Collections::emptyList);
 
 		return placeTags.stream()
 			.map(PlaceTag::getName)
@@ -193,7 +209,7 @@ public class PlaceServiceImpl implements PlaceService {
 	@Override
 	public List<PlaceCommentRes> findPlaceComments(Long placeId) {
 		List<PlaceComment> placeReviews = placeCommentRepository.findPlaceCommentsByPlaceIdAndStatus(placeId, USED)
-			.orElse(Collections.emptyList());
+			.orElseGet(Collections::emptyList);
 
 		return placeReviews.stream()
 			.map(placeReview -> PlaceCommentRes.builder()
@@ -271,11 +287,11 @@ public class PlaceServiceImpl implements PlaceService {
 		// ptpt :: 비어있는 리스트로 반환 ( repository 결과가 없을 때 )
 		// 1) 장소이름
 		List<Place> places = placeRepository.findPlacesByNameLikeAndStatus(query, USED)
-			.orElse(Collections.emptyList());
+			.orElseGet(Collections::emptyList);
 
 		// 2) 장소태그
 		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByNameLikeAndStatus(
-			query, USED).orElse(Collections.emptyList());
+			query, USED).orElseGet(Collections::emptyList);
 
 		// 3) 장소 태그에서 중복된 placeId는 필터링 한다.
 		List<Place> combinedPlaces = Stream.concat( // 5) 장소이름, 장소태그를 합친다.
@@ -316,6 +332,38 @@ public class PlaceServiceImpl implements PlaceService {
 	@Override
 	public List<PlaceSearchRes> searchPlacesRelateOrder(String query, Double lat, Double lng) {
 		return null;
+	}
+
+	@Override
+	public List<PlaceRankRes> getTop5PlaceRanks() {
+
+		Set<ZSetOperations.TypedTuple<String>> rankSet = redisTemplate.opsForZSet()
+			.reverseRangeWithScores(ZSET_KEY, 0, 4);
+
+		if (rankSet == null || rankSet.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		return rankSet.stream()
+			.map(rank -> {
+					Long placeId = Long.parseLong(requireNonNull(rank.getValue()));
+					Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, USED)
+						.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
+
+					return PlaceRankRes.builder()
+						.viewCount(requireNonNull(rank.getScore()).intValue())
+						.placeId(placeId)
+						.name(findPlace.getName())
+						.address(findPlace.getAddress())
+						.placeImageUrl( // >> ptpt: getImage null체크 대신 stream 사용
+							findPlace.getPlaceImages()
+								.stream()
+								.limit(1)
+								.map(PlaceImage::getImageUrl)
+								.collect(Collectors.joining()))
+						.build();
+				}
+			).collect(Collectors.toList());
 	}
 
 	// ====================================================================

@@ -1,12 +1,13 @@
-package com.sikhye.chabak.service.member.sms.dto;
+package com.sikhye.chabak.service.sms.dto;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Data
 @Service

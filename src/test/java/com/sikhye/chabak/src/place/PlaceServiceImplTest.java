@@ -45,6 +45,7 @@ import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
 import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
+import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
 import com.sikhye.chabak.service.place.entity.Place;
@@ -549,6 +550,19 @@ class PlaceServiceImplTest {
 					.content(objectMapper.writeValueAsString(placeCommentReq)))
 				.andDo(print())
 				.andReturn());
+	}
+
+	@Test
+	@DisplayName("10. 차박지 랭킹 (1-5위)")
+	@Order(20)
+	public void getTop5PlaceRanksTest() {
+		//given
+
+		//when
+		List<PlaceRankRes> top5PlaceRanks = placeService.getTop5PlaceRanks();
+
+		//then
+		System.out.println("Complete Test");
 	}
 
 }

@@ -2,8 +2,8 @@ package com.sikhye.chabak.service.bookmark;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
-import static java.util.Collections.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 		// 멤버 ID를 기준으로 북마크 조회
 		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, USED)
-			.orElse(emptyList());
+			.orElseGet(Collections::emptyList);
 
 		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
 		return bookmarks.stream()

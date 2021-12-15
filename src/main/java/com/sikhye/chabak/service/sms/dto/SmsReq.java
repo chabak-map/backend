@@ -1,9 +1,9 @@
-package com.sikhye.chabak.service.member.dto;
+package com.sikhye.chabak.service.sms.dto;
+
+import javax.validation.constraints.NotBlank;
 
 import lombok.Builder;
 import lombok.Getter;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 public class SmsReq {

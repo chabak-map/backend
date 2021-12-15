@@ -65,7 +65,7 @@ public class PostingServiceImpl implements PostingService {
 
 	@Override
 	public List<PostingRes> findPosts() {
-		List<Posting> findPostings = postingRepository.findPostingsByStatus(USED).orElse(Collections.emptyList());
+		List<Posting> findPostings = postingRepository.findPostingsByStatus(USED).orElseGet(Collections::emptyList);
 
 		return getPostingResList(findPostings);
 
@@ -75,7 +75,7 @@ public class PostingServiceImpl implements PostingService {
 	public List<PostingRes> findMemberPosts() {
 		Long memberId = jwtTokenService.getMemberId();
 		List<Posting> memberPostings = postingRepository.findPostingsByMemberIdAndStatus(memberId, USED)
-			.orElse(Collections.emptyList());
+			.orElseGet(Collections::emptyList);
 
 		return getPostingResList(memberPostings);
 	}
@@ -145,7 +145,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public List<String> findPostingTags(Long postingId) {
 		List<PostingTag> postingTags = postingTagRepository.findPostingTagsByPostingIdAndStatus(postingId, USED)
-			.orElse(Collections.emptyList());
+			.orElseGet(Collections::emptyList);
 
 		return postingTags.stream()
 			.map(PostingTag::getName)
@@ -234,7 +234,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public List<PostingCommentRes> findPostComments(Long postId) {
 		List<PostingComment> postingComments = postingCommentRepository
-			.findPostingCommentsByPostingIdAndStatus(postId, USED).orElse(Collections.emptyList());
+			.findPostingCommentsByPostingIdAndStatus(postId, USED).orElseGet(Collections::emptyList);
 
 		return postingComments.stream()
 			.map(postingComment -> PostingCommentRes.builder()

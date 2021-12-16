@@ -34,3 +34,14 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
+
+#20211216
+## 엘라스틱서치 로깅
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        data:
+#          elasticsearch:
+#            client:
+#              WIRE: TRACE

@@ -123,11 +123,7 @@ public class PlaceController {
 		@RequestParam("lat") Double latitude,
 		@RequestParam("lng") Double longitude
 	) {
-		if (sort.equals(SortType.DISTANCE.name())) {
-			return new BaseResponse<>(placeService.searchPlacesDistanceOrder(query, latitude, longitude));
-		} else {
-			return new BaseResponse<>(placeService.searchPlacesRelateOrder(query, latitude, longitude));
-		}
+		return new BaseResponse<>(placeService.searchPlacesOrder(query, latitude, longitude, SortType.valueOf(sort)));
 	}
 
 	@GetMapping("/rank")

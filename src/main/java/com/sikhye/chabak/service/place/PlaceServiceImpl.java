@@ -2,6 +2,7 @@ package com.sikhye.chabak.service.place;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static com.sikhye.chabak.service.place.constant.SortType.*;
 import static java.util.Objects.*;
 
 import java.text.NumberFormat;
@@ -23,6 +24,7 @@ import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.member.MemberService;
 import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.place.constant.SortType;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
@@ -269,49 +271,38 @@ public class PlaceServiceImpl implements PlaceService {
 	}
 
 	/**
-	 * 거리순 장소 검색
+	 * 거리순/관련순 장소 검색
 	 *
 	 * @param query 검색어
-	 * @param lat 현재 위도
-	 * @param lng 현재 경도
-	 * @return 거리순으로 나열된 장소 리스트
+	 * @param lat   현재 위도
+	 * @param lng   현재 경도
+	 * @param sortType 정렬타입(거리순/인기순)
+	 * @return 거리순/관련순으로 나열된 장소 리스트
 	 */
 	@Override
-	public List<PlaceSearchRes> searchPlacesDistanceOrder(String query, Double lat, Double lng) {
+	public List<PlaceSearchRes> searchPlacesOrder(String query, Double lat, Double lng, SortType sortType) {
 
 		Long memberId = jwtTokenService.getMemberId();
 
 		Member findMember = memberService.findMemberBy(memberId)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
-		// ptpt :: 비어있는 리스트로 반환 ( repository 결과가 없을 때 )
-		// 1) 장소이름
-		List<Place> places = placeRepository.findPlacesByNameLikeAndStatus(query, USED)
+		// 0) 키워드에 주소가 있는지 필터링, 파싱 (강원도 차박지 라는게 들어오면 강원으로 검색할 수 있도록 하기)
+
+		// 1) 이름, 주소로 장소를 검색한다.
+		List<Place> places = placeRepository.findPlacesByNameContainingOrAddressContainingAndStatus(query, query, USED)
 			.orElseGet(Collections::emptyList);
 
-		// 2) 장소태그
-		List<PlaceTag> placeTags = placeTagRepository.findPlaceTagsByNameLikeAndStatus(
-			query, USED).orElseGet(Collections::emptyList);
-
-		// 3) 장소 태그에서 중복된 placeId는 필터링 한다.
-		List<Place> combinedPlaces = Stream.concat( // 5) 장소이름, 장소태그를 합친다.
-				placeTags.stream()
-					.map(PlaceTag::getPlaceId)
-					.distinct()
-					.map((placeId) -> placeRepository.findPlaceByIdAndStatus(placeId, USED)
-						.orElse(null)), // 4) 장소태그의 placeId를 가지고 장소이름을 검색한다.
-				places.stream())
-			.collect(Collectors.toList());
-
-		// 6) PlaceSearchRes로 변환한다.
-		List<PlaceSearchRes> searchPlaces = combinedPlaces.stream()
+		// 2) DTO 변환
+		Stream<PlaceSearchRes> placeSearchResStream = places.stream()
 			.map(place ->
 				PlaceSearchRes.builder()
+					.id(place.getId())
 					.name(place.getName())
 					.address(place.getAddress())
 					.reviewCount(placeCommentRepository.countByPlaceIdAndStatus(place.getId(), USED))
 					.distance(getDistance(lat, lng, place.getLatitude(), place.getLongitude()))
-					.placeTags(place.getTags().stream().map(placeTag -> new PlaceTagRes(placeTag.getPlaceId(),
+					.placeTags(place.getTags().stream().map(placeTag -> new PlaceTagRes(placeTag.getId(),
 						placeTag.getName())).collect(Collectors.toList()))
 					.placeImages(place.getPlaceImages().stream()
 						.map(placeImage -> PlaceImageRes.builder()
@@ -322,16 +313,24 @@ public class PlaceServiceImpl implements PlaceService {
 					.isBookmarked(findMember.getBookmarks()
 						.stream()
 						.anyMatch(bookmark -> bookmark.getPlaceId().equals(place.getId())))
-					.build())
-			.sorted(Comparator.comparingDouble(PlaceSearchRes::getDistance)) // 7)  sorting
-			.collect(Collectors.toList());
+					.build());
 
-		return searchPlaces;
-	}
+		// 3) 거리순 / 관련순 정렬
+		if (sortType.equals(DISTANCE)) {
+			return placeSearchResStream
+				.sorted(Comparator.comparingDouble(PlaceSearchRes::getDistance))
+				.collect(Collectors.toList());
+		} else {
+			// >> ptpt: 스트림 내부 람다 사용한 경우 역순 정렬 시 Collections로 감싸야 한다.
+			return placeSearchResStream
+				.sorted(Collections.reverseOrder(Comparator.comparingInt(
+					(placeSearchRes) -> requireNonNullElse(
+						// >> ptpt: requireNonNullElse -> 이렇게 하는 방식도 NPE 발생하지 않는가 ?
+						redisTemplate.opsForZSet().score(ZSET_KEY, placeSearchRes.getId().toString()), 0.0).intValue()
+				)))
+				.collect(Collectors.toList());
+		}
 
-	@Override
-	public List<PlaceSearchRes> searchPlacesRelateOrder(String query, Double lat, Double lng) {
-		return null;
 	}
 
 	@Override

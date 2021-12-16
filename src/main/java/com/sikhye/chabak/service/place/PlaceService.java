@@ -2,6 +2,7 @@ package com.sikhye.chabak.service.place;
 
 import java.util.List;
 
+import com.sikhye.chabak.service.place.constant.SortType;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
@@ -50,9 +51,7 @@ public interface PlaceService {
 	Long statusToDeletePlaceComment(Long placeId, Long commentId);
 
 	// 13. 장소 검색
-	List<PlaceSearchRes> searchPlacesDistanceOrder(String query, Double lat, Double lng);
-
-	List<PlaceSearchRes> searchPlacesRelateOrder(String query, Double lat, Double lng);
+	List<PlaceSearchRes> searchPlacesOrder(String query, Double lat, Double lng, SortType sortType);
 
 	// 14. 장소 랭킹
 	List<PlaceRankRes> getTop5PlaceRanks();

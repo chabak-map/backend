@@ -1,10 +1,12 @@
 package com.sikhye.chabak.service.member;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
+import com.sikhye.chabak.service.member.constant.BaseRole;
 import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.oauth.constant.OAuthType;
 
@@ -26,5 +28,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 	Boolean existsByNicknameAndStatus(String nickname, BaseStatus status);
 
 	Boolean existsByEmailAndStatus(String email, BaseStatus status);
+
+	Optional<List<Member>> findMembersByRoleAndStatus(BaseRole role, BaseStatus status);
 
 }

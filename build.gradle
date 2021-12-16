@@ -92,6 +92,10 @@ dependencies {
 
     //kakao api json parser
     implementation group: 'org.json', name: 'json', version: '20210307'
+
+    //20211216
+    // elasticsearch
+    // implementation 'org.springframework.data:spring-data-elasticsearch'
 }
 
 test {

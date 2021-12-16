@@ -2,7 +2,9 @@ package com.sikhye.chabak.service.member;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
 import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
+import static com.sikhye.chabak.service.member.constant.BaseRole.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -297,6 +299,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Optional<Member> findMemberBy(Long memberId) {
 		return memberRepository.findMemberByIdAndStatus(memberId, USED);
+	}
+
+	@Override
+	public Optional<List<Member>> findAllAdmin() {
+		return memberRepository.findMembersByRoleAndStatus(ROLE_ADMIN, USED);
 	}
 
 	// ================================================

@@ -1,5 +1,6 @@
 package com.sikhye.chabak.service.member;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -61,5 +62,8 @@ public interface MemberService {
 	Optional<Member> findMemberBy(OAuthType socialType, String socialId);
 
 	Optional<Member> findMemberBy(Long memberId);
+
+	// 14. 관리자 계정
+	Optional<List<Member>> findAllAdmin();
 
 }

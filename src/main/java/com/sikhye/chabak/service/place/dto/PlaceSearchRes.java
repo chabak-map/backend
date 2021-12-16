@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class PlaceSearchRes {
 
+	private Long id;
 	private String name;
 	private String address;
 	private Long reviewCount;
@@ -21,8 +22,9 @@ public class PlaceSearchRes {
 	}
 
 	@Builder
-	public PlaceSearchRes(String name, String address, Long reviewCount, Double distance,
+	public PlaceSearchRes(Long id, String name, String address, Long reviewCount, Double distance,
 		List<PlaceTagRes> placeTags, List<PlaceImageRes> placeImages, Boolean isBookmarked) {
+		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.reviewCount = reviewCount;

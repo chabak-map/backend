@@ -26,6 +26,16 @@ public class PlaceRepositoryCustomImpl implements PlaceRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
 
+	//20211216
+	// private final ElasticsearchOperations elasticsearchOperations;    // Document, Search 기능을 모두 가지고 있음
+
+	//20211216
+	// public PlaceRepositoryCustomImpl(EntityManager em,
+	// 	ElasticsearchOperations elasticsearchOperations) {
+	// 	this.queryFactory = new JPAQueryFactory(em);
+	// 	this.elasticsearchOperations = elasticsearchOperations;
+	// }
+
 	public PlaceRepositoryCustomImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
 	}

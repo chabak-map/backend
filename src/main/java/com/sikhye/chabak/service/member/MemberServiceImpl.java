@@ -102,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
 			throw new BaseException(ENCRYPTION_ERROR);
 		}
 
-		// 닉네임, 이메일 중복체크
+		// 닉네임, 이메일, 휴대전화 중복체크
 		Optional<Member> findMemberEmail = memberRepository.findMemberByEmailAndStatus(joinReq.getEmail(), USED);
 		if (findMemberEmail.isPresent()) {
 			throw new BaseException(POST_USERS_EXISTS_EMAIL);
@@ -112,6 +112,13 @@ public class MemberServiceImpl implements MemberService {
 			USED);
 		if (findMemberNickname.isPresent()) {
 			throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+		}
+
+		Optional<Member> findMemberPhoneNumber = memberRepository.findMemberByPhoneNumberAndStatus(
+			joinReq.getPhoneNumber(),
+			USED);
+		if (findMemberPhoneNumber.isPresent()) {
+			throw new BaseException(POST_USERS_EXISTS_PHONE_NUMBER);
 		}
 
 		Member newMember = Member.builder()

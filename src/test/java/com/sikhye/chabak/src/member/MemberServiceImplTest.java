@@ -178,6 +178,24 @@ class MemberServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("01-3. 중복된 휴대폰번호 가입 시도")
+	@Order(6)
+	public void memberJoinDuplicatedPhoneNumberTest() throws BaseException {
+
+		//given
+		JoinReq joinReq = JoinReq.builder()
+			.email("junit1234@junit123.com")
+			.nickname("junit1234")
+			.password("junit123")
+			.phoneNumber("01099999999")
+			.build();
+
+		//when and then
+		BaseException exception = assertThrows(BaseException.class, () -> memberService.join(joinReq));
+		assertEquals(POST_USERS_EXISTS_PHONE_NUMBER.getCode(), exception.getStatus().getCode());
+	}
+
+	@Test
 	@Order(7)
 	@DisplayName("36. 회원정보 수정")
 	public void uploadImageTest() throws Exception {
@@ -203,7 +221,7 @@ class MemberServiceImplTest {
 	@Test
 	@Order(11)
 	@DisplayName("37. 회원 비밀번호 수정")
-	public void editPasswordTest() throws Exception {
+	public void editPasswordTest() {
 
 		//given
 		PasswordReq passwordReq = PasswordReq.builder()
@@ -227,7 +245,7 @@ class MemberServiceImplTest {
 	@Test
 	@Order(14)
 	@DisplayName("38. 회원 이메일찾기")
-	public void findMemberEmail() throws Exception {
+	public void findMemberEmail() {
 
 		//given
 		PasswordReq passwordReq = PasswordReq.builder()
@@ -247,7 +265,7 @@ class MemberServiceImplTest {
 	@Test
 	@Order(16)
 	@DisplayName("39. 회원 비밀번호 찾기 검증")
-	public void findMember() throws Exception {
+	public void findMember() {
 
 		//given
 		String phoneNumber = "01012123434";

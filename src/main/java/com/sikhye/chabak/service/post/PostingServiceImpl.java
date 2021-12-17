@@ -18,6 +18,7 @@ import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
@@ -207,30 +208,6 @@ public class PostingServiceImpl implements PostingService {
 
 	// TODO: 글에서 이미지만 관리하는 API 필요 ( 이미지 CRUD )
 
-	// ==================================
-	// INTERNAL USE
-	// ==================================
-	@NotNull
-	private List<PostingRes> getPostingResList(List<Posting> postings) {
-		return postings.stream()
-			.map(posting -> {
-					// ptpt: Optional map 사용
-					//               String postingImageUrl = postingImageRepository.findTop1ByPostingIdAndStatus(posting.getId(), used).map(PostingImage::getImageUrl).orElse("");
-					//               Long commentCount = postingCommentRepository.countByPostingIdAndStatus(posting.getId(), used);
-
-					return PostingRes.builder()
-						.id(posting.getId())
-						.title(posting.getTitle())
-						.nickname(posting.getMember().getNickname())
-						.imageUrl(posting.getPostingImages().isEmpty() ? "" :
-							posting.getPostingImages().get(0).getImageUrl())    // TODO: NPE 우려
-						.commentCount((long)posting.getPostingComments().size())
-						.build();
-				}
-			)
-			.collect(Collectors.toList());
-	}
-
 	@Override
 	public List<PostingCommentRes> findPostComments(Long postId) {
 		List<PostingComment> postingComments = postingCommentRepository
@@ -294,6 +271,25 @@ public class PostingServiceImpl implements PostingService {
 
 	}
 
+	@Override
+	public List<PostingRecentRes> getTop4RecentPosts() {
+		return postingRepository.findTop4ByStatusOrderByCreatedAtDesc(USED).orElseGet(Collections::emptyList).stream()
+			.map(posting -> PostingRecentRes.builder()
+				.title(posting.getTitle())
+				.reviewCount(posting.getPostingComments().size())
+				.imageUrl(posting.getPostingImages().size() != 0 ? posting.getPostingImages().get(0).getImageUrl() : "")
+				.build())
+			.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostingRes> findMemberPosts(Long memberId) {
+		List<Posting> memberPostings = postingRepository.findPostingsByMemberIdAndStatus(memberId, USED)
+			.orElseGet(Collections::emptyList);
+
+		return getPostingResList(memberPostings);
+	}
+
 	// ==============================================
 	// INTERNAL USE
 	// ==============================================
@@ -305,6 +301,23 @@ public class PostingServiceImpl implements PostingService {
 		if (!memberId.equals(findMemberId)) {
 			throw new BaseException(INVALID_USER_JWT);
 		}
+	}
+
+	@NotNull
+	private List<PostingRes> getPostingResList(List<Posting> postings) {
+		return postings.stream()
+			.map(posting ->
+				PostingRes.builder()
+					.id(posting.getId())
+					.title(posting.getTitle())
+					.nickname(posting.getMember().getNickname())
+					.imageUrl(posting.getPostingImages().isEmpty() ? "" :
+						posting.getPostingImages().get(0).getImageUrl())    // TODO: NPE 우려
+					.commentCount((long)posting.getPostingComments().size())
+					.createdAt(posting.getCreatedAt().toLocalDate())
+					.build()
+			)
+			.collect(Collectors.toList());
 	}
 
 }

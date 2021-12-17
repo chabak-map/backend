@@ -5,6 +5,7 @@ import java.util.List;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
@@ -57,4 +58,9 @@ public interface PostingService {
 	// 08. 포스트 댓글 삭제
 	Long statusToDeletePostComment(Long postId, Long commentId);
 
+	// 최근 4개 포스트 정보
+	List<PostingRecentRes> getTop4RecentPosts();
+
+	// 특정 상대 작성한 포스팅 조회 API
+	List<PostingRes> findMemberPosts(Long memberId);
 }

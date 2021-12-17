@@ -18,6 +18,7 @@ import com.sikhye.chabak.service.post.PostingService;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
@@ -113,5 +114,15 @@ public class PostingController {
 	@PatchMapping("/{postId}/comments/{commentId}/status")
 	public BaseResponse<Long> statusToDeletePostComment(@PathVariable Long postId, @PathVariable Long commentId) {
 		return new BaseResponse<>(postingService.statusToDeletePostComment(postId, commentId));
+	}
+
+	@GetMapping("/recency")
+	public BaseResponse<List<PostingRecentRes>> top4RecentPosts() {
+		return new BaseResponse<>(postingService.getTop4RecentPosts());
+	}
+
+	@GetMapping("/members/{memberId}")
+	public BaseResponse<List<PostingRes>> findMemberPosts(@PathVariable Long memberId) {
+		return new BaseResponse<>(postingService.findMemberPosts(memberId));
 	}
 }

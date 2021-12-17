@@ -15,5 +15,7 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, Posting
 	Optional<List<Posting>> findPostingsByMemberIdAndStatus(Long memberId, BaseStatus status);
 
 	Optional<Posting> findPostingByIdAndStatus(Long postingId, BaseStatus status);
+
+	Optional<List<Posting>> findTop4ByStatusOrderByCreatedAtDesc(BaseStatus status);
 }
 

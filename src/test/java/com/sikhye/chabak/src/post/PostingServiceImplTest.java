@@ -42,6 +42,7 @@ import com.sikhye.chabak.service.post.PostingService;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
@@ -538,5 +539,35 @@ class PostingServiceImplTest {
 				.andReturn());
 
 	}
+
+	@Test
+	@DisplayName("51. 최근 포스트 게시글 Top 4")
+	@Order(20)
+	public void getTop4RecentPostingTest() {
+		//given
+
+		//when
+		List<PostingRecentRes> top4RecentPosts = postingService.getTop4RecentPosts();
+
+		//then
+		assertEquals(top4RecentPosts.size(), 4);
+		top4RecentPosts.forEach(postingRecentRes ->
+			System.out.println("postingRecentRes.getTitle() = " + postingRecentRes.getTitle()));
+	}
+
+	@Test
+	@DisplayName("52. 다른 유저가 작성한 포스트 리스트 조회")
+	@Order(21)
+	public void findMemberPostsTest() {
+		//given
+		Long memberId = 107L;
+
+		//when
+		List<PostingRes> memberPosts = postingService.findMemberPosts(memberId);
+
+		//then
+		assertEquals(memberPosts.size(), 3);
+	}
+
 }
 

@@ -45,16 +45,18 @@ public class Place {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 
+	private String url;
+
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
 
 	@Builder
-	public Place(String name, String address, String content, Double latitude, Double longitude) {
+	public Place(String name, String address, String content, String phoneNumber, String url) {
 		this.name = name;
 		this.address = address;
 		this.content = content;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.phoneNumber = phoneNumber;
+		this.url = url;
 	}
 
 	public Place() {

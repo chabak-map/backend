@@ -40,8 +40,10 @@ public class PlaceController {
 
 	// 장소 상세정보
 	@GetMapping("/{placeId}")
-	public BaseResponse<PlaceDetailRes> getPlaceDetail(@PathVariable Long placeId) {
-		return new BaseResponse<>(placeService.getPlace(placeId));
+	public BaseResponse<PlaceDetailRes> getPlaceDetail(@PathVariable Long placeId,
+		@RequestParam(required = false, value = "lat") Double latitude,
+		@RequestParam(required = false, value = "lng") Double longitude) {
+		return new BaseResponse<>(placeService.getPlace(placeId, latitude, longitude));
 	}
 
 	// 주변 차박지 찾기

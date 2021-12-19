@@ -15,7 +15,7 @@ import com.sikhye.chabak.service.place.dto.PlaceTagRes;
 public interface PlaceService {
 
 	// 01. 장소 상세정보 API
-	PlaceDetailRes getPlace(Long placeId);
+	PlaceDetailRes getPlace(Long placeId, Double latitude, Double longitude);
 
 	// 02. 장소 반경조회 API
 	List<PlaceAroundRes> aroundPlace(Double latitude, Double longitude, Double radius);

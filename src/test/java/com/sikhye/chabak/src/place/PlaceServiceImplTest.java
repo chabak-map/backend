@@ -106,7 +106,7 @@ class PlaceServiceImplTest {
 	@Order(1)
 	public void getPlaceTest() {
 		//given
-		PlaceDetailRes place = placeService.getPlace(3L);
+		PlaceDetailRes place = placeService.getPlace(3L, null, null);
 
 		//when
 		String placeName = place.getName();

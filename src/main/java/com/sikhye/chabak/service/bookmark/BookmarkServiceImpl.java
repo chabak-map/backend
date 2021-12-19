@@ -50,7 +50,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
 		return bookmarks.stream()
 			.map(bookmark -> {
-				PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId());
+				PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId(), null, null);
 				return BookmarkRes.builder()
 					.id(place.getId())
 					.name(place.getName())

@@ -75,7 +75,7 @@ public class PlaceServiceImpl implements PlaceService {
 	}
 
 	@Override
-	public PlaceDetailRes getPlace(Long placeId) {
+	public PlaceDetailRes getPlace(Long placeId, Double latitude, Double longitude) {
 
 		// 장소/이미지/리뷰
 		Place place = placeRepository.findPlaceByIdAndStatus(placeId, USED)
@@ -114,6 +114,8 @@ public class PlaceServiceImpl implements PlaceService {
 						.build())
 				.collect(Collectors.toList()))
 			.phoneNumber(place.getPhoneNumber())
+			.distance(getDistance(latitude, longitude, place.getLatitude(), place.getLongitude()))
+			.url(place.getUrl())
 			.reviewCount(reviewCount)
 			.imageCount(imageCount)
 			.tagNames(placeTagNames)
@@ -378,7 +380,11 @@ public class PlaceServiceImpl implements PlaceService {
 	 * @param dstLng 목적지 경도
 	 * @return km단위 거리
 	 */
-	private double getDistance(double srcLat, double srcLng, double dstLat, double dstLng) {
+	private Double getDistance(Double srcLat, Double srcLng, Double dstLat, Double dstLng) {
+
+		if (srcLat == null || srcLng == null) {
+			return null;
+		}
 
 		// 소수점 반올림 설정
 		NumberFormat nf = NumberFormat.getNumberInstance();

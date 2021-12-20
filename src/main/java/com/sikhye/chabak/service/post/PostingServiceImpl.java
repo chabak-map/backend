@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,8 +65,59 @@ public class PostingServiceImpl implements PostingService {
 	}
 
 	@Override
-	public List<PostingRes> findPostsWithPaging() {
-		return null;
+	public List<PostingRes> findPostsWithJpaPaging(int offset, int limit) {
+		// 0부터 3개씩 생성일 역순으로 정렬
+		PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Posting> page = postingRepository.findPageByStatus(USED, pageRequest);
+
+		// 페이지로부터 데이터 추출
+		List<Posting> postings = page.getContent();
+		log.info("전체 데이터 수 : {}", page.getTotalElements());
+		log.info("페이지 번호 : {}", page.getNumber());
+		log.info("전체 페이지 수 : {}", page.getTotalPages());
+		log.info("첫 번째 항목 여부 : {}", page.isFirst());
+		log.info("다음 페이지 있는 지 확인 : {}", page.hasNext());
+
+		return getPostingResList(postings);
+	}
+
+	@Override
+	public List<PostingRes> findPostsWithJpaSlicing(int offset, int limit) {
+		// 0부터 3개씩 생성일 역순으로 정렬
+		PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Slice<Posting> slice = postingRepository.findSliceByStatus(USED, pageRequest);
+
+		// 페이지로부터 데이터 추출
+		List<Posting> postings = slice.getContent();
+		log.info("페이지 번호 : {}", slice.getNumber());
+		log.info("첫 번째 항목 여부 : {}", slice.isFirst());
+		log.info("다음 페이지 있는 지 확인 : {}", slice.hasNext());
+
+		return getPostingResList(postings);
+	}
+
+	@Override
+	public Page<PostingRes> findPostsWithQuerydslPaging(Pageable pageable) {
+
+		log.info("================> offset size = {}", pageable.getOffset());
+		log.info("================> page size = {}", pageable.getPageSize());
+		Page<Posting> postings = postingRepository.findPageByStatusQueryDSL1(pageable);
+
+		return postings.map(posting -> PostingRes.builder()
+			.id(posting.getId())
+			.title(posting.getTitle())
+			.nickname(posting.getMember().getNickname())
+			.imageUrl(posting.getPostingImages().isEmpty() ? "" :
+				posting.getPostingImages().get(0).getImageUrl())    // TODO: NPE 우려
+			.commentCount((long)posting.getPostingComments().size())
+			.createdAt(posting.getCreatedAt().toLocalDate())
+			.build()
+		);
+
+		// List<Posting> content = pageByStatusQueryDSL1.getContent();
+		//
+		// return getPostingResList(content);
+
 	}
 
 	@Override
@@ -182,8 +238,9 @@ public class PostingServiceImpl implements PostingService {
 		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
-		if (!findPostingTag.getPostingId().equals(postingId))
+		if (!findPostingTag.getPostingId().equals(postingId)) {
 			throw new BaseException(SEARCH_NOT_FOUND_POST);
+		}
 
 		findPostingTag.setName(postingTagName);
 
@@ -198,8 +255,9 @@ public class PostingServiceImpl implements PostingService {
 		PostingTag findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_POST));
 
-		if (!findPostingTag.getPostingId().equals(postingId))
+		if (!findPostingTag.getPostingId().equals(postingId)) {
 			throw new BaseException(SEARCH_NOT_FOUND_POST);
+		}
 
 		findPostingTag.setStatusToDelete();
 

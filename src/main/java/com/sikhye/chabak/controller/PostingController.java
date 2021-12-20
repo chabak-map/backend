@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +43,26 @@ public class PostingController {
 	@GetMapping
 	public BaseResponse<List<PostingRes>> findAllPosts() {
 		return new BaseResponse<>(postingService.findPosts());
+	}
+
+	@GetMapping("/page")
+	public BaseResponse<List<PostingRes>> findAllJpaPagePosts(
+		@RequestParam(defaultValue = "0") Integer offset,
+		@RequestParam(defaultValue = "10") Integer limit) {
+		return new BaseResponse<>(postingService.findPostsWithJpaPaging(offset, limit));
+	}
+
+	@GetMapping("/slice")
+	public BaseResponse<List<PostingRes>> findAllJpaSlicePosts(
+		@RequestParam(defaultValue = "0") Integer offset,
+		@RequestParam(defaultValue = "10") Integer limit) {
+		return new BaseResponse<>(postingService.findPostsWithJpaSlicing(offset, limit));
+	}
+
+	// http://localhost:9000/posts/querydsl?size=5&page=2
+	@GetMapping("/querydsl")
+	public BaseResponse<Page<PostingRes>> findAllQuerydslPosts(@PageableDefault Pageable pageable) {
+		return new BaseResponse<>(postingService.findPostsWithQuerydslPaging(pageable));
 	}
 
 	@GetMapping("/me")

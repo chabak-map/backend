@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass    // 해당 클래스는 엔티티 속성 상속만을 목적으로 사용
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public abstract class BaseEntity {
 
 	// DB 자체적으로 갱신하도록 함
 	// @CreatedDate

@@ -2,6 +2,9 @@ package com.sikhye.chabak.service.post;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
@@ -14,9 +17,15 @@ import com.sikhye.chabak.service.post.dto.PostingTagRes;
 public interface PostingService {
 
 	// 01. 포스트 전체 조회 API (페이징 이용)
-	List<PostingRes> findPostsWithPaging();
+	List<PostingRes> findPostsWithJpaPaging(int offset, int limit);
 
-	// 01-1. 포스트 전체 조회 API (페이징 이용 X)
+	// 01-0. 포스트 전체 조회 API (슬라이싱 이용)
+	List<PostingRes> findPostsWithJpaSlicing(int offset, int limit);
+
+	// 01-1. querydsl를 이용한 포스트 전체 조회 API
+	Page<PostingRes> findPostsWithQuerydslPaging(Pageable pageable);
+
+	// 01-2. 포스트 전체 조회 API (페이징 이용 X)
 	List<PostingRes> findPosts();
 
 	// 02. 본인 작성한 포스팅 조회 API (페이징 이용, jwt)

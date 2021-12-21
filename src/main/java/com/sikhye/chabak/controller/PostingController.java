@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,13 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sikhye.chabak.global.response.BaseResponse;
 import com.sikhye.chabak.service.post.PostingService;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingEditReq;
 import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
@@ -84,8 +88,8 @@ public class PostingController {
 
 	// TODO: 포스팅 수정 ( 글 수정만? )
 	@PatchMapping("/{postId}")
-	public BaseResponse<Long> editPost(@RequestBody PostingReq postingReq, @PathVariable Long postId) {
-		return new BaseResponse<>(postingService.editPost(postingReq, postId));
+	public BaseResponse<Long> editPost(@PathVariable Long postId, @RequestBody PostingEditReq postingEditReq) {
+		return new BaseResponse<>(postingService.editPost(postId, postingEditReq));
 	}
 
 	@PatchMapping("/{postId}/status")
@@ -147,5 +151,15 @@ public class PostingController {
 	@GetMapping("/members/{memberId}")
 	public BaseResponse<List<PostingRes>> findMemberPosts(@PathVariable Long memberId) {
 		return new BaseResponse<>(postingService.findMemberPosts(memberId));
+	}
+
+	@PostMapping("/s3/upload")
+	public BaseResponse<String> uploadImage(@RequestPart MultipartFile image, Long postId) {
+		return new BaseResponse<>(postingService.uploadImage(image, postId));
+	}
+
+	@DeleteMapping("/s3/delete")
+	public BaseResponse<Boolean> deleteImage(@RequestParam String url, Long postId) {
+		return new BaseResponse<>(postingService.deleteImage(url, postId));
 	}
 }

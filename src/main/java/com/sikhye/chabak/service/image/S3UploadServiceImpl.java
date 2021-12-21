@@ -1,14 +1,6 @@
 package com.sikhye.chabak.service.image;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.sikhye.chabak.global.exception.BaseException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +8,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.sikhye.chabak.global.response.BaseResponseStatus.S3_FORMAT_ERROR;
-import static com.sikhye.chabak.global.response.BaseResponseStatus.S3_UPLOAD_ERROR;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sikhye.chabak.global.exception.BaseException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -55,6 +57,19 @@ public class S3UploadServiceImpl implements UploadService {
 
 	}
 
+	@Override
+	public Boolean deleteImage(String key) {
+		try {
+			DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(component.getBucket(), key);
+			amazonS3.deleteObject(deleteObjectRequest);
+
+			log.info("[S3 WARN] {} deleted", key);    // images/posts/3/3-1.png
+
+			return true;
+		} catch (Exception e) {
+			throw new BaseException(S3_UPLOAD_ERROR);
+		}
+	}
 
 	// ========== internal use ========== //
 	private String createFilename(String originalFilename) {

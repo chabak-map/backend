@@ -60,6 +60,10 @@ public class Posting extends BaseEntity {
 	public Posting() {
 	}
 
+	public void setPosting(String content) {
+		this.content = content;
+	}
+
 	// 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "MEMBER_ID")

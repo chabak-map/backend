@@ -8,15 +8,13 @@ import lombok.Getter;
 @Getter
 public class PostingTagReq {
 
-	Long postingId;
 	List<String> postingTags;
 
 	public PostingTagReq() {
 	}
 
 	@Builder
-	public PostingTagReq(Long postingId, List<String> postingTags) {
-		this.postingId = postingId;
+	public PostingTagReq(List<String> postingTags) {
 		this.postingTags = postingTags;
 	}
 }

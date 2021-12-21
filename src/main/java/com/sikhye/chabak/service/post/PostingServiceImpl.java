@@ -103,15 +103,18 @@ public class PostingServiceImpl implements PostingService {
 		log.info("================> page size = {}", pageable.getPageSize());
 		Page<Posting> postings = postingRepository.findPageByStatusQueryDSL1(pageable);
 
-		return postings.map(posting -> PostingRes.builder()
-			.id(posting.getId())
-			.title(posting.getTitle())
-			.nickname(posting.getMember().getNickname())
-			.imageUrl(posting.getPostingImages().isEmpty() ? "" :
-				posting.getPostingImages().get(0).getImageUrl())    // TODO: NPE 우려
-			.commentCount((long)posting.getPostingComments().size())
-			.createdAt(posting.getCreatedAt().toLocalDate())
-			.build()
+		return postings.map(posting ->
+			PostingRes.builder()
+				.id(posting.getId())
+				.title(posting.getTitle())
+				.content(posting.getContent())
+				.nickname(posting.getMember().getNickname())
+				.imageUrls(posting.getPostingImages().stream()
+					.map(PostingImage::getImageUrl)
+					.collect(Collectors.toList()))    // TODO: NPE 우려
+				.commentCount((long)posting.getPostingComments().size())
+				.createdAt(posting.getCreatedAt().toLocalDate())
+				.build()
 		);
 
 		// List<Posting> content = pageByStatusQueryDSL1.getContent();
@@ -368,9 +371,11 @@ public class PostingServiceImpl implements PostingService {
 				PostingRes.builder()
 					.id(posting.getId())
 					.title(posting.getTitle())
+					.content(posting.getContent())
 					.nickname(posting.getMember().getNickname())
-					.imageUrl(posting.getPostingImages().isEmpty() ? "" :
-						posting.getPostingImages().get(0).getImageUrl())    // TODO: NPE 우려
+					.imageUrls(posting.getPostingImages().stream()
+						.map(PostingImage::getImageUrl)
+						.collect(Collectors.toList()))    // TODO: NPE 우려
 					.commentCount((long)posting.getPostingComments().size())
 					.createdAt(posting.getCreatedAt().toLocalDate())
 					.build()

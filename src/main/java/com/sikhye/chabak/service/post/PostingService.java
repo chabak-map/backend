@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
+import com.sikhye.chabak.service.post.dto.PostingEditReq;
 import com.sikhye.chabak.service.post.dto.PostingRecentRes;
 import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
@@ -38,7 +40,7 @@ public interface PostingService {
 	PostingDetailRes findPostDetail(Long postId);
 
 	// 05. 포스트 수정 API
-	Long editPost(PostingReq postingReq, Long postId);
+	Long editPost(Long postId, PostingEditReq postingEditReq);
 
 	// 06. 포스트 삭제 API (jwt 이용)
 	Long statusToDeletePost(Long postId);
@@ -72,4 +74,10 @@ public interface PostingService {
 
 	// 특정 상대 작성한 포스팅 조회 API
 	List<PostingRes> findMemberPosts(Long memberId);
+
+	// s3 이미지 업로드
+	String uploadImage(MultipartFile image, Long postId);
+
+	// s3 이미지 삭제
+	Boolean deleteImage(String url, Long postId);
 }

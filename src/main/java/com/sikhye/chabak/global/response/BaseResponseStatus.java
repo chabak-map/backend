@@ -91,8 +91,11 @@ public enum BaseResponseStatus {
 
 	S3_FORMAT_ERROR(false, 4022, "이미지 형식이 올바르지 않습니다."),
 
+	S3_DELETE_ERROR(false, 4023, "이미지 삭제에 실패하였습니다."),
+
 	// 5000 : 필요시 만들어서 쓰세요
 	// 6000 : 필요시 만들어서 쓰세요
+	// TODO: 실제 배포 시 지워야합니다
 	TEST_1(false, 6001, "테스트1"),
 
 	TEST_2(false, 6002, "테스트2"),

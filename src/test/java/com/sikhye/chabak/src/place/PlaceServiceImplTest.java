@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -181,7 +183,12 @@ class PlaceServiceImplTest {
 	@Order(5)
 	public void setPointTest() {
 		//given
-		Long updatePlace = placeService.savePoint(1L, 12.34, 56.78);
+		Map<String, String> point = new HashMap<>();
+		point.put("lat", "12.34");
+		point.put("lng", "56.78");
+		point.put("code", "1144012700");
+
+		Long updatePlace = placeService.savePoint(1L, point);
 		em.flush();
 		em.clear();
 
@@ -193,6 +200,7 @@ class PlaceServiceImplTest {
 		assertEquals(updatePlace, 1L);
 		assertEquals(findPlace.getLatitude(), 12.34);
 		assertEquals(findPlace.getLongitude(), 56.78);
+		assertEquals(findPlace.getDistrictCode(), "1144000000");
 	}
 
 	@Test

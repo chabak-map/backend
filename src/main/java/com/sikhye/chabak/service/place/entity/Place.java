@@ -7,9 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -47,6 +50,9 @@ public class Place {
 
 	private String url;
 
+	@Column(name = "district_code")
+	private String districtCode;
+
 	@Enumerated(EnumType.STRING)
 	private BaseStatus status;
 
@@ -66,9 +72,10 @@ public class Place {
 		this.status = BaseStatus.DELETED;
 	}
 
-	public void setPoint(Double latitude, Double longitude) {
+	public void setPoint(Double latitude, Double longitude, String code) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.districtCode = code;
 	}
 
 	public void setStatusToUsed() {
@@ -83,4 +90,9 @@ public class Place {
 
 	@OneToMany(mappedBy = "place")
 	private List<PlaceComment> placeComments = new ArrayList<>();
+
+	// >> ptpt: 연관관계 주인인 쪽은 자신의 외래키와 joinColumn 설정
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DISTRICT_CODE")
+	private District district;
 }

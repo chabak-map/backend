@@ -1,6 +1,7 @@
 package com.sikhye.chabak.service.place;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sikhye.chabak.service.place.constant.SortType;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
@@ -24,7 +25,7 @@ public interface PlaceService {
 	Long statusToDelete(Long placeId);
 
 	// 04. 장소 좌표 저장 API
-	Long savePoint(Long placeId, Double latitude, Double longitude);
+	Long savePoint(Long placeId, Map<String, String> point);
 
 	// 05. 장소 태그 조회 API
 	List<String> findPlaceTags(Long placeId);
@@ -50,8 +51,11 @@ public interface PlaceService {
 	// 12. 장소 댓글 삭제
 	Long statusToDeletePlaceComment(Long placeId, Long commentId);
 
-	// 13. 장소 검색
+	// 13. 장소명 검색
 	List<PlaceSearchRes> searchPlacesOrder(String query, Double lat, Double lng, SortType sortType);
+
+	// 13-1. 지역별 검색
+	List<PlaceSearchRes> searchPlacesRegion(String query, Double lat, Double lng);
 
 	// 14. 장소 랭킹
 	List<PlaceRankRes> getTop5PlaceRanks();

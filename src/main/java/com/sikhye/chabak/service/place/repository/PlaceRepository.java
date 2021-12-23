@@ -19,4 +19,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
 	Optional<List<Place>> findPlacesByNameContainingOrAddressContainingAndStatus(String name, String address,
 		BaseStatus status);
 
+	Optional<List<Place>> findPlacesByDistrictCodeAndStatus(String code, BaseStatus status);
+
 }

@@ -39,7 +39,7 @@ public class MemberController {
 
 	@GetMapping("/test")
 	public BaseResponse<String> test() {
-		return new BaseResponse<>("helloV2021-12-17");
+		return new BaseResponse<>("helloV2021-12-23");
 	}
 
 	@PostMapping("/login")

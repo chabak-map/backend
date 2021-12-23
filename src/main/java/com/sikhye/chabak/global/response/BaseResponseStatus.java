@@ -1,11 +1,13 @@
 package com.sikhye.chabak.global.response;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 에러 코드 관리
  */
 @Getter
+@RequiredArgsConstructor
 public enum BaseResponseStatus {
 	/**
 	 * 1000 : 요청 성공
@@ -55,6 +57,9 @@ public enum BaseResponseStatus {
 
 	VALID_INPUT_NULL(false, 2031, "입력되지 않은 값이 있습니다."),
 	VALID_INPUT_BLANK(false, 2032, "입력되지 않은 값이 있습니다."),
+
+	INVALID_DISTRICT_CODE(false, 2040, "존재하지 않는 지역코드입니다."),
+	SEARCHED_DUPLICATE_REGION(false, 2041, "해당 코드에 대해 중복된 지역이 검출되었습니다."),
 
 	/**
 	 * 3000 : Response 오류
@@ -108,9 +113,9 @@ public enum BaseResponseStatus {
 	private final int code;
 	private final String message;
 
-	private BaseResponseStatus(boolean isSuccess, int code, String message) {
-		this.isSuccess = isSuccess;
-		this.code = code;
-		this.message = message;
-	}
+	// private BaseResponseStatus(boolean isSuccess, int code, String message) {
+	// 	this.isSuccess = isSuccess;
+	// 	this.code = code;
+	// 	this.message = message;
+	// }
 }

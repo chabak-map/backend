@@ -61,4 +61,17 @@ public class BaseControllerAdvice {
 		return new BaseResponse<>(INVALID_URI_PATH);
 	}
 
+	// >> ptpt: throw로 발생된 Unchecked Exception(BaseException)은 여기서 처리
+	@ExceptionHandler(value = {BaseException.class})
+	protected BaseResponse<BaseResponseStatus> handleCustomException(BaseException e) {
+		log.error("handleCustomException throw CustomException : {}", e.status);
+		return new BaseResponse<>(e.status);
+	}
+
+	// @ExceptionHandler(value = { CustomException.class })
+	// protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+	// 	log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
+	// 	return ErrorResponse.toResponseEntity(e.getErrorCode());
+	// }
+
 }

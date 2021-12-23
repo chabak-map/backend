@@ -1,6 +1,7 @@
 package com.sikhye.chabak.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -64,10 +65,11 @@ public class PlaceController {
 	// 장소 좌표 저장
 	// TODO: 좌표값은 관리자만 설정할 수 있도록 변경 (JWT 토큰 이용)
 	@PostMapping("/{placeId}")
-	public BaseResponse<Long> savePoint(@PathVariable Long placeId,
-		@RequestParam("lat") Double latitude,
-		@RequestParam("lng") Double longitude) {
-		return new BaseResponse<>(placeService.savePoint(placeId, latitude, longitude));
+	// public BaseResponse<Long> savePoint(@PathVariable Long placeId,
+	// 	@RequestParam("lat") Double latitude,
+	// 	@RequestParam("lng") Double longitude) {
+	public BaseResponse<Long> savePoint(@PathVariable Long placeId, @RequestBody Map<String, String> point) {
+		return new BaseResponse<>(placeService.savePoint(placeId, point));
 	}
 
 	@GetMapping("/{placeId}/tags")
@@ -118,14 +120,23 @@ public class PlaceController {
 		return new BaseResponse<>(placeService.statusToDeletePlaceComment(placeId, commentId));
 	}
 
-	@GetMapping("/search")
-	public BaseResponse<List<PlaceSearchRes>> placeSearch(
+	@GetMapping("/search/name")
+	public BaseResponse<List<PlaceSearchRes>> placeNameSearch(
 		@RequestParam("query") String query,
 		@RequestParam("sort") String sort,
-		@RequestParam("lat") Double latitude,
-		@RequestParam("lng") Double longitude
+		@RequestParam(value = "lat", required = false) Double latitude,
+		@RequestParam(value = "lng", required = false) Double longitude
 	) {
 		return new BaseResponse<>(placeService.searchPlacesOrder(query, latitude, longitude, SortType.valueOf(sort)));
+	}
+
+	@GetMapping("/search/region")
+	public BaseResponse<List<PlaceSearchRes>> placeRegionSearch(
+		@RequestParam("query") String query,
+		@RequestParam(value = "lat", required = false) Double latitude,
+		@RequestParam(value = "lng", required = false) Double longitude
+	) {
+		return new BaseResponse<>(placeService.searchPlacesRegion(query, latitude, longitude));
 	}
 
 	@GetMapping("/rank")

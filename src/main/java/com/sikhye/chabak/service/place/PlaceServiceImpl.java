@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.global.exception.ExceptionFunction;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.member.MemberService;
 import com.sikhye.chabak.service.member.entity.Member;
@@ -38,6 +41,7 @@ import com.sikhye.chabak.service.place.entity.Place;
 import com.sikhye.chabak.service.place.entity.PlaceComment;
 import com.sikhye.chabak.service.place.entity.PlaceImage;
 import com.sikhye.chabak.service.place.entity.PlaceTag;
+import com.sikhye.chabak.service.place.repository.DistrictRepository;
 import com.sikhye.chabak.service.place.repository.PlaceCommentRepository;
 import com.sikhye.chabak.service.place.repository.PlaceImageRepository;
 import com.sikhye.chabak.service.place.repository.PlaceRepository;
@@ -54,6 +58,7 @@ public class PlaceServiceImpl implements PlaceService {
 	private final PlaceImageRepository placeImageRepository;
 	private final PlaceCommentRepository placeCommentRepository;
 	private final PlaceTagRepository placeTagRepository;
+	private final DistrictRepository districtRepository;
 	private final MemberService memberService;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final JwtTokenService jwtTokenService;
@@ -63,12 +68,14 @@ public class PlaceServiceImpl implements PlaceService {
 	public PlaceServiceImpl(PlaceRepository placeRepository,
 		PlaceImageRepository placeImageRepository,
 		PlaceCommentRepository placeCommentRepository,
-		PlaceTagRepository placeTagRepository, MemberService memberService,
+		PlaceTagRepository placeTagRepository,
+		DistrictRepository districtRepository, MemberService memberService,
 		RedisTemplate<String, String> redisTemplate, JwtTokenService jwtTokenService) {
 		this.placeRepository = placeRepository;
 		this.placeImageRepository = placeImageRepository;
 		this.placeCommentRepository = placeCommentRepository;
 		this.placeTagRepository = placeTagRepository;
+		this.districtRepository = districtRepository;
 		this.memberService = memberService;
 		this.redisTemplate = redisTemplate;
 		this.jwtTokenService = jwtTokenService;
@@ -145,11 +152,18 @@ public class PlaceServiceImpl implements PlaceService {
 
 	@Override
 	@Transactional
-	public Long savePoint(Long placeId, Double latitude, Double longitude) {
+	public Long savePoint(Long placeId, Map<String, String> point) {
+
+		Double latitude = Double.parseDouble(point.get("lat"));
+		Double longitude = Double.parseDouble(point.get("lng"));
+		String code = point.get("code");
+
+		// 0이상 5 미만
+		String clearedCode = code.substring(0, 5) + "00000";
 
 		Place findPlace = placeRepository.findPlaceByIdAndStatus(placeId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
-		findPlace.setPoint(latitude, longitude);
+		findPlace.setPoint(latitude, longitude, clearedCode);
 
 		return findPlace.getId();
 	}
@@ -296,26 +310,7 @@ public class PlaceServiceImpl implements PlaceService {
 			.orElseGet(Collections::emptyList);
 
 		// 2) DTO 변환
-		Stream<PlaceSearchRes> placeSearchResStream = places.stream()
-			.map(place ->
-				PlaceSearchRes.builder()
-					.id(place.getId())
-					.name(place.getName())
-					.address(place.getAddress())
-					.reviewCount(placeCommentRepository.countByPlaceIdAndStatus(place.getId(), USED))
-					.distance(getDistance(lat, lng, place.getLatitude(), place.getLongitude()))
-					.placeTags(place.getTags().stream().map(placeTag -> new PlaceTagRes(placeTag.getId(),
-						placeTag.getName())).collect(Collectors.toList()))
-					.placeImages(place.getPlaceImages().stream()
-						.map(placeImage -> PlaceImageRes.builder()
-							.imageId(placeImage.getId())
-							.imageUrl(placeImage.getImageUrl())
-							.build())
-						.collect(Collectors.toList()))
-					.isBookmarked(findMember.getBookmarks()
-						.stream()
-						.anyMatch(bookmark -> bookmark.getPlaceId().equals(place.getId())))
-					.build());
+		Stream<PlaceSearchRes> placeSearchResStream = placesToSearchDTOs(places, findMember, lat, lng);
 
 		// 3) 거리순 / 관련순 정렬
 		if (sortType.equals(DISTANCE)) {
@@ -333,6 +328,46 @@ public class PlaceServiceImpl implements PlaceService {
 				.collect(Collectors.toList());
 		}
 
+	}
+
+	@Override
+	public List<PlaceSearchRes> searchPlacesRegion(String query, Double lat, Double lng) {
+
+		// 0) 쿼리 형식 : '시도명-시군구명*시군구명'
+		Long memberId = jwtTokenService.getMemberId();
+
+		Member findMember = memberService.findMemberBy(memberId)
+			.orElseThrow(() -> new BaseException(CHECK_USER));
+
+		// 1) 쿼리 파싱 ( 코드의 개수가 여러개일 수 있음 )
+		String[] splitQuery = query.split("-");
+		String region1Depth = splitQuery[0];
+
+		List<String> region2Depths = new ArrayList<>();
+		if (splitQuery[1].contains("*")) {    // 2개 이상 매핑
+			region2Depths = List.of(splitQuery[1].split("\\*"));
+		} else {    // 1개만 매핑
+			region2Depths.add(splitQuery[1]);
+		}
+
+		List<String> codeList = region2Depths.stream()
+			.map(wrap(region2Depth -> (districtRepository.findByRegion1DepthContainingAndRegion2DepthContaining(
+				region1Depth, region2Depth))    // >> ptpt : try-catch를 사용하면 비즈니스 코드보다 예외처리 코드가 더 크기 때문에 따로 분리
+				.orElseThrow(() -> new BaseException(INVALID_DISTRICT_CODE)).getCode()))
+			.collect(Collectors.toList());
+
+		// 2) 코드에 해당하는 장소 반환
+		List<Place> findPlaces = codeList.stream()
+			.map(
+				code -> placeRepository.findPlacesByDistrictCodeAndStatus(code, USED)
+					.orElseThrow(() -> new BaseException(INVALID_DISTRICT_CODE))
+			)
+			.flatMap(places -> places.stream())    // >> ptpt: flatMap을 이용해서 나온 list들을 모두 합쳐줌
+			.collect(Collectors.toList());
+
+		Stream<PlaceSearchRes> placeSearchResStream = placesToSearchDTOs(findPlaces, findMember, lat, lng);
+
+		return placeSearchResStream.collect(Collectors.toList());
 	}
 
 	@Override
@@ -370,6 +405,47 @@ public class PlaceServiceImpl implements PlaceService {
 	// ====================================================================
 	// INTERNAL USE
 	// ====================================================================
+
+	// >> ptpt: stream에서의 함수형 인터페이스에 대한 exception 처리 (람다식)
+	private static <T, R> Function<T, R> wrap(ExceptionFunction<T, R> f) {
+		// (r) ->
+		//     wrap(
+		//           ()->InetAddress.getByName(r)
+		//     )
+		return (T t) -> {
+			try {
+				return f.apply(t);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new BaseException(SEARCHED_DUPLICATE_REGION);
+			}
+		};
+	}
+
+	private Stream<PlaceSearchRes> placesToSearchDTOs(List<Place> placeList, Member member, Double lat, Double
+		lng) {
+
+		return placeList.stream()
+			.map(place ->
+				PlaceSearchRes.builder()
+					.id(place.getId())
+					.name(place.getName())
+					.address(place.getAddress())
+					.reviewCount(placeCommentRepository.countByPlaceIdAndStatus(place.getId(), USED))
+					.distance(getDistance(lat, lng, place.getLatitude(), place.getLongitude()))
+					.placeTags(place.getTags().stream().map(placeTag -> new PlaceTagRes(placeTag.getId(),
+						placeTag.getName())).collect(Collectors.toList()))
+					.placeImages(place.getPlaceImages().stream()
+						.map(placeImage -> PlaceImageRes.builder()
+							.imageId(placeImage.getId())
+							.imageUrl(placeImage.getImageUrl())
+							.build())
+						.collect(Collectors.toList()))
+					.isBookmarked(member.getBookmarks()
+						.stream()
+						.anyMatch(bookmark -> bookmark.getPlaceId().equals(place.getId())))
+					.build());
+	}
 
 	/**
 	 * 두 지점간 거리 계산

@@ -14,12 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 
 import lombok.Builder;
 import lombok.Getter;
 
+@Document(indexName = "placetag")
 @Getter
 @DynamicInsert
 @Entity

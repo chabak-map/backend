@@ -96,6 +96,10 @@ dependencies {
     //20211216
     // elasticsearch
     // implementation 'org.springframework.data:spring-data-elasticsearch'
+
+    // jdbc
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+
 }
 
 test {

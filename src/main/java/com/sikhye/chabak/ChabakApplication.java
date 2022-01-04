@@ -1,5 +1,6 @@
 package com.sikhye.chabak;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,6 +12,7 @@ import com.sikhye.chabak.global.config.ConfigProperties;
 import com.sikhye.chabak.service.oauth.config.OAuthProperties;
 
 @EnableScheduling
+@EnableBatchProcessing
 @EnableCaching
 @EnableJpaAuditing
 @SpringBootApplication

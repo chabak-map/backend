@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 
-public interface ReportRepository extends JpaRepository<Report, Long> {
+public interface ReportRepository extends JpaRepository<Report, Long>, ReportRepositoryCustom {
 
 	Optional<List<Report>> findAllByStatus(BaseStatus status);
 }

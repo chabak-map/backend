@@ -24,6 +24,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  batch:
+    jdbc:
+      initialize-schema: always
 
 logging.level:
   org.hibernate.SQL: debug

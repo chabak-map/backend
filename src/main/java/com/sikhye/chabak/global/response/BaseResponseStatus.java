@@ -98,6 +98,8 @@ public enum BaseResponseStatus {
 
 	S3_DELETE_ERROR(false, 4023, "이미지 삭제에 실패하였습니다."),
 
+	SEND_MAIL_ERROR(false, 4024, "이메일 전송에 실패하였습니다."),
+
 	// 5000 : 필요시 만들어서 쓰세요
 	// 6000 : 필요시 만들어서 쓰세요
 	// TODO: 실제 배포 시 지워야합니다

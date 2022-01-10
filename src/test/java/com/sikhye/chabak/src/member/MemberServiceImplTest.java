@@ -36,14 +36,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.exception.BaseException;
-import com.sikhye.chabak.service.member.MemberRepository;
 import com.sikhye.chabak.service.member.MemberService;
+import com.sikhye.chabak.service.member.domain.Member;
+import com.sikhye.chabak.service.member.domain.MemberRepository;
 import com.sikhye.chabak.service.member.dto.EditMemberReq;
 import com.sikhye.chabak.service.member.dto.JoinReq;
 import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
-import com.sikhye.chabak.service.member.entity.Member;
 
 @SpringBootTest
 @WebAppConfiguration

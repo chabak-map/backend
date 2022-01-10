@@ -11,7 +11,7 @@ public class SearchPostRes {
 
 	private Long id;
 	private String title;
-	private String content;    // 30자 잘라서 보내기
+	private String content;
 	private String imageUrl;
 
 	public SearchPostRes() {

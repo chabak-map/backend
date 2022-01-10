@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sikhye.chabak.global.exception.BaseException;
+import com.sikhye.chabak.service.member.domain.Member;
 import com.sikhye.chabak.service.member.dto.EditMemberReq;
 import com.sikhye.chabak.service.member.dto.JoinReq;
 import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
-import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.oauth.constant.OAuthType;
 
 public interface MemberService {

@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @Validated
 @ConstructorBinding
-@ConfigurationProperties(prefix = "secret")    // >> ptpt : configurationProperties
+@ConfigurationProperties(prefix = "secret")
 public class ConfigProperties {
 
 	@NotBlank

@@ -31,7 +31,6 @@ public class JwtAdminInterceptor implements HandlerInterceptor {
 
 		String requestURI = request.getRequestURI();
 
-		// places에서 GET 방식이라면 Admin 기능이 아닌 Member도 사용 가능
 		if (request.getMethod().equals("GET")) {
 			return true;
 		}

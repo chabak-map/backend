@@ -21,13 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.image.UploadService;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
+import com.sikhye.chabak.service.member.domain.Member;
+import com.sikhye.chabak.service.member.domain.MemberRepository;
 import com.sikhye.chabak.service.member.dto.EditMemberReq;
 import com.sikhye.chabak.service.member.dto.JoinReq;
 import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
 import com.sikhye.chabak.service.member.dto.MemberDto;
 import com.sikhye.chabak.service.member.dto.PasswordReq;
-import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.oauth.constant.OAuthType;
 import com.sikhye.chabak.service.sms.SmsService;
 import com.sikhye.chabak.service.sms.entity.SmsCacheKey;
@@ -80,6 +81,7 @@ public class MemberServiceImpl implements MemberService {
 			throw new BaseException(DECRYPTION_ERROR);
 		}
 
+		log.info("password = {}", findPassword);
 		// 현재 찾은 비밀번호와 유저 입력 패스워드 비교
 		if (password.equals(findPassword)) {
 			Long memberId = findMember.getId();
@@ -128,7 +130,6 @@ public class MemberServiceImpl implements MemberService {
 			.phoneNumber(joinReq.getPhoneNumber())
 			.build();
 
-		// >> ptpt: default 값 적용시키기 위해 save와 flush 동시 사용
 		Member savedMember = memberRepository.save(newMember);
 		em.refresh(savedMember);
 
@@ -151,7 +152,6 @@ public class MemberServiceImpl implements MemberService {
 			.build();
 	}
 
-	// >> ptpt: @cachePut
 	@Override
 	@Transactional
 	@CachePut(value = SmsCacheKey.SMS, key = "#phoneNumber")
@@ -176,7 +176,6 @@ public class MemberServiceImpl implements MemberService {
 		return verifyCode;
 	}
 
-	// >> ptpt: @CacheEvict
 	@Override
 	@CacheEvict(value = SmsCacheKey.SMS, key = "#phoneNumber")
 	public Boolean verifySms(String verifyCode, String phoneNumber) throws BaseException {
@@ -231,7 +230,6 @@ public class MemberServiceImpl implements MemberService {
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
 		// 이미지가 유무에 따른 이미지 작업
-		// >> ptpt 이미지가 없을 경우
 		if (editMemberReq.getImage() != null) {
 			String imageUrl = s3UploadService.uploadImage(editMemberReq.getImage(), "images/member/");
 			findMember.editMemberInfo(editMemberReq.getNickname(), imageUrl);
@@ -316,7 +314,6 @@ public class MemberServiceImpl implements MemberService {
 	// ================================================
 	// INTERNAL USE
 	// ================================================
-	// ptpt: 중복방지 랜덤 생성
 	private String genRandomNum() {
 		int maxNumLen = 6;
 

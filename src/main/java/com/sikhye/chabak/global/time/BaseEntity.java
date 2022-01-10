@@ -17,7 +17,7 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-	// DB 자체적으로 갱신하도록 함
+	// DB 자체적으로 갱신하도록 해서 어노테이션 불필요
 	// @CreatedDate
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;

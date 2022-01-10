@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-// ptpt: basepackge 정해줘야 다른 패키지에서 redis repo 사용 가능
 @EnableRedisRepositories(basePackages = "com.sikhye.chabak")
 public class RedisConfig {
 
@@ -24,13 +23,11 @@ public class RedisConfig {
 	@Value("${spring.redis.port}")
 	private int redisPort;
 
-	// connect와 관련된 객체
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		return new LettuceConnectionFactory(redisHost, redisPort);
 	}
 
-	// 실제로 template 역할하여 키-값을 직렬화하여 데이터 변환
 	@Bean
 	public RedisTemplate<String, String> redisTemplate() {
 		RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();

@@ -31,7 +31,6 @@ public class CacheConfig {
 	@Bean
 	public CacheManager cacheManager() {
 
-		log.info("============= cache =============");
 		RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
 			.disableKeyPrefix()
 			.disableCachingNullValues()
@@ -46,10 +45,6 @@ public class CacheConfig {
 
 		Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-		// ptpt 01. SMS 캐시 설정을 해줘야 적용됨
-		// https://newbedev.com/spring-boot-caching-with-redis-key-have-xac-xed-x00-x05t-x00-x06
-		// 캐시매니저를 만들어도 유니코드 문제가 발생한 이유 :: SMS라는 캐시에도 default처럼 설정해줬어야함
-		log.info("============= SMS cache config =============");
 		cacheConfigurations.put(SmsCacheKey.SMS,
 			RedisCacheConfiguration.defaultCacheConfig()
 				.disableKeyPrefix()
@@ -62,7 +57,7 @@ public class CacheConfig {
 				.serializeValuesWith(RedisSerializationContext
 					.SerializationPair
 					.fromSerializer(new StringRedisSerializer())));
-		
+
 		return RedisCacheManager.RedisCacheManagerBuilder
 			.fromConnectionFactory(redisConnectionFactory)
 			.cacheDefaults(configuration)

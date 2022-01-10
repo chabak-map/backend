@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sikhye.chabak.service.member.MemberService;
+import com.sikhye.chabak.service.member.domain.Member;
 import com.sikhye.chabak.service.member.dto.JoinReq;
 import com.sikhye.chabak.service.member.dto.LoginReq;
 import com.sikhye.chabak.service.member.dto.LoginRes;
-import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.oauth.constant.OAuthType;
 import com.sikhye.chabak.service.oauth.dto.UserInfo;
 import com.sikhye.chabak.service.oauth.social.SocialOAuth;

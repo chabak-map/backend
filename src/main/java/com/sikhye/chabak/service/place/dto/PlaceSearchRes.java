@@ -14,7 +14,7 @@ public class PlaceSearchRes {
 	private Long reviewCount;
 	private Double distance;
 	private List<PlaceTagRes> placeTags;
-	private List<PlaceImageRes> placeImages;    // TODO: 이미지는 TOP 3개만 제공
+	private List<PlaceImageRes> placeImages;
 	private Boolean isBookmarked;
 
 	public PlaceSearchRes() {

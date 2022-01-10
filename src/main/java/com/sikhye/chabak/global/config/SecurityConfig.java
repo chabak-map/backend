@@ -5,7 +5,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-// !!!!!!!!!! /login 페이지가 계속 뜨는 경우 무시 ( https://sncap.tistory.com/849 )
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

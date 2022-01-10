@@ -23,6 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.image.UploadService;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
+import com.sikhye.chabak.service.post.domain.Posting;
+import com.sikhye.chabak.service.post.domain.PostingComment;
+import com.sikhye.chabak.service.post.domain.PostingCommentRepository;
+import com.sikhye.chabak.service.post.domain.PostingImage;
+import com.sikhye.chabak.service.post.domain.PostingImageRepository;
+import com.sikhye.chabak.service.post.domain.PostingRepository;
+import com.sikhye.chabak.service.post.domain.PostingTag;
+import com.sikhye.chabak.service.post.domain.PostingTagRepository;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
@@ -32,14 +40,6 @@ import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
 import com.sikhye.chabak.service.post.dto.PostingTagRes;
-import com.sikhye.chabak.service.post.entity.Posting;
-import com.sikhye.chabak.service.post.entity.PostingComment;
-import com.sikhye.chabak.service.post.entity.PostingImage;
-import com.sikhye.chabak.service.post.entity.PostingTag;
-import com.sikhye.chabak.service.post.repository.PostingCommentRepository;
-import com.sikhye.chabak.service.post.repository.PostingImageRepository;
-import com.sikhye.chabak.service.post.repository.PostingRepository;
-import com.sikhye.chabak.service.post.repository.PostingTagRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,15 +115,11 @@ public class PostingServiceImpl implements PostingService {
 				.nickname(posting.getMember().getNickname())
 				.imageUrls(posting.getPostingImages().stream()
 					.map(PostingImage::getImageUrl)
-					.collect(toList()))    // TODO: NPE 우려
+					.collect(toList()))
 				.commentCount((long)posting.getPostingComments().size())
 				.createdAt(posting.getCreatedAt().toLocalDate())
 				.build()
 		);
-
-		// List<Posting> content = pageByStatusQueryDSL1.getContent();
-		//
-		// return getPostingResList(content);
 
 	}
 
@@ -208,19 +204,15 @@ public class PostingServiceImpl implements PostingService {
 		// =================================
 		// 태그 작업
 		// =================================
-		// >> ptpt: 포스팅 수정 시 매치되는 것 모두 필터링
 		List<PostingTag> findTags = findPost.getPostingTags();
 		List<String> toAddTags = new ArrayList<>();
 
-		// 기존에 있는 태그는 놔두고 추가된 태그만 add 사용하여 추가
 		postingEditReq.getTags().stream()
 			.filter(tagName -> findTags.stream().noneMatch(findTag -> findTag.getName().equals(tagName)))
 			.forEach(toAddTags::add);
 
-		// add된 태그는 추가
 		addPostingTags(findPost.getId(), new PostingTagReq(toAddTags));
 
-		// 기존에 있는 태그는 놔두고 없는 태그만 delete
 		findTags.stream()
 			.filter(
 				findTag -> postingEditReq.getTags().stream().noneMatch(tagName -> findTag.getName().equals(tagName)))
@@ -231,13 +223,11 @@ public class PostingServiceImpl implements PostingService {
 		// =================================
 		List<PostingImage> findPostImages = findPost.getPostingImages();
 
-		// 기존에 있는 url은 놔두고 추가된 url만 add하여 추가
 		postingEditReq.getImages().stream()
 			.filter(imageUrl -> findPostImages.stream()
 				.noneMatch(findPostImage -> findPostImage.getImageUrl().equals(imageUrl)))
-			.forEach(url -> postingImageRepository.save(new PostingImage(postId, url))); // add된 url만 추가
+			.forEach(url -> postingImageRepository.save(new PostingImage(postId, url)));
 
-		// 받아 온 정보에 없는 이미지 url은 제거
 		findPostImages.stream()
 			.filter(
 				findImage -> postingEditReq.getImages().stream().noneMatch(url -> findImage.getImageUrl().equals(url)))
@@ -269,7 +259,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	@Transactional
 	public List<PostingTagRes> addPostingTags(Long postingId, PostingTagReq postingTagReq) {
-		// 포스팅 작성 유저와 동일 권한인지 확인
+
 		validateMember(postingId);
 
 		List<String> postingTagNames = postingTagReq.getPostingTags();
@@ -309,7 +299,6 @@ public class PostingServiceImpl implements PostingService {
 	public Long postingTagStatusToDelete(Long postingId, Long postingTagId) {
 		validateMember(postingId);
 
-		log.info("+++++++++postingTagID => {}", postingTagId);
 		Optional<PostingTag> findPostingTag = postingTagRepository.findPostingTagByIdAndStatus(postingTagId,
 			USED);
 
@@ -329,7 +318,6 @@ public class PostingServiceImpl implements PostingService {
 
 	}
 
-	// TODO: 글에서 이미지만 관리하는 API 필요 ( 이미지 CRUD )
 	@Override
 	public List<PostingCommentRes> findPostComments(Long postId) {
 		List<PostingComment> postingComments = postingCommentRepository
@@ -494,7 +482,7 @@ public class PostingServiceImpl implements PostingService {
 					.nickname(posting.getMember().getNickname())
 					.imageUrls(posting.getPostingImages().stream()
 						.map(PostingImage::getImageUrl)
-						.collect(toList()))    // TODO: NPE 우려
+						.collect(toList()))
 					.commentCount((long)posting.getPostingComments().size())
 					.createdAt(posting.getCreatedAt().toLocalDate())
 					.build()

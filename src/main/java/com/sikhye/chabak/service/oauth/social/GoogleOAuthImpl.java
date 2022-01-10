@@ -112,11 +112,6 @@ public class GoogleOAuthImpl implements SocialOAuth {
 		Map<String, String> userInfo = mapper.readValue(resultJson, new TypeReference<>() {
 		});
 
-		log.info("userInfo.get(\"sub\") = " + userInfo.get("sub"));
-		log.info("userInfo.get(\"email\") = " + userInfo.get("email"));
-		log.info("userInfo.get(\"name\") = " + userInfo.get("name"));
-		log.info("userInfo.get(\"picture\") = " + userInfo.get("picture"));
-
 		String id = userInfo.get("sub");
 		String email = userInfo.get("email");
 		String name = userInfo.get("name");

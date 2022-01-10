@@ -16,8 +16,8 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
-import com.sikhye.chabak.service.member.entity.Member;
-import com.sikhye.chabak.service.place.entity.Place;
+import com.sikhye.chabak.service.member.domain.Member;
+import com.sikhye.chabak.service.place.domain.Place;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -51,15 +51,10 @@ public class Bookmark extends BaseEntity {
 
 	}
 
-	public void setStatusToUsed() {
-		this.status = BaseStatus.USED;
-	}
-
 	public void setStatusToDelete() {
 		this.status = BaseStatus.DELETED;
 	}
 
-	// 연관관계
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "MEMBER_ID")
 	private Member member;
@@ -67,11 +62,5 @@ public class Bookmark extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLACE_ID")
 	private Place place;
-
-	//	// 연관관계 지원 함수
-	//	public void changePlace(Place place) {
-	//		this.place = place;
-	//		team.getPlaces().add(this);	// 리스트에 자신을 추가
-	//	}
 
 }

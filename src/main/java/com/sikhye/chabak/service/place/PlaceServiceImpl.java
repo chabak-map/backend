@@ -26,8 +26,17 @@ import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.global.exception.ExceptionFunction;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.member.MemberService;
-import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.member.domain.Member;
 import com.sikhye.chabak.service.place.constant.SortType;
+import com.sikhye.chabak.service.place.domain.DistrictRepository;
+import com.sikhye.chabak.service.place.domain.Place;
+import com.sikhye.chabak.service.place.domain.PlaceComment;
+import com.sikhye.chabak.service.place.domain.PlaceCommentRepository;
+import com.sikhye.chabak.service.place.domain.PlaceImage;
+import com.sikhye.chabak.service.place.domain.PlaceImageRepository;
+import com.sikhye.chabak.service.place.domain.PlaceRepository;
+import com.sikhye.chabak.service.place.domain.PlaceTag;
+import com.sikhye.chabak.service.place.domain.PlaceTagRepository;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
@@ -37,15 +46,6 @@ import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
-import com.sikhye.chabak.service.place.entity.Place;
-import com.sikhye.chabak.service.place.entity.PlaceComment;
-import com.sikhye.chabak.service.place.entity.PlaceImage;
-import com.sikhye.chabak.service.place.entity.PlaceTag;
-import com.sikhye.chabak.service.place.repository.DistrictRepository;
-import com.sikhye.chabak.service.place.repository.PlaceCommentRepository;
-import com.sikhye.chabak.service.place.repository.PlaceImageRepository;
-import com.sikhye.chabak.service.place.repository.PlaceRepository;
-import com.sikhye.chabak.service.place.repository.PlaceTagRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -88,7 +88,7 @@ public class PlaceServiceImpl implements PlaceService {
 		Place place = placeRepository.findPlaceByIdAndStatus(placeId, USED)
 			.orElseThrow(() -> new BaseException(SEARCH_NOT_FOUND_PLACE));
 		Optional<List<PlaceImage>> placeImageResults = placeImageRepository.findPlaceImagesByPlaceIdAndStatus(placeId,
-			USED);    // TODO: orElse 변경
+			USED);
 		Optional<List<PlaceComment>> placeReviewResults = placeCommentRepository.findPlaceCommentsByPlaceIdAndStatus(
 			placeId, USED);
 		List<String> placeTagNames = findPlaceTags(place.getId());
@@ -130,7 +130,6 @@ public class PlaceServiceImpl implements PlaceService {
 
 		//조회 수 증가
 		redisTemplate.opsForZSet().incrementScore(ZSET_KEY, Long.toString(place.getId()), 1);
-		// redisTemplate.opsForZSet().add();
 
 		return placeDetail;
 	}
@@ -303,16 +302,11 @@ public class PlaceServiceImpl implements PlaceService {
 		Member findMember = memberService.findMemberBy(memberId)
 			.orElseThrow(() -> new BaseException(CHECK_USER));
 
-		// 0) 키워드에 주소가 있는지 필터링, 파싱 (강원도 차박지 라는게 들어오면 강원으로 검색할 수 있도록 하기)
-
-		// 1) 이름, 주소로 장소를 검색한다.
 		List<Place> places = placeRepository.findPlacesByNameContainingOrAddressContainingAndStatus(query, query, USED)
 			.orElseGet(Collections::emptyList);
 
-		// 2) DTO 변환
 		Stream<PlaceSearchRes> placeSearchResStream = placesToSearchDTOs(places, findMember, lat, lng);
 
-		// 3) 거리순 / 관련순 정렬
 		if (sortType.equals(DISTANCE)) {
 			return placeSearchResStream
 				.sorted(Comparator.comparingDouble(PlaceSearchRes::getDistance))
@@ -322,7 +316,6 @@ public class PlaceServiceImpl implements PlaceService {
 			return placeSearchResStream
 				.sorted(Collections.reverseOrder(Comparator.comparingInt(
 					(placeSearchRes) -> requireNonNullElse(
-						// >> ptpt: requireNonNullElse -> 이렇게 하는 방식도 NPE 발생하지 않는가 ?
 						redisTemplate.opsForZSet().score(ZSET_KEY, placeSearchRes.getId().toString()), 0.0).intValue()
 				)))
 				.collect(Collectors.toList());
@@ -352,7 +345,7 @@ public class PlaceServiceImpl implements PlaceService {
 
 		List<String> codeList = region2Depths.stream()
 			.map(wrap(region2Depth -> (districtRepository.findByRegion1DepthContainingAndRegion2DepthContaining(
-				region1Depth, region2Depth))    // >> ptpt : try-catch를 사용하면 비즈니스 코드보다 예외처리 코드가 더 크기 때문에 따로 분리
+				region1Depth, region2Depth))
 				.orElseThrow(() -> new BaseException(INVALID_DISTRICT_CODE)).getCode()))
 			.collect(Collectors.toList());
 
@@ -362,7 +355,7 @@ public class PlaceServiceImpl implements PlaceService {
 				code -> placeRepository.findPlacesByDistrictCodeAndStatus(code, USED)
 					.orElseThrow(() -> new BaseException(INVALID_DISTRICT_CODE))
 			)
-			.flatMap(places -> places.stream())    // >> ptpt: flatMap을 이용해서 나온 list들을 모두 합쳐줌
+			.flatMap(places -> places.stream())
 			.collect(Collectors.toList());
 
 		Stream<PlaceSearchRes> placeSearchResStream = placesToSearchDTOs(findPlaces, findMember, lat, lng);
@@ -391,7 +384,7 @@ public class PlaceServiceImpl implements PlaceService {
 						.placeId(placeId)
 						.name(findPlace.getName())
 						.address(findPlace.getAddress())
-						.placeImageUrl( // >> ptpt: getImage null체크 대신 stream 사용
+						.placeImageUrl(
 							findPlace.getPlaceImages()
 								.stream()
 								.limit(1)
@@ -450,10 +443,6 @@ public class PlaceServiceImpl implements PlaceService {
 
 	// >> ptpt: stream에서의 함수형 인터페이스에 대한 exception 처리 (람다식)
 	private static <T, R> Function<T, R> wrap(ExceptionFunction<T, R> f) {
-		// (r) ->
-		//     wrap(
-		//           ()->InetAddress.getByName(r)
-		//     )
 		return (T t) -> {
 			try {
 				return f.apply(t);
@@ -534,5 +523,3 @@ public class PlaceServiceImpl implements PlaceService {
 		return (rad * 180 / Math.PI);
 	}
 }
-
-// .placeImages(placeImages.stream().map(PlaceImage::getImageUrl).collect(Collectors.toList()))

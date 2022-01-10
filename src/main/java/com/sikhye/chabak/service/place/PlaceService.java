@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.sikhye.chabak.service.place.constant.SortType;
+import com.sikhye.chabak.service.place.domain.Place;
+import com.sikhye.chabak.service.place.domain.PlaceTag;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
 import com.sikhye.chabak.service.place.dto.PlaceCommentReq;
 import com.sikhye.chabak.service.place.dto.PlaceCommentRes;
@@ -13,8 +15,6 @@ import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
-import com.sikhye.chabak.service.place.entity.Place;
-import com.sikhye.chabak.service.place.entity.PlaceTag;
 
 public interface PlaceService {
 

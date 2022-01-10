@@ -50,12 +50,12 @@ import com.sikhye.chabak.service.place.dto.PlaceDetailRes;
 import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
-import com.sikhye.chabak.service.place.entity.Place;
-import com.sikhye.chabak.service.place.entity.PlaceComment;
-import com.sikhye.chabak.service.place.entity.PlaceTag;
-import com.sikhye.chabak.service.place.repository.PlaceCommentRepository;
-import com.sikhye.chabak.service.place.repository.PlaceRepository;
-import com.sikhye.chabak.service.place.repository.PlaceTagRepository;
+import com.sikhye.chabak.service.place.domain.Place;
+import com.sikhye.chabak.service.place.domain.PlaceComment;
+import com.sikhye.chabak.service.place.domain.PlaceTag;
+import com.sikhye.chabak.service.place.domain.PlaceCommentRepository;
+import com.sikhye.chabak.service.place.domain.PlaceRepository;
+import com.sikhye.chabak.service.place.domain.PlaceTagRepository;
 
 @SpringBootTest
 @WebAppConfiguration

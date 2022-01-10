@@ -26,8 +26,6 @@ public class SearchController {
 	public BaseResponse<SearchDto> search(@RequestParam String q) {
 
 		SearchDto searchDto;
-		// if (q.startsWith("#")) {
-		// >> ptpt: 한 글자만 비교하는거는 charAt이 성능상 좋다.
 		if (q.charAt(0) == '#') {
 			searchDto = searchService.searchByTag(q.substring(1));
 		} else {

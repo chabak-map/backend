@@ -25,8 +25,4 @@ public class PlaceRankRes {
 		this.address = address;
 		this.placeImageUrl = placeImageUrl;
 	}
-
-	// >> ptpt: stream() 결과 반환 시 간단하게 해당 메소드로 사용 가능
-	// public PlaceRankRes convertToPlaceRankRes() {
-	// }
 }

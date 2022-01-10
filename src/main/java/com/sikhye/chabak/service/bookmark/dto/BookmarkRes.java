@@ -12,21 +12,13 @@ import lombok.Getter;
 public class BookmarkRes {
 
 	private Long id;
-
-	// 이름
 	private String name;
-
-	// 주소
 	private String address;
 
-	// 대표 이미지
 	private String imageUrl;
-
-	// 장소 태그들
 	private List<String> placeTagNames;
 
 	public BookmarkRes() {
-
 	}
 
 	@Builder

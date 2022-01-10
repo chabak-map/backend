@@ -16,7 +16,7 @@ import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.email.EmailSenderService;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.member.MemberService;
-import com.sikhye.chabak.service.member.entity.Member;
+import com.sikhye.chabak.service.member.domain.Member;
 import com.sikhye.chabak.service.report.constant.ReportType;
 import com.sikhye.chabak.service.report.domain.Report;
 import com.sikhye.chabak.service.report.domain.ReportRepository;
@@ -72,15 +72,13 @@ public class ReportServiceImpl implements ReportService {
 		String subject = "[ㅊㅂㅊㅂ] 신고 리포트";
 		String content = DateTime.now().toString();
 
-		adminEmailList.forEach(email ->
-			{
-				try {
-					emailSenderService.sendEmail(email, subject, content);
-				} catch (MessagingException e) {
-					throw new BaseException(SEND_MAIL_ERROR);
-				}
+		adminEmailList.forEach(email -> {
+			try {
+				emailSenderService.sendEmail(email, subject, content);
+			} catch (MessagingException e) {
+				throw new BaseException(SEND_MAIL_ERROR);
 			}
-		);
+		});
 
 	}
 

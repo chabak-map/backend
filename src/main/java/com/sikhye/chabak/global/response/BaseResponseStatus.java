@@ -100,24 +100,12 @@ public enum BaseResponseStatus {
 
 	SEND_MAIL_ERROR(false, 4024, "이메일 전송에 실패하였습니다."),
 
-	// 5000 : 필요시 만들어서 쓰세요
-	// 6000 : 필요시 만들어서 쓰세요
-	// TODO: 실제 배포 시 지워야합니다
-	TEST_1(false, 6001, "테스트1"),
+	AES256_INVALID_SPEC(false, 4025, "AES256 초기화에 오류가 있습니다."),
 
-	TEST_2(false, 6002, "테스트2"),
-
-	TEST_3(false, 6003, "테스트3"),
-
-	TEST_4(false, 6004, "테스트4");
+	AES256_NO_SUCH_SPEC(false, 4026, "지정한 AES256 스펙을 찾을 수 없습니다.");
 
 	private final boolean isSuccess;
 	private final int code;
 	private final String message;
 
-	// private BaseResponseStatus(boolean isSuccess, int code, String message) {
-	// 	this.isSuccess = isSuccess;
-	// 	this.code = code;
-	// 	this.message = message;
-	// }
 }

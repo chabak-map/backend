@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sikhye.chabak.service.post.domain.Posting;
+import com.sikhye.chabak.service.post.domain.PostingTag;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
@@ -16,8 +18,6 @@ import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
 import com.sikhye.chabak.service.post.dto.PostingTagRes;
-import com.sikhye.chabak.service.post.entity.Posting;
-import com.sikhye.chabak.service.post.entity.PostingTag;
 
 public interface PostingService {
 

@@ -39,6 +39,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.post.PostingService;
+import com.sikhye.chabak.service.post.domain.Posting;
+import com.sikhye.chabak.service.post.domain.PostingComment;
+import com.sikhye.chabak.service.post.domain.PostingCommentRepository;
+import com.sikhye.chabak.service.post.domain.PostingRepository;
+import com.sikhye.chabak.service.post.domain.PostingTag;
+import com.sikhye.chabak.service.post.domain.PostingTagRepository;
 import com.sikhye.chabak.service.post.dto.PostingCommentReq;
 import com.sikhye.chabak.service.post.dto.PostingCommentRes;
 import com.sikhye.chabak.service.post.dto.PostingDetailRes;
@@ -47,12 +53,6 @@ import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
 import com.sikhye.chabak.service.post.dto.PostingTagRes;
-import com.sikhye.chabak.service.post.entity.Posting;
-import com.sikhye.chabak.service.post.entity.PostingComment;
-import com.sikhye.chabak.service.post.entity.PostingTag;
-import com.sikhye.chabak.service.post.repository.PostingCommentRepository;
-import com.sikhye.chabak.service.post.repository.PostingRepository;
-import com.sikhye.chabak.service.post.repository.PostingTagRepository;
 
 @SpringBootTest
 @WebAppConfiguration

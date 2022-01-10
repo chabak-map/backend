@@ -40,14 +40,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 	@Override
 	public List<BookmarkRes> findBookmark() {
-		// 멤버 ID 추출
+
 		Long memberId = jwtTokenService.getMemberId();
 
-		// 멤버 ID를 기준으로 북마크 조회
 		List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByMemberIdAndStatus(memberId, USED)
 			.orElseGet(Collections::emptyList);
 
-		// List<Bookmark> :: Entity -> List<BookmarkRes> :: DTO 변환 및 반환
 		return bookmarks.stream()
 			.map(bookmark -> {
 				PlaceDetailRes place = placeService.getPlace(bookmark.getPlaceId(), null, null);
@@ -67,7 +65,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	@Override
 	@Transactional
 	public Long registerBookmark(Long placeId) {
-		// 멤버 ID 추출
+
 		Long memberId = jwtTokenService.getMemberId();
 
 		Bookmark newBookmark = Bookmark.builder()

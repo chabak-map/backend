@@ -102,7 +102,6 @@ public class MemberController {
 		return new BaseResponse<>(memberService.findMemberEmail(param.get("phoneNumber")));
 	}
 
-	// ptpt: Controller에서 RequestBody 를 새로운 객체 생성 없이도 사용이 가능
 	@PostMapping("/help/password")
 	public BaseResponse<Long> findMember(@RequestBody Map<String, String> param) {
 		return new BaseResponse<>(memberService.findMember(param.get("phoneNumber"), param.get("email")));

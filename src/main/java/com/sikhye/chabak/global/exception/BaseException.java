@@ -9,14 +9,4 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BaseException extends RuntimeException {
 	BaseResponseStatus status;
-
-	// public BaseResponse<BaseResponseStatus> getBaseException(BaseResponseStatus status) {
-	// 	// super(status.name());
-	// 	// this.status = status;
-	// 	return new BaseResponse<>(status);
-	// }
-
-	// public BaseException(BaseResponseStatus status) {
-	// 	super(status.getMessage());
-	// }
 }

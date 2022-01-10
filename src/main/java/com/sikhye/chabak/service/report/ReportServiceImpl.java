@@ -1,16 +1,18 @@
 package com.sikhye.chabak.service.report;
 
-import static com.sikhye.chabak.global.constant.BaseStatus.*;
-import static java.util.Objects.*;
+import static com.sikhye.chabak.global.response.BaseResponseStatus.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.mail.SimpleMailMessage;
+import javax.mail.MessagingException;
+
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sikhye.chabak.global.exception.BaseException;
 import com.sikhye.chabak.service.email.EmailSenderService;
 import com.sikhye.chabak.service.jwt.JwtTokenService;
 import com.sikhye.chabak.service.member.MemberService;
@@ -18,6 +20,7 @@ import com.sikhye.chabak.service.member.entity.Member;
 import com.sikhye.chabak.service.report.constant.ReportType;
 import com.sikhye.chabak.service.report.domain.Report;
 import com.sikhye.chabak.service.report.domain.ReportRepository;
+import com.sikhye.chabak.service.report.dto.ReportRankRes;
 import com.sikhye.chabak.service.report.dto.ReportReq;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,42 +59,29 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	@Transactional
-	public void sendEmailToAdminAndClear() {
+	public List<ReportRankRes> getRank() {
+		return reportRepository.getReportRank().orElseGet(Collections::emptyList);
+	}
 
-		List<Report> reportList = reportRepository.findAllByStatus(USED).orElseGet(Collections::emptyList);
-
-		if (reportList.isEmpty()) {
-			return;
-		}
+	@Override
+	public void sendEmailToAdmin() {
 
 		List<String> adminEmailList = memberService.findAllAdmin().orElseGet(Collections::emptyList)
 			.stream().map(Member::getEmail).collect(Collectors.toList());
 
-		reportList
-			.forEach(report -> {
-				adminEmailList
-					.forEach((adminEmail) -> {
-						String memberEmail = requireNonNull(
-							memberService.findMemberBy(report.getMemberId()).orElse(null)).getEmail();
-						String targetEmail = requireNonNull(
-							memberService.findMemberBy(report.getTargetId()).orElse(null)).getEmail();
+		String subject = "[ㅊㅂㅊㅂ] 신고 리포트";
+		String content = DateTime.now().toString();
 
-						String content = "[신고 작성자 : " + memberEmail + " ]\n"
-							+ "[신고 대상자 : " + targetEmail + " ]\n"
-							+ report.getReportType() + "\n\n\n"
-							+ report.getContent();
+		adminEmailList.forEach(email ->
+			{
+				try {
+					emailSenderService.sendEmail(email, subject, content);
+				} catch (MessagingException e) {
+					throw new BaseException(SEND_MAIL_ERROR);
+				}
+			}
+		);
 
-						SimpleMailMessage mailMessage = new SimpleMailMessage();
-						mailMessage.setTo(adminEmail);
-						mailMessage.setSubject("[ㅊㅂㅊㅂ] 신고메일 :: " + report.getCreatedAt());
-						mailMessage.setText(content);
-						emailSenderService.sendEmail(mailMessage);
-
-						log.info("to -> {}", adminEmail);
-					});
-				reportRepository.delete(report);
-			});
 	}
 
 }

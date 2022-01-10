@@ -1,7 +1,7 @@
 package com.sikhye.chabak.service.post.domain;
 
 import static com.sikhye.chabak.global.constant.BaseStatus.*;
-import static com.sikhye.chabak.service.post.entity.QPosting.*;
+import static com.sikhye.chabak.service.post.domain.QPosting.*;
 
 import java.util.List;
 

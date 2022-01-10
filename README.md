@@ -10,7 +10,7 @@
 |---|---|---|
 |디자인|1명|[ㅊㅂㅊㅂ Figma 디자인](https://www.figma.com/file/OJhobFAs7K0uEcUL72wZat/%EC%B0%A8%EB%B0%95?node-id=0%3A1)|
 |안드로이드|2명|[ㅊㅂㅊㅂ 프론트엔드](https://github.com/chabak-map/frontend)|  
-|서버|1명|[ㅊㅂㅊㅂ 백엔드](https://github.com/chabak-map/backend)|
+|서버|2명|[ㅊㅂㅊㅂ 백엔드](https://github.com/chabak-map/backend)|
 
 <br />
 

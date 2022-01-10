@@ -2,7 +2,7 @@ package com.sikhye.chabak.service.place.domain;
 
 import static com.querydsl.core.types.dsl.Expressions.*;
 import static com.querydsl.core.types.dsl.MathExpressions.*;
-import static com.sikhye.chabak.service.place.entity.QPlace.*;
+import static com.sikhye.chabak.service.place.domain.QPlace.*;
 
 import java.util.List;
 import java.util.Optional;

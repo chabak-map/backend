@@ -1,0 +1,67 @@
+name: chabak-dev-1.0.0
+
+on:
+  push:
+    branches: [ CHABAK-1.0.0 ]
+env:
+  S3_BUCKET_NAME: univ-city-bucket
+  PROJECT_NAME: backend
+  RESOURCE_PATH: /home/runner/work/backend/backend/src/main/resources
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: test
+        run: ls /home/runner/work/
+        shell: bash
+
+      - name: Decrypt application yml
+        run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_YML_GPG }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
+        shell: bash
+
+      - name: Unzip application yml
+        run: tar xvf $RESOURCE_PATH/application.tar -C $RESOURCE_PATH
+        shell: bash
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Clean with Gradle
+        run: ./gradlew clean
+        shell: bash
+
+      - name: Clean querydsl files
+        run: ./gradlew cleanQuerydslSourcesDir
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build --exclude-task test # ptpt:  테스트 제외
+        shell: bash
+
+      - name: Make zip file
+        run: zip -qq -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name chabak-map-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name chabak-map-deploy-group --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip

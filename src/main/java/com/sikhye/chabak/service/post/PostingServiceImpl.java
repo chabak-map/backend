@@ -427,6 +427,49 @@ public class PostingServiceImpl implements PostingService {
 		return s3UploadService.deleteImage(key);
 	}
 
+	// 20211216
+	// @Override
+	// public List<Posting> findPostings() {
+	// 	// return postingRepository.findPostingAllByUpdatedAtAfterAndStatus(LocalDateTime.now(), USED)
+	// 	// 	.orElseGet(Collections::emptyList);
+	//
+	// 	// return postingRepository.findPostingAllByUpdatedAtAfterAndStatus(
+	// 	// 		LocalDateTime.of(2021, Month.JANUARY, 1, 1, 11, 11),
+	// 	// 		USED)
+	// 	// 	.orElseGet(Collections::emptyList);
+	//
+	// 	return postingRepository.findPostingAllByUpdatedAtAfterAndStatus(
+	// 			LocalDateTime.of(2022, Month.JANUARY, 8, 1, 11, 11),
+	// 			USED)
+	// 		.orElseGet(Collections::emptyList);
+	// }
+	//
+	// @Override
+	// public int countPosts() {
+	// 	return postingRepository.countAllByStatus(USED);
+	// }
+	//
+	// @Override
+	// public List<PostingImage> findPostingImages() {
+	// 	return postingImageRepository.findPostingImageAllByStatus(USED).orElseGet(Collections::emptyList);
+	// }
+
+	@Override
+	public List<Posting> searchPostsBy(String keyword) {
+		return postingRepository.findByTitleContainsOrContentContainsAndStatus(keyword, keyword, USED)
+			.orElseGet(Collections::emptyList);
+	}
+
+	@Override
+	public List<PostingTag> searchPostTagsBy(String tagName) {
+		return postingTagRepository.findByNameAndStatus(tagName, USED).orElseGet(Collections::emptyList);
+	}
+
+	@Override
+	public Optional<Posting> findBy(Long id) {
+		return postingRepository.findPostingByIdAndStatus(id, USED);
+	}
+
 	// ==============================================
 	// INTERNAL USE
 	// ==============================================

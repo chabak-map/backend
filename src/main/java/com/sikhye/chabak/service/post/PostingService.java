@@ -1,6 +1,7 @@
 package com.sikhye.chabak.service.post;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import com.sikhye.chabak.service.post.dto.PostingReq;
 import com.sikhye.chabak.service.post.dto.PostingRes;
 import com.sikhye.chabak.service.post.dto.PostingTagReq;
 import com.sikhye.chabak.service.post.dto.PostingTagRes;
+import com.sikhye.chabak.service.post.entity.Posting;
+import com.sikhye.chabak.service.post.entity.PostingTag;
 
 public interface PostingService {
 
@@ -80,4 +83,20 @@ public interface PostingService {
 
 	// s3 이미지 삭제
 	Boolean deleteImage(String url, Long postId);
+
+	// 20211216
+	//
+	// // (ES 전용) 이미지 및 포스팅 전체 조회
+	// List<Posting> findPostings();
+	//
+	// int countPosts();
+	//
+	// List<PostingImage> findPostingImages();
+
+	// 검색 전용
+	List<Posting> searchPostsBy(String keyword);
+
+	List<PostingTag> searchPostTagsBy(String tagName);
+
+	Optional<Posting> findBy(Long id);
 }

@@ -8,4 +8,8 @@ public interface SearchService {
 
 	SearchDto searchByTag(String tagName);
 
+	// 20211216
+	// String addPlace(Place place);
+	//
+	// String addPost(Posting post);
 }

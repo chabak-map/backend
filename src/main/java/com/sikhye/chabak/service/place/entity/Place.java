@@ -17,23 +17,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sikhye.chabak.global.constant.BaseStatus;
+import com.sikhye.chabak.global.time.BaseEntity;
 
 import lombok.Builder;
 import lombok.Getter;
 
 //20211216
-@Document(indexName = "place")
+// @Document(indexName = "place")
 @Getter
 @DynamicInsert
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Table(name = "Place")
-public class Place {
+public class Place extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,16 +84,21 @@ public class Place {
 	}
 
 	@OneToMany(mappedBy = "place")
+	// 20211216
+	// @Field(type = FieldType.Nested, ignoreFields = {"placeImages"})
 	private List<PlaceImage> placeImages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "place")
+	// @Field(type = FieldType.Nested, ignoreFields = {"tags"})
 	private List<PlaceTag> tags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "place")
+	// @Field(type = FieldType.Nested, ignoreFields = {"placeComments"})
 	private List<PlaceComment> placeComments = new ArrayList<>();
 
 	// >> ptpt: 연관관계 주인인 쪽은 자신의 외래키와 joinColumn 설정
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISTRICT_CODE")
+	// @Field(type = FieldType.Nested, ignoreFields = {"district"})
 	private District district;
 }

@@ -2,6 +2,7 @@ package com.sikhye.chabak.service.place;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.sikhye.chabak.service.place.constant.SortType;
 import com.sikhye.chabak.service.place.dto.PlaceAroundRes;
@@ -12,6 +13,8 @@ import com.sikhye.chabak.service.place.dto.PlaceRankRes;
 import com.sikhye.chabak.service.place.dto.PlaceSearchRes;
 import com.sikhye.chabak.service.place.dto.PlaceTagReq;
 import com.sikhye.chabak.service.place.dto.PlaceTagRes;
+import com.sikhye.chabak.service.place.entity.Place;
+import com.sikhye.chabak.service.place.entity.PlaceTag;
 
 public interface PlaceService {
 
@@ -59,5 +62,21 @@ public interface PlaceService {
 
 	// 14. 장소 랭킹
 	List<PlaceRankRes> getTop5PlaceRanks();
+
+	// // 20211216
+	// // 15. 모든 장소 조회 ( ES 용도 )
+	// List<Place> findPlaces();
+	//
+	// int countPlaces();
+	//
+	// // 16. 모든 장소 리스트 조회 ( ES 용도 )
+	// List<PlaceImage> findPlaceImages();
+
+	// 15. 검색 전용
+	List<Place> searchPlacesBy(String keyword);
+
+	List<PlaceTag> searchPlaceTagsBy(String tagName);
+
+	Optional<Place> findBy(Long id);
 
 }

@@ -1,5 +1,6 @@
 package com.sikhye.chabak.service.place.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,5 +21,13 @@ public interface PlaceRepository extends JpaRepository<Place, Long>, PlaceReposi
 		BaseStatus status);
 
 	Optional<List<Place>> findPlacesByDistrictCodeAndStatus(String code, BaseStatus status);
+
+	Optional<List<Place>> findPlaceAllByUpdatedAtAfterAndStatus(LocalDateTime updatedAt, BaseStatus status);
+
+	int countAllByStatus(BaseStatus status);
+
+	Optional<List<Place>> findByNameContainsAndStatus(String name, BaseStatus status);
+
+	Optional<Place> findByIdAndStatus(Long placeId, BaseStatus status);
 
 }

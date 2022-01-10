@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.sikhye.chabak.global.constant.BaseStatus;
 import com.sikhye.chabak.global.time.BaseEntity;
@@ -27,7 +26,8 @@ import com.sikhye.chabak.service.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
-@Document(indexName = "posting")
+// 20211216
+// @Document(indexName = "posting")
 @Getter
 @DynamicInsert
 @Entity
@@ -66,18 +66,24 @@ public class Posting extends BaseEntity {
 		this.content = content;
 	}
 
+	// 20211216
 	// 연관관계 매핑
 	@ManyToOne(fetch = LAZY)
+	// @Field(type = FieldType.Nested, ignoreFields = {"member"})
 	@JoinColumn(name = "MEMBER_ID")
 	private Member member;
 
 	@OneToMany(mappedBy = "posting")
+	// @Field(type = FieldType.Nested, ignoreFields = {"postingTags"})
 	private List<PostingTag> postingTags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "posting")
+	// @Field(type = FieldType.Nested, ignoreFields = {"postingComments"})
 	private List<PostingComment> postingComments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "posting")
+	// @Field(type = FieldType.Nested, ignoreFields = {"postingImages"})    // >> ptpt: ES에서 ignore 하기(무한루프 방지)
+	// https://stackoverflow.com/questions/47142738/spring-data-elastic-and-recursive-document-mapping
 	private List<PostingImage> postingImages = new ArrayList<>();
 
 }

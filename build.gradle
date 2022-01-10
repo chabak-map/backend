@@ -95,7 +95,7 @@ dependencies {
 
     //20211216
 //     elasticsearch
-    implementation 'org.springframework.data:spring-data-elasticsearch'
+//    implementation 'org.springframework.data:spring-data-elasticsearch'
 }
 
 test {

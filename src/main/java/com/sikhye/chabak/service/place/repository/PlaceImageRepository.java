@@ -14,4 +14,6 @@ public interface PlaceImageRepository extends JpaRepository<PlaceImage, Long> {
 
 	// 첫 번째 장소만 찾아옴
 	Optional<PlaceImage> findFirst1PlaceImageByPlaceIdAndStatus(Long placeId, BaseStatus status);
+
+	Optional<List<PlaceImage>> findPlaceImageAllByStatus(BaseStatus status);
 }

@@ -13,4 +13,6 @@ public interface PostingTagRepository extends JpaRepository<PostingTag, Long> {
 	Optional<List<PostingTag>> findPostingTagsByPostingIdAndStatus(Long postingId, BaseStatus status);
 
 	Optional<PostingTag> findPostingTagByIdAndStatus(Long postingId, BaseStatus status);
+
+	Optional<List<PostingTag>> findByNameAndStatus(String name, BaseStatus status);
 }

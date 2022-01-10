@@ -20,6 +20,8 @@ import com.sikhye.chabak.global.constant.BaseStatus;
 import lombok.Builder;
 import lombok.Getter;
 
+//20211216
+// @Document(indexName = "placetag")
 @Getter
 @DynamicInsert
 @Entity

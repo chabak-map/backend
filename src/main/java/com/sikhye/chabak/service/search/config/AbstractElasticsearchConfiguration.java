@@ -9,7 +9,7 @@
 //
 // /**
 //  * elasticsearchOperations : Query를 받아서 엘라스틱서치에 요청을 보내는 역할
-//  *
+//  * 요청에서는 RestHighLevelClient를 사용
 //  * 엘라스틱서치 설정을 상속받아서 추가 변수, 함수를 만들어 자식 추상클래스로 만듦
 //  */
 // public abstract class AbstractElasticsearchConfiguration extends ElasticsearchConfigurationSupport {

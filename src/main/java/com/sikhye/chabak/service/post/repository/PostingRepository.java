@@ -23,7 +23,7 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, Posting
 
 	// Slice<T> 타입은 추가 count 쿼리 없이 다음 페이지 확인 가능하다. 내부적으로 limit + 1 조회를 해서 totalCount 쿼리가 나가지 않아서 성능상 조금 이점을 볼 수도 있다.
 	Slice<Posting> findSliceByStatus(BaseStatus status, Pageable pageable);
-	
+
 	Optional<List<Posting>> findPostingsByStatus(BaseStatus status);
 
 	Optional<List<Posting>> findPostingsByMemberIdAndStatus(Long memberId, BaseStatus status);
@@ -31,5 +31,15 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, Posting
 	Optional<Posting> findPostingByIdAndStatus(Long postingId, BaseStatus status);
 
 	Optional<List<Posting>> findTop4ByStatusOrderByCreatedAtDesc(BaseStatus status);
+
+	// //20211216
+	// Optional<List<Posting>> findPostingAllByUpdatedAtAfterAndStatus(LocalDateTime updatedAt, BaseStatus status);
+	//
+	// int countAllByStatus(BaseStatus status);
+
+	Optional<List<Posting>> findByTitleContainsOrContentContainsAndStatus(String title, String content,
+		BaseStatus status);
+
+	Optional<Posting> findByIdAndStatus(Long postId, BaseStatus status);
 }
 

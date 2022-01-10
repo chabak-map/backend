@@ -402,6 +402,48 @@ public class PlaceServiceImpl implements PlaceService {
 			).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Place> searchPlacesBy(String keyword) {
+		return placeRepository.findByNameContainsAndStatus(keyword, USED).orElseGet(Collections::emptyList);
+	}
+
+	@Override
+	public List<PlaceTag> searchPlaceTagsBy(String tagName) {
+		return placeTagRepository.findByNameAndStatus(tagName, USED).orElseGet(Collections::emptyList);
+	}
+
+	@Override
+	public Optional<Place> findBy(Long id) {
+		return placeRepository.findPlaceByIdAndStatus(id, USED);
+	}
+
+	// // 20211216
+	// @Override
+	// public List<Place> findPlaces() {
+	// 	// return placeRepository.findPlaceAllByUpdatedAtAfterAndStatus(LocalDateTime.now(), USED)
+	// 	// 	.orElseGet(Collections::emptyList);
+	//
+	// 	// return placeRepository.findPlaceAllByUpdatedAtAfterAndStatus(
+	// 	// 		LocalDateTime.of(2021, Month.JANUARY, 1, 1, 11, 11),
+	// 	// 		USED)
+	// 	// 	.orElseGet(Collections::emptyList);
+	//
+	// 	return placeRepository.findPlaceAllByUpdatedAtAfterAndStatus(
+	// 			LocalDateTime.of(2022, Month.JANUARY, 8, 1, 11, 11),
+	// 			USED)
+	// 		.orElseGet(Collections::emptyList);
+	// }
+	//
+	// @Override
+	// public int countPlaces() {
+	// 	return placeRepository.countAllByStatus(USED);
+	// }
+	//
+	// @Override
+	// public List<PlaceImage> findPlaceImages() {
+	// 	return placeImageRepository.findPlaceImageAllByStatus(USED).orElseGet(Collections::emptyList);
+	// }
+
 	// ====================================================================
 	// INTERNAL USE
 	// ====================================================================

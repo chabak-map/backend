@@ -6,8 +6,9 @@
 // import org.springframework.data.elasticsearch.client.RestClients;
 // import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 //
-// // AbstractElasticsearchConfiguration를 상속받아서 접속정보 부분은 재정의
-// @EnableElasticsearchRepositories
+// // AbstractElasticsearchConfiguration 추상클래스 상속받아서 접속정보 부분은 재정의
+// // 엘라스틱 서치 관련 repository만 스캔하도록 설정
+// @EnableElasticsearchRepositories(basePackages = "com.sikhye.chabak.service.search.domain")
 // @Configuration
 // public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 //

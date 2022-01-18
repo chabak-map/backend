@@ -2,7 +2,7 @@ name: chabak-dev-1.0.0
 
 on:
   push:
-    branches: [ CHABAK-1.0.0 ]
+    branches: [ CHABAK-1.0.0, master ]
 env:
   S3_BUCKET_NAME: univ-city-bucket
   PROJECT_NAME: backend
